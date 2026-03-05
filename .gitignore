@@ -1,0 +1,24 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE files
+.idea/
+.vscode/
+
+# Dependency directories
+vendor/
+node_modules/
+
+# Tool caches
+.phpcs-cache
+.phpunit.result.cache
+
+# Logs
+*.log
+
+# Local agent instructions and local PHPCS config
+AGENTS.md
+assets/AGENTS.md
+includes/AGENTS.md
+phpcs.xml.dist
