@@ -37,6 +37,20 @@ class Plugin
 	private $clients;
 
 	/**
+	 * Update module service.
+	 *
+	 * @var Updates
+	 */
+	private $updates;
+
+	/**
+	 * Portal shortcode service.
+	 *
+	 * @var Portal
+	 */
+	private $portal;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct()
@@ -44,6 +58,8 @@ class Plugin
 		$this->settings = new Settings();
 		$this->admin    = new Admin($this->settings);
 		$this->clients  = new Clients();
+		$this->updates  = new Updates();
+		$this->portal   = new Portal();
 	}
 
 	/**
@@ -57,6 +73,8 @@ class Plugin
 		$this->settings->register();
 		$this->admin->register();
 		$this->clients->register();
+		$this->updates->register();
+		$this->portal->register();
 	}
 
 	/**

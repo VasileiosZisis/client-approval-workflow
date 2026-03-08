@@ -324,6 +324,34 @@ class Clients
 	}
 
 	/**
+	 * Get the first published client.
+	 *
+	 * Useful for staff/admin preview flows when no explicit assignment exists.
+	 *
+	 * @return \WP_Post|null
+	 */
+	public static function get_first_client()
+	{
+		$clients = get_posts(
+			array(
+				'post_type'              => self::POST_TYPE,
+				'post_status'            => 'publish',
+				'posts_per_page'         => 1,
+				'orderby'                => 'title',
+				'order'                  => 'ASC',
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
+
+		if (! is_array($clients) || empty($clients) || ! $clients[0] instanceof \WP_Post) {
+			return null;
+		}
+
+		return $clients[0];
+	}
+
+	/**
 	 * Determine whether a user can view a client.
 	 *
 	 * @param int $client_id Client post ID.
@@ -388,6 +416,12 @@ class Clients
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
 				'meta_query'             => array(
+					'relation' => 'OR',
+					array(
+						'key'     => self::ASSIGNED_USERS_META_KEY,
+						'value'   => 'i:' . $user_id . ';',
+						'compare' => 'LIKE',
+					),
 					array(
 						'key'     => self::ASSIGNED_USERS_META_KEY,
 						'value'   => '"' . $user_id . '"',

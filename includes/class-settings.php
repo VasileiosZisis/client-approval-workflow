@@ -332,16 +332,14 @@ class Settings
 		$settings = self::get_settings();
 		$name     = esc_attr(self::OPTION_KEY . '[portal_page_id]');
 		$none     = esc_html__('Select a page', 'client-approval-workflow');
-
-		echo wp_kses_post(
-			wp_dropdown_pages(
-				array(
-					'name'              => $name,
-					'selected'          => (int) $settings['portal_page_id'],
-					'show_option_none'  => $none,
-					'option_none_value' => '0',
-					'echo'              => 0,
-				)
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_dropdown_pages() outputs trusted core-generated select markup.
+		echo wp_dropdown_pages(
+			array(
+				'name'              => $name,
+				'selected'          => (int) $settings['portal_page_id'],
+				'show_option_none'  => $none,
+				'option_none_value' => '0',
+				'echo'              => 0,
 			)
 		);
 

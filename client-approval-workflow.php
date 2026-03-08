@@ -27,6 +27,8 @@ require_once CLIAPWO_PLUGIN_DIR . 'includes/class-lifecycle.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-settings.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-admin.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-clients.php';
+require_once CLIAPWO_PLUGIN_DIR . 'includes/class-updates.php';
+require_once CLIAPWO_PLUGIN_DIR . 'includes/class-portal.php';
 
 register_activation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'activate'));
 register_deactivation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'deactivate'));
@@ -66,4 +68,16 @@ function cliapwo_get_client_for_user($user_id = 0)
 function cliapwo_user_can_view_client($client_id, $user_id = 0)
 {
 	return \ClientApprovalWorkflow\Clients::user_can_view_client($client_id, $user_id);
+}
+
+/**
+ * Get a paged updates query for a client.
+ *
+ * @param int   $client_id Client post ID.
+ * @param array $args      Optional query overrides.
+ * @return \WP_Query
+ */
+function cliapwo_get_updates_query_for_client($client_id, array $args = array())
+{
+	return \ClientApprovalWorkflow\Updates::get_updates_query_for_client($client_id, $args);
 }
