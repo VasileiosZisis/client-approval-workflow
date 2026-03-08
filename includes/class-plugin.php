@@ -3,10 +3,10 @@
 /**
  * Plugin bootstrap.
  *
- * @package SignoffFlow
+ * @package ClientApprovalWorkflow
  */
 
-namespace SignoffFlow;
+namespace ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 
@@ -30,12 +30,20 @@ class Plugin
 	private $admin;
 
 	/**
+	 * Client module service.
+	 *
+	 * @var Clients
+	 */
+	private $clients;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct()
 	{
 		$this->settings = new Settings();
 		$this->admin    = new Admin($this->settings);
+		$this->clients  = new Clients();
 	}
 
 	/**
@@ -48,6 +56,7 @@ class Plugin
 		add_action('plugins_loaded', array($this, 'load_textdomain'));
 		$this->settings->register();
 		$this->admin->register();
+		$this->clients->register();
 	}
 
 	/**
@@ -58,7 +67,7 @@ class Plugin
 	public function load_textdomain()
 	{
 		load_plugin_textdomain(
-			'signoffflow',
+			'client-approval-workflow',
 			false,
 			dirname(plugin_basename(CLIAPWO_PLUGIN_FILE)) . '/languages'
 		);

@@ -3,10 +3,10 @@
 /**
  * Settings registration and sanitization.
  *
- * @package SignoffFlow
+ * @package ClientApprovalWorkflow
  */
 
-namespace SignoffFlow;
+namespace ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 
@@ -28,7 +28,7 @@ class Settings
 	/**
 	 * Settings page slug.
 	 */
-	public const PAGE_SLUG = 'cliapwo-signoffflow';
+	public const PAGE_SLUG = 'cliapwo-client-approval-workflow';
 
 	/**
 	 * Register admin hooks.
@@ -70,14 +70,14 @@ class Settings
 
 		add_settings_section(
 			'cliapwo_general_section',
-			__('General', 'signoffflow'),
+			__('General', 'client-approval-workflow'),
 			array($this, 'render_general_section'),
 			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'cliapwo_portal_page_id',
-			__('Portal base page', 'signoffflow'),
+			__('Portal base page', 'client-approval-workflow'),
 			array($this, 'render_portal_page_field'),
 			self::PAGE_SLUG,
 			'cliapwo_general_section'
@@ -85,14 +85,14 @@ class Settings
 
 		add_settings_section(
 			'cliapwo_branding_section',
-			__('Branding', 'signoffflow'),
+			__('Branding', 'client-approval-workflow'),
 			array($this, 'render_branding_section'),
 			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'cliapwo_branding_logo_id',
-			__('Logo media ID', 'signoffflow'),
+			__('Logo media ID', 'client-approval-workflow'),
 			array($this, 'render_logo_id_field'),
 			self::PAGE_SLUG,
 			'cliapwo_branding_section'
@@ -100,7 +100,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_branding_logo_url',
-			__('Logo URL', 'signoffflow'),
+			__('Logo URL', 'client-approval-workflow'),
 			array($this, 'render_logo_url_field'),
 			self::PAGE_SLUG,
 			'cliapwo_branding_section'
@@ -108,7 +108,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_branding_primary_color',
-			__('Primary color', 'signoffflow'),
+			__('Primary color', 'client-approval-workflow'),
 			array($this, 'render_primary_color_field'),
 			self::PAGE_SLUG,
 			'cliapwo_branding_section'
@@ -116,14 +116,14 @@ class Settings
 
 		add_settings_section(
 			'cliapwo_notifications_section',
-			__('Notifications', 'signoffflow'),
+			__('Notifications', 'client-approval-workflow'),
 			array($this, 'render_notifications_section'),
 			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'cliapwo_notify_updates',
-			__('Update emails', 'signoffflow'),
+			__('Update emails', 'client-approval-workflow'),
 			array($this, 'render_notify_updates_field'),
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
@@ -131,7 +131,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_notify_files',
-			__('File emails', 'signoffflow'),
+			__('File emails', 'client-approval-workflow'),
 			array($this, 'render_notify_files_field'),
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
@@ -195,7 +195,7 @@ class Settings
 				add_settings_error(
 					self::OPTION_KEY,
 					'cliapwo_portal_page_id',
-					__('Choose a valid WordPress page for the portal base page.', 'signoffflow'),
+					__('Choose a valid WordPress page for the portal base page.', 'client-approval-workflow'),
 					'error'
 				);
 				$portal_page_id = (int) $defaults['portal_page_id'];
@@ -211,7 +211,7 @@ class Settings
 				add_settings_error(
 					self::OPTION_KEY,
 					'cliapwo_branding_logo_id',
-					__('Enter a valid media attachment ID for the portal logo.', 'signoffflow'),
+					__('Enter a valid media attachment ID for the portal logo.', 'client-approval-workflow'),
 					'error'
 				);
 				$branding_logo_id = (int) $defaults['branding_logo_id'];
@@ -225,7 +225,7 @@ class Settings
 			add_settings_error(
 				self::OPTION_KEY,
 				'cliapwo_primary_color',
-				__('Enter a valid hex color for the primary color setting.', 'signoffflow'),
+				__('Enter a valid hex color for the primary color setting.', 'client-approval-workflow'),
 				'error'
 			);
 			$primary_color = $defaults['primary_color'];
@@ -266,7 +266,7 @@ class Settings
 			add_settings_error(
 				self::OPTION_KEY,
 				'cliapwo_branding_logo_url',
-				__('Enter a valid URL for the portal logo.', 'signoffflow'),
+				__('Enter a valid URL for the portal logo.', 'client-approval-workflow'),
 				'error'
 			);
 
@@ -299,7 +299,7 @@ class Settings
 	 */
 	public function render_general_section()
 	{
-		echo '<p>' . esc_html__('Configure the base page that will later host the client portal.', 'signoffflow') . '</p>';
+		echo '<p>' . esc_html__('Configure the base page that will later host the client portal.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -309,7 +309,7 @@ class Settings
 	 */
 	public function render_branding_section()
 	{
-		echo '<p>' . esc_html__('Store the portal branding values used by future frontend milestones.', 'signoffflow') . '</p>';
+		echo '<p>' . esc_html__('Store the portal branding values used by future frontend milestones.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -319,7 +319,7 @@ class Settings
 	 */
 	public function render_notifications_section()
 	{
-		echo '<p>' . esc_html__('Enable or disable notification types before the email features ship in a later milestone.', 'signoffflow') . '</p>';
+		echo '<p>' . esc_html__('Enable or disable notification types before the email features ship in a later milestone.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -331,7 +331,7 @@ class Settings
 	{
 		$settings = self::get_settings();
 		$name     = esc_attr(self::OPTION_KEY . '[portal_page_id]');
-		$none     = esc_html__('Select a page', 'signoffflow');
+		$none     = esc_html__('Select a page', 'client-approval-workflow');
 
 		echo wp_kses_post(
 			wp_dropdown_pages(
@@ -345,7 +345,7 @@ class Settings
 			)
 		);
 
-		echo '<p class="description">' . esc_html__('Optional for M1. Leave unset until the portal shortcode is added.', 'signoffflow') . '</p>';
+		echo '<p class="description">' . esc_html__('Optional for M1. Leave unset until the portal shortcode is added.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -363,7 +363,7 @@ class Settings
 			min="0"
 			name="<?php echo esc_attr(self::OPTION_KEY); ?>[branding_logo_id]"
 			value="<?php echo esc_attr((string) $settings['branding_logo_id']); ?>" />
-		<p class="description"><?php esc_html_e('Optional attachment ID from the Media Library.', 'signoffflow'); ?></p>
+		<p class="description"><?php esc_html_e('Optional attachment ID from the Media Library.', 'client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -382,7 +382,7 @@ class Settings
 			name="<?php echo esc_attr(self::OPTION_KEY); ?>[branding_logo_url]"
 			value="<?php echo esc_attr((string) $settings['branding_logo_url']); ?>"
 			placeholder="https://example.com/logo.png" />
-		<p class="description"><?php esc_html_e('Optional direct URL fallback for the portal logo.', 'signoffflow'); ?></p>
+		<p class="description"><?php esc_html_e('Optional direct URL fallback for the portal logo.', 'client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -399,7 +399,7 @@ class Settings
 			type="color"
 			name="<?php echo esc_attr(self::OPTION_KEY); ?>[primary_color]"
 			value="<?php echo esc_attr((string) $settings['primary_color']); ?>" />
-		<p class="description"><?php esc_html_e('Used later for portal and email branding.', 'signoffflow'); ?></p>
+		<p class="description"><?php esc_html_e('Used later for portal and email branding.', 'client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -419,7 +419,7 @@ class Settings
 				name="<?php echo esc_attr(self::OPTION_KEY); ?>[notify_updates]"
 				value="1"
 				<?php checked(! empty($settings['notify_updates'])); ?> />
-			<?php esc_html_e('Send email notifications when a new update is posted.', 'signoffflow'); ?>
+			<?php esc_html_e('Send email notifications when a new update is posted.', 'client-approval-workflow'); ?>
 		</label>
 	<?php
 	}
@@ -440,7 +440,7 @@ class Settings
 				name="<?php echo esc_attr(self::OPTION_KEY); ?>[notify_files]"
 				value="1"
 				<?php checked(! empty($settings['notify_files'])); ?> />
-			<?php esc_html_e('Send email notifications when a new file is uploaded.', 'signoffflow'); ?>
+			<?php esc_html_e('Send email notifications when a new file is uploaded.', 'client-approval-workflow'); ?>
 		</label>
 <?php
 	}
