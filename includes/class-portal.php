@@ -81,6 +81,7 @@ class Portal
 				'paged' => $paged,
 			)
 		);
+		$files_query   = Files::get_files_query_for_client($client->ID);
 
 		ob_start();
 		?>
@@ -141,6 +142,49 @@ class Portal
 					?>
 				<?php else : ?>
 					<p><?php esc_html_e('No updates yet.', 'client-approval-workflow'); ?></p>
+				<?php endif; ?>
+			</section>
+
+			<section class="cliapwo-portal__files">
+				<h3><?php esc_html_e('Files', 'client-approval-workflow'); ?></h3>
+
+				<?php if ($files_query->have_posts()) : ?>
+					<ul class="cliapwo-portal__file-list">
+						<?php while ($files_query->have_posts()) : ?>
+							<?php
+							$files_query->the_post();
+							$file_post_id = get_the_ID();
+							$file_name    = (string) get_post_meta($file_post_id, Files::ORIGINAL_FILENAME_META_KEY, true);
+							$mime_type    = (string) get_post_meta($file_post_id, Files::MIME_TYPE_META_KEY, true);
+							$file_size    = absint(get_post_meta($file_post_id, Files::FILE_SIZE_META_KEY, true));
+							$download_url = Files::get_download_url($file_post_id);
+							?>
+							<li class="cliapwo-portal__file">
+								<a href="<?php echo esc_url($download_url); ?>">
+									<?php echo esc_html('' !== $file_name ? $file_name : get_the_title($file_post_id)); ?>
+								</a>
+								<?php if ($file_size > 0 || '' !== $mime_type) : ?>
+									<span class="cliapwo-portal__file-meta">
+										<?php
+										$file_meta = array();
+
+										if ($file_size > 0) {
+											$file_meta[] = size_format($file_size);
+										}
+
+										if ('' !== $mime_type) {
+											$file_meta[] = $mime_type;
+										}
+
+										echo esc_html(implode(' | ', $file_meta));
+										?>
+									</span>
+								<?php endif; ?>
+							</li>
+						<?php endwhile; ?>
+					</ul>
+				<?php else : ?>
+					<p><?php esc_html_e('No files yet.', 'client-approval-workflow'); ?></p>
 				<?php endif; ?>
 			</section>
 		</div>

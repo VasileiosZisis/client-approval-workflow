@@ -51,6 +51,13 @@ class Plugin
 	private $portal;
 
 	/**
+	 * File module service.
+	 *
+	 * @var Files
+	 */
+	private $files;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct()
@@ -60,6 +67,7 @@ class Plugin
 		$this->clients  = new Clients();
 		$this->updates  = new Updates();
 		$this->portal   = new Portal();
+		$this->files    = new Files();
 	}
 
 	/**
@@ -75,6 +83,7 @@ class Plugin
 		$this->clients->register();
 		$this->updates->register();
 		$this->portal->register();
+		$this->files->register();
 	}
 
 	/**

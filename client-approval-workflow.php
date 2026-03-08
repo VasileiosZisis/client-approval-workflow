@@ -29,6 +29,7 @@ require_once CLIAPWO_PLUGIN_DIR . 'includes/class-admin.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-clients.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-updates.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-portal.php';
+require_once CLIAPWO_PLUGIN_DIR . 'includes/class-files.php';
 
 register_activation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'activate'));
 register_deactivation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'deactivate'));
@@ -80,4 +81,27 @@ function cliapwo_user_can_view_client($client_id, $user_id = 0)
 function cliapwo_get_updates_query_for_client($client_id, array $args = array())
 {
 	return \ClientApprovalWorkflow\Updates::get_updates_query_for_client($client_id, $args);
+}
+
+/**
+ * Get a paged files query for a client.
+ *
+ * @param int   $client_id Client post ID.
+ * @param array $args      Optional query overrides.
+ * @return \WP_Query
+ */
+function cliapwo_get_files_query_for_client($client_id, array $args = array())
+{
+	return \ClientApprovalWorkflow\Files::get_files_query_for_client($client_id, $args);
+}
+
+/**
+ * Get a protected download URL for a file post.
+ *
+ * @param int $file_post_id File post ID.
+ * @return string
+ */
+function cliapwo_get_file_download_url($file_post_id)
+{
+	return \ClientApprovalWorkflow\Files::get_download_url($file_post_id);
 }
