@@ -18,6 +18,7 @@ node_modules/
 *.log
 
 # Local agent instructions and local PHPCS config
+PLAN.md
 AGENTS.md
 assets/AGENTS.md
 includes/AGENTS.md
