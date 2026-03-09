@@ -81,7 +81,9 @@ class Portal
 				'paged' => $paged,
 			)
 		);
+		$requests_query = Requests::get_requests_query_for_client($client->ID);
 		$files_query   = Files::get_files_query_for_client($client->ID);
+		$open_requests = Requests::get_open_request_count_for_client($client->ID);
 
 		ob_start();
 		?>
@@ -93,7 +95,77 @@ class Portal
 
 			<section class="cliapwo-portal__summary">
 				<h3><?php esc_html_e('Waiting on you', 'client-approval-workflow'); ?></h3>
-				<p><?php esc_html_e('Nothing is waiting on you yet. Requests and approvals will appear here in later milestones.', 'client-approval-workflow'); ?></p>
+				<?php if ($open_requests > 0) : ?>
+					<p>
+						<?php
+						printf(
+							/* translators: %d: number of open requests */
+							esc_html(_n('%d request needs your attention.', '%d requests need your attention.', $open_requests, 'client-approval-workflow')),
+							esc_html($open_requests)
+						);
+						?>
+					</p>
+				<?php else : ?>
+					<p><?php esc_html_e('Nothing is waiting on you right now.', 'client-approval-workflow'); ?></p>
+				<?php endif; ?>
+			</section>
+
+			<section class="cliapwo-portal__requests">
+				<h3><?php esc_html_e('Requests', 'client-approval-workflow'); ?></h3>
+
+				<?php if ($requests_query->have_posts()) : ?>
+					<ul class="cliapwo-portal__request-list">
+						<?php while ($requests_query->have_posts()) : ?>
+							<?php
+							$requests_query->the_post();
+							$request_id      = get_the_ID();
+							$request_status  = Requests::get_status_for_request($request_id);
+							$can_manage      = current_user_can('cliapwo_manage_portal');
+							$can_complete    = ! $can_manage && Requests::STATUS_OPEN === $request_status;
+							$can_reopen      = $can_manage && Requests::STATUS_COMPLETE === $request_status;
+							$can_force_close = $can_manage && Requests::STATUS_OPEN === $request_status;
+							?>
+							<li class="cliapwo-portal__request">
+								<div class="cliapwo-portal__request-header">
+									<strong><?php echo esc_html(get_the_title($request_id)); ?></strong>
+									<span class="cliapwo-portal__request-status">
+										<?php echo esc_html(Requests::get_status_label($request_status)); ?>
+									</span>
+								</div>
+
+								<?php if ('' !== (string) get_post_field('post_content', $request_id)) : ?>
+									<div class="cliapwo-portal__request-content">
+										<?php echo wp_kses_post(wpautop((string) get_post_field('post_content', $request_id))); ?>
+									</div>
+								<?php endif; ?>
+
+								<?php if ($can_complete || $can_reopen || $can_force_close) : ?>
+									<form
+										method="post"
+										action="<?php echo esc_url(admin_url('admin-post.php')); ?>"
+										class="cliapwo-portal__request-form">
+										<input type="hidden" name="action" value="<?php echo esc_attr(Requests::STATUS_UPDATE_ACTION); ?>" />
+										<input type="hidden" name="cliapwo_request_id" value="<?php echo esc_attr((string) $request_id); ?>" />
+										<?php wp_nonce_field(Requests::STATUS_UPDATE_ACTION, Requests::STATUS_UPDATE_NONCE_NAME); ?>
+
+										<?php if ($can_complete) : ?>
+											<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
+											<button type="submit"><?php esc_html_e('Mark complete', 'client-approval-workflow'); ?></button>
+										<?php elseif ($can_reopen) : ?>
+											<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_OPEN); ?>" />
+											<button type="submit"><?php esc_html_e('Reopen', 'client-approval-workflow'); ?></button>
+										<?php elseif ($can_force_close) : ?>
+											<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
+											<button type="submit"><?php esc_html_e('Complete for client', 'client-approval-workflow'); ?></button>
+										<?php endif; ?>
+									</form>
+								<?php endif; ?>
+							</li>
+						<?php endwhile; ?>
+					</ul>
+				<?php else : ?>
+					<p><?php esc_html_e('No requests yet.', 'client-approval-workflow'); ?></p>
+				<?php endif; ?>
 			</section>
 
 			<section class="cliapwo-portal__updates">

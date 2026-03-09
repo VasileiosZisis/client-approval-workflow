@@ -58,6 +58,13 @@ class Plugin
 	private $files;
 
 	/**
+	 * Requests module service.
+	 *
+	 * @var Requests
+	 */
+	private $requests;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct()
@@ -68,6 +75,7 @@ class Plugin
 		$this->updates  = new Updates();
 		$this->portal   = new Portal();
 		$this->files    = new Files();
+		$this->requests = new Requests();
 	}
 
 	/**
@@ -84,6 +92,7 @@ class Plugin
 		$this->updates->register();
 		$this->portal->register();
 		$this->files->register();
+		$this->requests->register();
 	}
 
 	/**
