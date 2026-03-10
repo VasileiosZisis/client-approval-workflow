@@ -150,6 +150,7 @@ class Clients
 				'order'   => 'ASC',
 			)
 		);
+		$wp_roles          = wp_roles();
 		?>
 		<p>
 			<label for="cliapwo_contact_email"><strong><?php esc_html_e('Contact email', 'client-approval-workflow'); ?></strong></label><br />
@@ -170,7 +171,10 @@ class Clients
 				name="cliapwo_client_notes"><?php echo esc_textarea((string) $notes); ?></textarea>
 		</p>
 
-		<p><strong><?php esc_html_e('Assigned users', 'client-approval-workflow'); ?></strong></p>
+		<p><strong><?php esc_html_e('Assigned portal users', 'client-approval-workflow'); ?></strong></p>
+		<p class="description">
+			<?php esc_html_e('Select the WordPress user accounts that can log in and view this client portal.', 'client-approval-workflow'); ?>
+		</p>
 		<?php if (empty($users)) : ?>
 			<p><?php esc_html_e('No WordPress users are available to assign.', 'client-approval-workflow'); ?></p>
 		<?php else : ?>
@@ -179,6 +183,19 @@ class Clients
 					<?php if (! $user instanceof \WP_User) : ?>
 						<?php continue; ?>
 					<?php endif; ?>
+					<?php
+					$role_labels = array();
+
+					if ($wp_roles instanceof \WP_Roles && is_array($user->roles)) {
+						foreach ($user->roles as $role_key) {
+							$role_key = sanitize_key((string) $role_key);
+
+							if (isset($wp_roles->roles[$role_key]['name'])) {
+								$role_labels[] = (string) $wp_roles->roles[$role_key]['name'];
+							}
+						}
+					}
+					?>
 					<label style="display:block; margin-bottom:8px;">
 						<input
 							type="checkbox"
@@ -188,6 +205,9 @@ class Clients
 						<?php echo esc_html($user->display_name); ?>
 						<?php if (! empty($user->user_email)) : ?>
 							<?php echo esc_html(' (' . $user->user_email . ')'); ?>
+						<?php endif; ?>
+						<?php if (! empty($role_labels)) : ?>
+							<?php echo esc_html(' - ' . implode(', ', $role_labels)); ?>
 						<?php endif; ?>
 					</label>
 				<?php endforeach; ?>

@@ -446,6 +446,16 @@ class Files
 			);
 		}
 
+		if (! current_user_can('cliapwo_manage_portal') && ! current_user_can('cliapwo_view_portal')) {
+			wp_die(
+				esc_html__('You are not allowed to download files.', 'client-approval-workflow'),
+				esc_html__('Forbidden', 'client-approval-workflow'),
+				array(
+					'response' => 403,
+				)
+			);
+		}
+
 		$file_post_id = 0;
 
 		if (isset($_GET['cliapwo_file_id'])) {

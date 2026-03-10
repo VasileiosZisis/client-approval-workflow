@@ -61,6 +61,11 @@ class Requests
 	public const STATUS_UPDATE_NONCE_NAME = 'cliapwo_request_status_nonce';
 
 	/**
+	 * Client notification marker meta key.
+	 */
+	public const NOTIFIED_META_KEY = 'cliapwo_request_notified';
+
+	/**
 	 * Register module hooks.
 	 *
 	 * @return void
@@ -280,6 +285,7 @@ class Requests
 		}
 
 		update_post_meta($post_id, self::STATUS_META_KEY, $status);
+		$this->maybe_dispatch_created_event($post_id, $post, $client_id);
 	}
 
 	/**
@@ -351,6 +357,19 @@ class Requests
 			);
 		}
 
+		$is_manager     = current_user_can('cliapwo_manage_portal');
+		$is_client_user = current_user_can('cliapwo_view_portal');
+
+		if (! $is_manager && ! $is_client_user) {
+			wp_die(
+				esc_html__('You are not allowed to update requests.', 'client-approval-workflow'),
+				esc_html__('Forbidden', 'client-approval-workflow'),
+				array(
+					'response' => 403,
+				)
+			);
+		}
+
 		$request_id = 0;
 		$status     = '';
 
@@ -387,7 +406,7 @@ class Requests
 		$current_user_id = get_current_user_id();
 		$client_id       = self::get_client_id_for_request($request_id);
 
-		if (current_user_can('cliapwo_manage_portal')) {
+		if ($is_manager) {
 			update_post_meta($request_id, self::STATUS_META_KEY, $status);
 			$this->redirect_back();
 		}
@@ -539,6 +558,40 @@ class Requests
 			self::STATUS_OPEN,
 			self::STATUS_COMPLETE,
 		);
+	}
+
+	/**
+	 * Fire a one-time event when a request becomes client-visible.
+	 *
+	 * @param int      $post_id   Request post ID.
+	 * @param \WP_Post $post      Request post object.
+	 * @param int      $client_id Linked client ID.
+	 * @return void
+	 */
+	private function maybe_dispatch_created_event($post_id, $post, $client_id)
+	{
+		if (! $post instanceof \WP_Post || 'publish' !== $post->post_status) {
+			return;
+		}
+
+		$client_id = absint($client_id);
+
+		if ($client_id <= 0) {
+			return;
+		}
+
+		if ('1' === (string) get_post_meta($post_id, self::NOTIFIED_META_KEY, true)) {
+			return;
+		}
+
+		/**
+		 * Fires when a published request becomes visible to a client.
+		 *
+		 * @param int $post_id   Request post ID.
+		 * @param int $client_id Client post ID.
+		 */
+		do_action('cliapwo_request_created', $post_id, $client_id);
+		update_post_meta($post_id, self::NOTIFIED_META_KEY, '1');
 	}
 
 	/**

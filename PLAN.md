@@ -518,7 +518,6 @@ Each milestone includes:
   - Include “client approval workflow” + “client portal” in the opening paragraph naturally
   - Screenshot captions aligned to keyword strategy
 - Confirm free version is WP.org-friendly (no aggressive upsells)
-- Add uninstall.php
 
 ## Tests (manual)
 

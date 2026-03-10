@@ -74,23 +74,44 @@ class Portal
 			return '<div class="cliapwo-portal"><p>' . esc_html__('You do not have access to this portal.', 'client-approval-workflow') . '</p></div>';
 		}
 
-		$paged         = $this->get_current_page();
-		$updates_query = Updates::get_updates_query_for_client(
+		$settings         = Settings::get_settings();
+		$paged            = $this->get_current_page();
+		$updates_query    = Updates::get_updates_query_for_client(
 			$client->ID,
 			array(
 				'paged' => $paged,
 			)
 		);
 		$requests_query = Requests::get_requests_query_for_client($client->ID);
-		$files_query   = Files::get_files_query_for_client($client->ID);
-		$open_requests = Requests::get_open_request_count_for_client($client->ID);
+		$files_query      = Files::get_files_query_for_client($client->ID);
+		$open_requests    = Requests::get_open_request_count_for_client($client->ID);
+		$logo_url         = $this->get_branding_logo_url($settings);
+		$primary_color    = isset($settings['primary_color']) ? sanitize_hex_color((string) $settings['primary_color']) : false;
+		$is_staff_preview = current_user_can('cliapwo_manage_portal') && ! in_array($current_user_id, Clients::get_assigned_user_ids($client->ID), true);
 
 		ob_start();
 		?>
-		<div class="cliapwo-portal">
+		<div
+			class="cliapwo-portal"
+			<?php if (is_string($primary_color) && '' !== $primary_color) : ?>
+				style="<?php echo esc_attr('border-top: 4px solid ' . $primary_color . '; padding-top: 1rem;'); ?>"
+			<?php endif; ?>>
 			<header class="cliapwo-portal__header">
+				<?php if ('' !== $logo_url) : ?>
+					<p class="cliapwo-portal__brand">
+						<img
+							src="<?php echo esc_url($logo_url); ?>"
+							alt="<?php echo esc_attr__('SignoffFlow logo', 'client-approval-workflow'); ?>"
+							style="max-width:180px; height:auto;" />
+					</p>
+				<?php endif; ?>
 				<h2><?php echo esc_html($client->post_title); ?></h2>
 				<p><?php esc_html_e('Welcome to your SignoffFlow portal.', 'client-approval-workflow'); ?></p>
+				<?php if ($is_staff_preview) : ?>
+					<p class="cliapwo-portal__preview-note">
+						<?php esc_html_e('You are previewing this portal as staff.', 'client-approval-workflow'); ?>
+					</p>
+				<?php endif; ?>
 			</header>
 
 			<section class="cliapwo-portal__summary">
@@ -164,7 +185,15 @@ class Portal
 						<?php endwhile; ?>
 					</ul>
 				<?php else : ?>
-					<p><?php esc_html_e('No requests yet.', 'client-approval-workflow'); ?></p>
+					<p>
+						<?php
+						echo esc_html(
+							$is_staff_preview
+								? __('No requests yet. Add one from SignoffFlow > Requests.', 'client-approval-workflow')
+								: __('No requests yet. Your team will add anything they still need from you here.', 'client-approval-workflow')
+						);
+						?>
+					</p>
 				<?php endif; ?>
 			</section>
 
@@ -213,7 +242,15 @@ class Portal
 					}
 					?>
 				<?php else : ?>
-					<p><?php esc_html_e('No updates yet.', 'client-approval-workflow'); ?></p>
+					<p>
+						<?php
+						echo esc_html(
+							$is_staff_preview
+								? __('No updates yet. Publish a client update from SignoffFlow > Updates.', 'client-approval-workflow')
+								: __('No updates yet. New project updates will appear here.', 'client-approval-workflow')
+						);
+						?>
+					</p>
 				<?php endif; ?>
 			</section>
 
@@ -256,7 +293,15 @@ class Portal
 						<?php endwhile; ?>
 					</ul>
 				<?php else : ?>
-					<p><?php esc_html_e('No files yet.', 'client-approval-workflow'); ?></p>
+					<p>
+						<?php
+						echo esc_html(
+							$is_staff_preview
+								? __('No files yet. Upload one from SignoffFlow > Files.', 'client-approval-workflow')
+								: __('No files yet. Shared deliverables and downloads will appear here.', 'client-approval-workflow')
+						);
+						?>
+					</p>
 				<?php endif; ?>
 			</section>
 		</div>
@@ -333,5 +378,30 @@ class Portal
 		}
 
 		return $portal_url;
+	}
+
+	/**
+	 * Get the configured portal branding logo URL.
+	 *
+	 * @param array<string, mixed> $settings Plugin settings.
+	 * @return string
+	 */
+	private function get_branding_logo_url(array $settings)
+	{
+		$logo_id = isset($settings['branding_logo_id']) ? absint($settings['branding_logo_id']) : 0;
+
+		if ($logo_id > 0) {
+			$logo_url = wp_get_attachment_url($logo_id);
+
+			if (is_string($logo_url) && '' !== $logo_url) {
+				return $logo_url;
+			}
+		}
+
+		if (isset($settings['branding_logo_url']) && is_string($settings['branding_logo_url'])) {
+			return esc_url_raw($settings['branding_logo_url']);
+		}
+
+		return '';
 	}
 }

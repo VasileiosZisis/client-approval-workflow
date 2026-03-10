@@ -136,6 +136,14 @@ class Settings
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
 		);
+
+		add_settings_field(
+			'cliapwo_notify_requests',
+			__('Request emails', 'client-approval-workflow'),
+			array($this, 'render_notify_requests_field'),
+			self::PAGE_SLUG,
+			'cliapwo_notifications_section'
+		);
 	}
 
 	/**
@@ -168,6 +176,7 @@ class Settings
 			'primary_color'     => '#1d4ed8',
 			'notify_updates'    => 1,
 			'notify_files'      => 1,
+			'notify_requests'   => 1,
 		);
 	}
 
@@ -238,6 +247,7 @@ class Settings
 			'primary_color'     => $primary_color,
 			'notify_updates'    => $this->sanitize_toggle($input, 'notify_updates'),
 			'notify_files'      => $this->sanitize_toggle($input, 'notify_files'),
+			'notify_requests'   => $this->sanitize_toggle($input, 'notify_requests'),
 		);
 	}
 
@@ -299,7 +309,7 @@ class Settings
 	 */
 	public function render_general_section()
 	{
-		echo '<p>' . esc_html__('Configure the base page that will later host the client portal.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Choose the WordPress page that hosts the client portal shortcode.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -309,7 +319,7 @@ class Settings
 	 */
 	public function render_branding_section()
 	{
-		echo '<p>' . esc_html__('Store the portal branding values used by future frontend milestones.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Set the logo and primary color used across the SignoffFlow portal experience.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -319,7 +329,7 @@ class Settings
 	 */
 	public function render_notifications_section()
 	{
-		echo '<p>' . esc_html__('Enable or disable the client emails sent for new updates and uploaded files.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -342,8 +352,6 @@ class Settings
 				'echo'              => 0,
 			)
 		);
-
-		echo '<p class="description">' . esc_html__('Optional for M1. Leave unset until the portal shortcode is added.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -397,7 +405,7 @@ class Settings
 			type="color"
 			name="<?php echo esc_attr(self::OPTION_KEY); ?>[primary_color]"
 			value="<?php echo esc_attr((string) $settings['primary_color']); ?>" />
-		<p class="description"><?php esc_html_e('Used later for portal and email branding.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Used for portal accents and notification branding.', 'client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -439,6 +447,27 @@ class Settings
 				value="1"
 				<?php checked(! empty($settings['notify_files'])); ?> />
 			<?php esc_html_e('Send email notifications when a new file is uploaded.', 'client-approval-workflow'); ?>
+		</label>
+	<?php
+	}
+
+	/**
+	 * Render the request email toggle.
+	 *
+	 * @return void
+	 */
+	public function render_notify_requests_field()
+	{
+		$settings = self::get_settings();
+	?>
+		<label for="cliapwo_notify_requests">
+			<input
+				id="cliapwo_notify_requests"
+				type="checkbox"
+				name="<?php echo esc_attr(self::OPTION_KEY); ?>[notify_requests]"
+				value="1"
+				<?php checked(! empty($settings['notify_requests'])); ?> />
+			<?php esc_html_e('Send email notifications when a new request is created.', 'client-approval-workflow'); ?>
 		</label>
 <?php
 	}

@@ -88,9 +88,8 @@ class Admin
 ?>
 		<div class="wrap">
 			<h1><?php esc_html_e('SignoffFlow Settings', 'client-approval-workflow'); ?></h1>
-			<p><?php esc_html_e('Milestone M1 stores the base portal configuration and permissions foundation.', 'client-approval-workflow'); ?></p>
 
-			<?php settings_errors(Settings::OPTION_KEY); ?>
+			<?php settings_errors(); ?>
 
 			<form action="options.php" method="post">
 				<?php

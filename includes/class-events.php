@@ -50,6 +50,7 @@ class Events
 		add_action('init', array($this, 'register_post_type'));
 		add_filter('manage_' . self::POST_TYPE . '_posts_columns', array($this, 'filter_event_columns'));
 		add_action('manage_' . self::POST_TYPE . '_posts_custom_column', array($this, 'render_event_column'), 10, 2);
+		add_action('cliapwo_request_created', array($this, 'handle_request_created'), 10, 2);
 		add_action('cliapwo_update_created', array($this, 'handle_update_created'), 10, 2);
 		add_action('cliapwo_file_uploaded', array($this, 'handle_file_uploaded'), 10, 3);
 		add_action('admin_notices', array($this, 'render_mail_debug_notice'));
@@ -182,6 +183,89 @@ class Events
 				/* translators: %s: update title */
 				__('update "%s"', 'client-approval-workflow'),
 				$update->post_title
+			)
+		);
+	}
+
+	/**
+	 * Log and notify for new client requests.
+	 *
+	 * @param int $request_id Request post ID.
+	 * @param int $client_id  Client post ID.
+	 * @return void
+	 */
+	public function handle_request_created($request_id, $client_id)
+	{
+		$request_id = absint($request_id);
+		$client_id  = absint($client_id);
+		$request    = get_post($request_id);
+		$client     = get_post($client_id);
+
+		if (! $request instanceof \WP_Post || Requests::POST_TYPE !== $request->post_type) {
+			return;
+		}
+
+		if (! $client instanceof \WP_Post || Clients::POST_TYPE !== $client->post_type) {
+			return;
+		}
+
+		$title = sprintf(
+			/* translators: %s: request title */
+			__('Request created: %s', 'client-approval-workflow'),
+			$request->post_title
+		);
+
+		$details = sprintf(
+			/* translators: 1: client name, 2: request title */
+			__("Client: %1\$s\nRequest: %2\$s", 'client-approval-workflow'),
+			$client->post_title,
+			$request->post_title
+		);
+
+		$this->create_event_entry($title, $details, 'request_created', $client_id, $request_id);
+
+		if (! $this->should_send_notification('notify_requests')) {
+			return;
+		}
+
+		$portal_url = $this->get_portal_url();
+		$subject    = sprintf(
+			/* translators: 1: site name, 2: client name */
+			__('[%1$s] New request for %2$s', 'client-approval-workflow'),
+			wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES),
+			$client->post_title
+		);
+		$message    = implode(
+			"\n\n",
+			array(
+				__('A new request has been added to your SignoffFlow portal.', 'client-approval-workflow'),
+				sprintf(
+					/* translators: %s: client name */
+					__('Client: %s', 'client-approval-workflow'),
+					$client->post_title
+				),
+				sprintf(
+					/* translators: %s: request title */
+					__('Request: %s', 'client-approval-workflow'),
+					$request->post_title
+				),
+				sprintf(
+					/* translators: %s: portal URL */
+					__('Portal link: %s', 'client-approval-workflow'),
+					$portal_url
+				),
+			)
+		);
+
+		$this->send_email_to_client_users(
+			$client_id,
+			$subject,
+			$message,
+			$request_id,
+			sprintf(
+				/* translators: %s: request title */
+				__('request "%s"', 'client-approval-workflow'),
+				$request->post_title
 			)
 		);
 	}
@@ -337,6 +421,21 @@ class Events
 			return;
 		}
 
+		$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+
+		if ($screen instanceof \WP_Screen) {
+			$allowed_post_types = array(
+				Requests::POST_TYPE,
+				Updates::POST_TYPE,
+				Files::POST_TYPE,
+				self::POST_TYPE,
+			);
+
+			if (! in_array((string) $screen->post_type, $allowed_post_types, true) && 'toplevel_page_' . Settings::PAGE_SLUG !== (string) $screen->id) {
+				return;
+			}
+		}
+
 		$user_id = get_current_user_id();
 
 		if ($user_id <= 0) {
@@ -426,7 +525,7 @@ class Events
 	{
 		$settings = Settings::get_settings();
 
-		return ! empty($settings[$setting_key]);
+		return isset($settings[$setting_key]) && 1 === absint($settings[$setting_key]);
 	}
 
 	/**
@@ -461,6 +560,10 @@ class Events
 	{
 		if ('email_attempt' === $event_type) {
 			return __('Email attempt', 'client-approval-workflow');
+		}
+
+		if ('request_created' === $event_type) {
+			return __('Request created', 'client-approval-workflow');
 		}
 
 		if ('file_uploaded' === $event_type) {
