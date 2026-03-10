@@ -31,6 +31,7 @@ require_once CLIAPWO_PLUGIN_DIR . 'includes/class-updates.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-portal.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-files.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-requests.php';
+require_once CLIAPWO_PLUGIN_DIR . 'includes/class-events.php';
 
 register_activation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'activate'));
 register_deactivation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'deactivate'));

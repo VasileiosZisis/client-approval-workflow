@@ -71,6 +71,11 @@ class Files
 	public const UPLOAD_FIELD_NAME = 'cliapwo_file_upload';
 
 	/**
+	 * Last notified attachment ID meta key.
+	 */
+	public const LAST_NOTIFIED_ATTACHMENT_META_KEY = 'cliapwo_last_notified_attachment_id';
+
+	/**
 	 * Register module hooks.
 	 *
 	 * @return void
@@ -304,71 +309,71 @@ class Files
 			delete_post_meta($post_id, self::CLIENT_META_KEY);
 		}
 
-		if (empty($_FILES[self::UPLOAD_FIELD_NAME]) || ! is_array($_FILES[self::UPLOAD_FIELD_NAME])) {
-			return;
+		$attachment_id = self::get_attachment_id_for_file($post_id);
+
+		if (! empty($_FILES[self::UPLOAD_FIELD_NAME]) && is_array($_FILES[self::UPLOAD_FIELD_NAME])) {
+			$file_data = wp_unslash($_FILES[self::UPLOAD_FIELD_NAME]);
+
+			if (isset($file_data['error']) && UPLOAD_ERR_NO_FILE !== (int) $file_data['error']) {
+				if (UPLOAD_ERR_OK !== (int) $file_data['error']) {
+					set_transient(
+						'cliapwo_file_upload_error_' . $post_id,
+						__('The file upload failed. Please try again.', 'client-approval-workflow'),
+						MINUTE_IN_SECONDS
+					);
+					return;
+				}
+
+				if (! isset($file_data['name']) || ! isset($file_data['tmp_name'])) {
+					set_transient(
+						'cliapwo_file_upload_error_' . $post_id,
+						__('The uploaded file data is incomplete.', 'client-approval-workflow'),
+						MINUTE_IN_SECONDS
+					);
+					return;
+				}
+
+				$original_name = sanitize_file_name((string) $file_data['name']);
+				$file_check    = wp_check_filetype_and_ext((string) $file_data['tmp_name'], $original_name);
+				$allowed_mimes = get_allowed_mime_types();
+				$extension     = is_array($file_check) && isset($file_check['ext']) ? (string) $file_check['ext'] : '';
+				$mime_type     = is_array($file_check) && isset($file_check['type']) ? (string) $file_check['type'] : '';
+
+				if ('' === $extension || '' === $mime_type || ! in_array($mime_type, $allowed_mimes, true)) {
+					set_transient(
+						'cliapwo_file_upload_error_' . $post_id,
+						__('That file type is not allowed.', 'client-approval-workflow'),
+						MINUTE_IN_SECONDS
+					);
+					return;
+				}
+
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+
+				$attachment_id = media_handle_upload(self::UPLOAD_FIELD_NAME, $post_id);
+
+				if (is_wp_error($attachment_id)) {
+					set_transient(
+						'cliapwo_file_upload_error_' . $post_id,
+						$attachment_id->get_error_message(),
+						MINUTE_IN_SECONDS
+					);
+					return;
+				}
+
+				$file_path = get_attached_file($attachment_id);
+				$file_size = is_string($file_path) && '' !== $file_path && file_exists($file_path) ? filesize($file_path) : 0;
+
+				update_post_meta($post_id, self::ATTACHMENT_META_KEY, $attachment_id);
+				update_post_meta($post_id, self::ORIGINAL_FILENAME_META_KEY, $original_name);
+				update_post_meta($post_id, self::MIME_TYPE_META_KEY, $mime_type);
+				update_post_meta($post_id, self::FILE_SIZE_META_KEY, absint($file_size));
+			}
 		}
 
-		$file_data = wp_unslash($_FILES[self::UPLOAD_FIELD_NAME]);
-
-		if (! isset($file_data['error']) || UPLOAD_ERR_NO_FILE === (int) $file_data['error']) {
-			return;
-		}
-
-		if (UPLOAD_ERR_OK !== (int) $file_data['error']) {
-			set_transient(
-				'cliapwo_file_upload_error_' . $post_id,
-				__('The file upload failed. Please try again.', 'client-approval-workflow'),
-				MINUTE_IN_SECONDS
-			);
-			return;
-		}
-
-		if (! isset($file_data['name']) || ! isset($file_data['tmp_name'])) {
-			set_transient(
-				'cliapwo_file_upload_error_' . $post_id,
-				__('The uploaded file data is incomplete.', 'client-approval-workflow'),
-				MINUTE_IN_SECONDS
-			);
-			return;
-		}
-
-		$original_name = sanitize_file_name((string) $file_data['name']);
-		$file_check    = wp_check_filetype_and_ext((string) $file_data['tmp_name'], $original_name);
-		$allowed_mimes = get_allowed_mime_types();
-		$extension     = is_array($file_check) && isset($file_check['ext']) ? (string) $file_check['ext'] : '';
-		$mime_type     = is_array($file_check) && isset($file_check['type']) ? (string) $file_check['type'] : '';
-
-		if ('' === $extension || '' === $mime_type || ! in_array($mime_type, $allowed_mimes, true)) {
-			set_transient(
-				'cliapwo_file_upload_error_' . $post_id,
-				__('That file type is not allowed.', 'client-approval-workflow'),
-				MINUTE_IN_SECONDS
-			);
-			return;
-		}
-
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		require_once ABSPATH . 'wp-admin/includes/media.php';
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-
-		$attachment_id = media_handle_upload(self::UPLOAD_FIELD_NAME, $post_id);
-
-		if (is_wp_error($attachment_id)) {
-			set_transient(
-				'cliapwo_file_upload_error_' . $post_id,
-				$attachment_id->get_error_message(),
-				MINUTE_IN_SECONDS
-			);
-			return;
-		}
-
-		$file_path = get_attached_file($attachment_id);
-		$file_size = is_string($file_path) && '' !== $file_path && file_exists($file_path) ? filesize($file_path) : 0;
-
-		update_post_meta($post_id, self::ATTACHMENT_META_KEY, $attachment_id);
-		update_post_meta($post_id, self::ORIGINAL_FILENAME_META_KEY, $original_name);
-		update_post_meta($post_id, self::MIME_TYPE_META_KEY, $mime_type);
-		update_post_meta($post_id, self::FILE_SIZE_META_KEY, absint($file_size));
+		$this->maybe_dispatch_upload_event($post_id, $post, $client_id, $attachment_id);
 	}
 
 	/**
@@ -655,5 +660,44 @@ class Files
 		);
 
 		return new \WP_Query(wp_parse_args($args, $defaults));
+	}
+
+	/**
+	 * Fire an upload event once per attachment when the file is client-visible.
+	 *
+	 * @param int      $post_id       File post ID.
+	 * @param \WP_Post $post          File post object.
+	 * @param int      $client_id     Linked client ID.
+	 * @param int      $attachment_id Attachment ID.
+	 * @return void
+	 */
+	private function maybe_dispatch_upload_event($post_id, $post, $client_id, $attachment_id)
+	{
+		if (! $post instanceof \WP_Post || 'publish' !== $post->post_status) {
+			return;
+		}
+
+		$client_id     = absint($client_id);
+		$attachment_id = absint($attachment_id);
+
+		if ($client_id <= 0 || $attachment_id <= 0) {
+			return;
+		}
+
+		$last_notified_attachment_id = absint(get_post_meta($post_id, self::LAST_NOTIFIED_ATTACHMENT_META_KEY, true));
+
+		if ($attachment_id === $last_notified_attachment_id) {
+			return;
+		}
+
+		/**
+		 * Fires when a file upload becomes visible to a client.
+		 *
+		 * @param int $post_id       File post ID.
+		 * @param int $client_id     Client post ID.
+		 * @param int $attachment_id Attachment ID.
+		 */
+		do_action('cliapwo_file_uploaded', $post_id, $client_id, $attachment_id);
+		update_post_meta($post_id, self::LAST_NOTIFIED_ATTACHMENT_META_KEY, $attachment_id);
 	}
 }

@@ -319,7 +319,7 @@ class Settings
 	 */
 	public function render_notifications_section()
 	{
-		echo '<p>' . esc_html__('Enable or disable notification types before the email features ship in a later milestone.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Enable or disable the client emails sent for new updates and uploaded files.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**

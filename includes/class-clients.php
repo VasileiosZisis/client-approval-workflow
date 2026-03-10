@@ -455,6 +455,50 @@ class Clients
 	}
 
 	/**
+	 * Get unique email addresses for the users assigned to a client.
+	 *
+	 * @param int $client_id Client post ID.
+	 * @return array<int, string>
+	 */
+	public static function get_assigned_user_emails($client_id)
+	{
+		$user_ids = self::get_assigned_user_ids($client_id);
+
+		if (empty($user_ids)) {
+			return array();
+		}
+
+		$users = get_users(
+			array(
+				'include' => $user_ids,
+				'orderby' => 'include',
+			)
+		);
+
+		if (! is_array($users) || empty($users)) {
+			return array();
+		}
+
+		$emails = array();
+
+		foreach ($users as $user) {
+			if (! $user instanceof \WP_User) {
+				continue;
+			}
+
+			$email = sanitize_email($user->user_email);
+
+			if ('' === $email) {
+				continue;
+			}
+
+			$emails[] = $email;
+		}
+
+		return array_values(array_unique($emails));
+	}
+
+	/**
 	 * Filter user IDs down to existing users.
 	 *
 	 * @param array<int, int> $user_ids Candidate user IDs.

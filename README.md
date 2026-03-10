@@ -16,11 +16,11 @@ Implemented so far:
 - Milestone 2: client CPT, client-user assignment, access helpers
 - Milestone 3: portal shortcode, updates CPT, client updates timeline
 - Milestone 4: files CPT, staff uploads, protected client downloads
+- Milestone 5: requests/tasks module with client completion and staff reopen/override
+- Milestone 6: event log and email notifications for updates/files
 
 Planned next:
 
-- Requests/tasks
-- notifications and event log
 - UX polish and WP.org packaging
 - Pro extension points
 
@@ -51,7 +51,10 @@ Planned next:
 4. Assign one or more WordPress users to that client.
 5. Create updates in `SignoffFlow > Updates`.
 6. Upload downloadable files in `SignoffFlow > Files`.
-7. Visit the portal page as an assigned client user to view updates and files.
+7. Create client requests/tasks in `SignoffFlow > Requests`.
+8. Visit the portal page as an assigned client user to view updates, files, and requests.
+9. Let client users mark requests complete from the portal; staff can reopen or override statuses.
+10. Review `SignoffFlow > Event Log` for update/file events and email attempt records.
 
 ## Repository Conventions
 
@@ -75,6 +78,19 @@ However, direct attachment URLs may still be accessible if someone knows the raw
 Planned mitigation:
 
 - move protected files to a non-public or server-protected storage path in a later milestone
+
+## Notifications and Local Testing
+
+Update and file notifications use `wp_mail()` and are controlled by the `Update emails` and `File emails` settings in `SignoffFlow > Settings`.
+
+Emails are sent to all WordPress users assigned to the related client record.
+
+For local environments where outbound mail is not configured:
+
+- `SignoffFlow > Event Log` records the update/file event and a separate `Email attempt` entry with the targeted recipients
+- the triggering staff user also gets a one-time admin notice after the save redirect showing the `wp_mail()` attempt result and recipients
+
+This makes it possible to verify notification flow locally even when no real message is delivered.
 
 ## Security Notes
 

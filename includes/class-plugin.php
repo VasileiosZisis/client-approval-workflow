@@ -65,6 +65,13 @@ class Plugin
 	private $requests;
 
 	/**
+	 * Event logging and notifications service.
+	 *
+	 * @var Events
+	 */
+	private $events;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct()
@@ -76,6 +83,7 @@ class Plugin
 		$this->portal   = new Portal();
 		$this->files    = new Files();
 		$this->requests = new Requests();
+		$this->events   = new Events();
 	}
 
 	/**
@@ -93,6 +101,7 @@ class Plugin
 		$this->portal->register();
 		$this->files->register();
 		$this->requests->register();
+		$this->events->register();
 	}
 
 	/**

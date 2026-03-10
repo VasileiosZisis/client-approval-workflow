@@ -46,6 +46,11 @@ class Updates
 	public const SAVE_NONCE_NAME = 'cliapwo_update_nonce';
 
 	/**
+	 * Client notification marker meta key.
+	 */
+	public const NOTIFIED_META_KEY = 'cliapwo_update_notified';
+
+	/**
 	 * Register update hooks.
 	 *
 	 * @return void
@@ -233,6 +238,8 @@ class Updates
 			delete_post_meta($post_id, self::CLIENT_META_KEY);
 			delete_post_meta($post_id, self::VISIBILITY_META_KEY);
 		}
+
+		$this->maybe_dispatch_created_event($post_id, $post, $client_id);
 	}
 
 	/**
@@ -326,5 +333,43 @@ class Updates
 		);
 
 		return new \WP_Query(wp_parse_args($args, $defaults));
+	}
+
+	/**
+	 * Fire a one-time event when an update becomes client-visible.
+	 *
+	 * @param int      $post_id   Update post ID.
+	 * @param \WP_Post $post      Update post object.
+	 * @param int      $client_id Linked client ID.
+	 * @return void
+	 */
+	private function maybe_dispatch_created_event($post_id, $post, $client_id)
+	{
+		if (! $post instanceof \WP_Post || 'publish' !== $post->post_status) {
+			return;
+		}
+
+		$client_id = absint($client_id);
+
+		if ($client_id <= 0) {
+			return;
+		}
+
+		if (self::VISIBILITY_CLIENT !== (string) get_post_meta($post_id, self::VISIBILITY_META_KEY, true)) {
+			return;
+		}
+
+		if ('1' === (string) get_post_meta($post_id, self::NOTIFIED_META_KEY, true)) {
+			return;
+		}
+
+		/**
+		 * Fires when a published update becomes visible to a client.
+		 *
+		 * @param int $post_id   Update post ID.
+		 * @param int $client_id Client post ID.
+		 */
+		do_action('cliapwo_update_created', $post_id, $client_id);
+		update_post_meta($post_id, self::NOTIFIED_META_KEY, '1');
 	}
 }
