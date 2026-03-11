@@ -96,6 +96,8 @@ class Portal
 			<?php if (is_string($primary_color) && '' !== $primary_color) : ?>
 				style="<?php echo esc_attr('border-top: 4px solid ' . $primary_color . '; padding-top: 1rem;'); ?>"
 			<?php endif; ?>>
+			<?php do_action('cliapwo_before_render_portal', $client->ID, $current_user_id); ?>
+
 			<header class="cliapwo-portal__header">
 				<?php if ('' !== $logo_url) : ?>
 					<p class="cliapwo-portal__brand">
@@ -304,6 +306,8 @@ class Portal
 					</p>
 				<?php endif; ?>
 			</section>
+
+			<?php do_action('cliapwo_after_render_portal', $client->ID, $current_user_id); ?>
 		</div>
 		<?php
 		wp_reset_postdata();

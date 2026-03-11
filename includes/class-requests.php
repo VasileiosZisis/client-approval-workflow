@@ -591,6 +591,7 @@ class Requests
 		 * @param int $client_id Client post ID.
 		 */
 		do_action('cliapwo_request_created', $post_id, $client_id);
+		do_action('cliapwo_after_request_created', $post_id, $client_id);
 		update_post_meta($post_id, self::NOTIFIED_META_KEY, '1');
 	}
 

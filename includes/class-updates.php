@@ -370,6 +370,7 @@ class Updates
 		 * @param int $client_id Client post ID.
 		 */
 		do_action('cliapwo_update_created', $post_id, $client_id);
+		do_action('cliapwo_after_update_created', $post_id, $client_id);
 		update_post_meta($post_id, self::NOTIFIED_META_KEY, '1');
 	}
 }

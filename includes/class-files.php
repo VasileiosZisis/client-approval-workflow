@@ -708,6 +708,7 @@ class Files
 		 * @param int $attachment_id Attachment ID.
 		 */
 		do_action('cliapwo_file_uploaded', $post_id, $client_id, $attachment_id);
+		do_action('cliapwo_after_file_uploaded', $post_id, $client_id, $attachment_id);
 		update_post_meta($post_id, self::LAST_NOTIFIED_ATTACHMENT_META_KEY, $attachment_id);
 	}
 }

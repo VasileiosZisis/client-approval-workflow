@@ -18,11 +18,12 @@ Implemented so far:
 - Milestone 4: files CPT, staff uploads, protected client downloads
 - Milestone 5: requests/tasks module with client completion and staff reopen/override
 - Milestone 6: event log and email notifications for updates/files
+- Milestone 7: security hardening, portal UX polish, i18n scaffolding, WP.org readme draft
+- Milestone 8: approvals extension hooks, Pro detection helper, and minimal placeholder UI
 
 Planned next:
 
-- UX polish and WP.org packaging
-- Pro extension points
+- QA, packaging, and release prep
 
 ## Requirements
 

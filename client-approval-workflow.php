@@ -33,6 +33,7 @@ require_once CLIAPWO_PLUGIN_DIR . 'includes/class-portal.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-files.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-requests.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-events.php';
+require_once CLIAPWO_PLUGIN_DIR . 'includes/class-approvals.php';
 
 register_activation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'activate'));
 register_deactivation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'deactivate'));
@@ -119,4 +120,31 @@ function cliapwo_get_file_download_url($file_post_id)
 function cliapwo_get_requests_query_for_client($client_id, array $args = array())
 {
 	return \ClientApprovalWorkflow\Requests::get_requests_query_for_client($client_id, $args);
+}
+
+/**
+ * Determine whether the SignoffFlow Pro add-on is active.
+ *
+ * @return bool
+ */
+function cliapwo_is_pro_active()
+{
+	$is_active = defined('CLIAPWO_PRO_VERSION') || class_exists('\ClientApprovalWorkflowPro\Plugin');
+
+	/**
+	 * Filter whether the SignoffFlow Pro add-on is active.
+	 *
+	 * @param bool $is_active Whether Pro is active.
+	 */
+	return (bool) apply_filters('cliapwo_is_pro_active', $is_active);
+}
+
+/**
+ * Get the approvals data contract for extension plugins.
+ *
+ * @return array<string, mixed>
+ */
+function cliapwo_get_approvals_schema()
+{
+	return \ClientApprovalWorkflow\Approvals::get_schema();
 }
