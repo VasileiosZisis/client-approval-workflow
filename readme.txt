@@ -1,4 +1,4 @@
-=== Client Approval Workflow & Client Portal for WordPress - SignoffFlow ===
+=== Client Approval Workflow & Client Portal - SignoffFlow ===
 Contributors: vzisis
 Tags: client approval workflow, client portal, approvals, agency client portal, file sharing
 Requires at least: 6.0
@@ -20,7 +20,7 @@ Core features in the current free plugin:
 * Protected file downloads through a permission-checked endpoint
 * Client requests/tasks with completion tracking
 * Event log for update, file, and email-attempt activity
-* Email notifications for new updates and uploaded files
+* Email notifications for new requests, updates, and uploaded files
 * Basic branding settings for logo and primary color
 
 This repository build keeps the admin experience WordPress-native and focuses on secure access control, capability checks, nonces, and minimal theme-compatible portal output.
@@ -47,7 +47,7 @@ Clients receive protected download links that go through an access-checked endpo
 
 = Does the plugin send email notifications? =
 
-Yes. SignoffFlow can send update and file notifications with `wp_mail()` to all WordPress users assigned to the related client. Notification types can be toggled in `SignoffFlow > Settings`.
+Yes. SignoffFlow can send request, update, and file notifications with `wp_mail()` to all WordPress users assigned to the related client. Notification types can be toggled in `SignoffFlow > Settings`.
 
 = Can I test notifications on a local site? =
 
@@ -67,7 +67,7 @@ Yes, but local mail delivery depends on your environment. SignoffFlow also recor
 = 0.1.0 =
 
 * Initial public milestone build of SignoffFlow
-* Added plugin settings, capabilities, client management, portal rendering, updates, files, requests, event log, and notifications
+* Added plugin settings, capabilities, client management, portal rendering, updates, files, requests, event log, and notifications for requests, updates, and files
 
 == Upgrade Notice ==
 

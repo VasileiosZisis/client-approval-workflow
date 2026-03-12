@@ -101,7 +101,6 @@ class Plugin
 	 */
 	public function run()
 	{
-		add_action('plugins_loaded', array($this, 'load_textdomain'));
 		$this->settings->register();
 		$this->admin->register();
 		$this->clients->register();
@@ -111,19 +110,5 @@ class Plugin
 		$this->requests->register();
 		$this->events->register();
 		$this->approvals->register();
-	}
-
-	/**
-	 * Load translations for the plugin.
-	 *
-	 * @return void
-	 */
-	public function load_textdomain()
-	{
-		load_plugin_textdomain(
-			'client-approval-workflow',
-			false,
-			dirname(plugin_basename(CLIAPWO_PLUGIN_FILE)) . '/languages'
-		);
 	}
 }

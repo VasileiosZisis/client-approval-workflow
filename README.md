@@ -82,7 +82,7 @@ Planned mitigation:
 
 ## Notifications and Local Testing
 
-Update and file notifications use `wp_mail()` and are controlled by the `Update emails` and `File emails` settings in `SignoffFlow > Settings`.
+Request, update, and file notifications use `wp_mail()` and are controlled by the `Request emails`, `Update emails`, and `File emails` settings in `SignoffFlow > Settings`.
 
 Emails are sent to all WordPress users assigned to the related client record.
 
