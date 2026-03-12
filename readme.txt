@@ -1,9 +1,9 @@
-=== Client Approval Workflow & Client Portal - SignoffFlow ===
+=== Client Approval Workflow & Client Portal for WordPress - SignoffFlow ===
 Contributors: vzisis
 Tags: client approval workflow, client portal, approvals, agency client portal, file sharing
 Requires at least: 6.0
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,12 +64,23 @@ Yes, but local mail delivery depends on your environment. SignoffFlow also recor
 
 == Changelog ==
 
+= 0.2.0 =
+
+* Prepared the first release-ready package for SignoffFlow
+* Added release packaging docs and uninstall handling
+* Added request, update, and file notifications with event-log visibility
+* Added Pro extension hooks, approvals schema, and Pro detection helper
+
 = 0.1.0 =
 
 * Initial public milestone build of SignoffFlow
 * Added plugin settings, capabilities, client management, portal rendering, updates, files, requests, event log, and notifications for requests, updates, and files
 
 == Upgrade Notice ==
+
+= 0.2.0 =
+
+Release-ready packaging update with final milestone features, uninstall handling, and documentation improvements.
 
 = 0.1.0 =
 

@@ -1,85 +1,76 @@
 # Handoff
 
-## Current repo state
+## Current state
 
-- Plugin name: `SignoffFlow`
-- Package slug: `client-approval-workflow`
-- Main plugin file: `client-approval-workflow.php`
+- Plugin: `SignoffFlow`
+- Package: `client-approval-workflow`
+- Main file: `client-approval-workflow.php`
 - Text domain: `client-approval-workflow`
 - Namespace: `ClientApprovalWorkflow\`
-- Code prefix: `cliapwo`
+- Prefix: `cliapwo`
+- Current release version: `0.2.0`
 
-## Completed milestones
+## Milestones completed
 
-- M1: bootstrap, settings, capabilities
-- M2: clients and assignment helpers
-- M3: portal shortcode and updates
-- M4: files with protected download endpoint
-- M5: requests/tasks with portal completion flow
-- M6: event log and email notifications
-- M7: security/UX/i18n/readme pass
-- M8: Pro extension hooks, Pro detection helper, approvals schema/placeholder
+- M1 through M9 are implemented
+- Recent fixes include:
+  - release packaging/version bump to `0.2.0`
+  - `CHANGELOG.md` and `RELEASE.md`
+  - explicit `uninstall.php`
+  - request email docs updates
+  - file upload sanitization tightened for Plugin Check
+  - approvals submenu hidden unless Pro is active
 
-## Recent important changes
+## Current worktree focus
 
-- Removed manual `load_plugin_textdomain()` from [includes/class-plugin.php](C:/Users/gonea/repos/client-approval-workflow/includes/class-plugin.php)
-- Tightened file upload sanitization in [includes/class-files.php](C:/Users/gonea/repos/client-approval-workflow/includes/class-files.php)
-- Added request-created emails through the existing event/notification system
-- Hid the Approvals submenu unless `cliapwo_is_pro_active()` returns `true`
+- Release/readme/docs are updated for `0.2.0`
+- Remaining work is now centered on known issues and post-release hardening
+- `AGENTS.md` is user-modified in the worktree and should be treated as off-limits unless explicitly requested
 
-## Current audit outcome
+## Completed in M9
 
-Audit was done using:
+1. Prepared a release-ready build
+2. Bumped plugin version to `0.2.0`
+3. Added/updated changelog and release docs
+4. Ran available syntax/lint validation
+5. Documented final checklist and known issues
 
-- primary policy: [AGENTS.md](C:/Users/gonea/repos/client-approval-workflow/AGENTS.md)
-- supplementary guidance: local skill `C:\Users\gonea\.agents\skills\wp-plugin-development\SKILL.md`
+## Validation completed
 
-### Real fixes still pending
+- PHP lint across plugin PHP files passed
+- `composer lint` passed
+- Version/readme consistency was checked
+- Live browser/wp-admin smoke testing was not run from this environment
 
-1. Add explicit uninstall handling
+## Known issues to tackle next
 
-- Reason:
-  - skill guidance says preferred approaches are `uninstall.php` or `register_uninstall_hook()`
-  - repo currently has activation/deactivation hooks but no uninstall entrypoint
-- Smallest valid fix:
-  - add `uninstall.php`
-  - guard with `if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) { exit; }`
-  - do not delete data by default; document that uninstall is intentionally non-destructive
+1. Protected files still rely on Media Library storage
+   - Risk: a raw attachment URL may still be reachable if someone knows it
+   - Recommended next step: move protected file storage out of the public uploads path or add server-level protection for a dedicated subdirectory
+   - Likely files: `includes/class-files.php`, `README.md`, `readme.txt`
 
-2. Update readmes for request email support
+2. Email delivery depends on the site mail transport
+   - Risk: `wp_mail()` may succeed logically but not deliver in local/staging environments
+   - Recommended next step: add a small diagnostics section on the settings page or a documented test flow for SMTP/Postmark/Mailpit, without adding tracking or external calls automatically
+   - Likely files: `includes/class-settings.php`, `README.md`, `readme.txt`
 
-- Reason:
-  - code now supports request-created emails and a `Request emails` setting
-  - docs still describe notifications as update/file only
-- Files to update:
-  - [readme.txt](C:/Users/gonea/repos/client-approval-workflow/readme.txt)
-  - [README.md](C:/Users/gonea/repos/client-approval-workflow/README.md)
-- Smallest valid fix:
-  - update feature lists, FAQ/notification sections, and any wording that says only updates/files
+3. No generated POT file is shipped yet
+   - Risk: translation scaffolding exists, but translators do not have an extracted source catalog yet
+   - Recommended next step: generate `languages/client-approval-workflow.pot` and document the command in the repo
+   - Likely files: `languages/client-approval-workflow.pot` (new), `README.md`, possibly `composer.json`
 
-## Useful file references for the next pass
+4. End-to-end live WordPress smoke tests are still manual and not recorded
+   - Risk: packaging is validated, but release confidence still depends on local manual verification
+   - Recommended next step: run the smoke test list from `RELEASE.md` on a clean WP install and capture results in a short QA note
+   - Likely files: `RELEASE.md`, `README.md`, optional `QA.md` (new)
 
-- [client-approval-workflow.php](C:/Users/gonea/repos/client-approval-workflow/client-approval-workflow.php)
-- [includes/class-plugin.php](C:/Users/gonea/repos/client-approval-workflow/includes/class-plugin.php)
-- [includes/class-settings.php](C:/Users/gonea/repos/client-approval-workflow/includes/class-settings.php)
-- [includes/class-events.php](C:/Users/gonea/repos/client-approval-workflow/includes/class-events.php)
-- [includes/class-requests.php](C:/Users/gonea/repos/client-approval-workflow/includes/class-requests.php)
-- [includes/class-files.php](C:/Users/gonea/repos/client-approval-workflow/includes/class-files.php)
-- [readme.txt](C:/Users/gonea/repos/client-approval-workflow/readme.txt)
-- [README.md](C:/Users/gonea/repos/client-approval-workflow/README.md)
+## Recommended order of work
 
-## Validation status before handoff
+1. Harden file storage/downloads first. This is the highest-impact security limitation.
+2. Generate and ship the POT file. This is low risk and finishes the i18n packaging work.
+3. Improve mail diagnostics/documentation for local and staging verification.
+4. Run and document live smoke tests on a clean WordPress install.
 
-Most recent relevant validations completed successfully:
+## Recommended next action
 
-- `php -l includes/class-files.php`
-- `php -l includes/class-plugin.php`
-- `vendor\bin\phpcs --standard=phpcs.xml.dist includes/class-files.php`
-- `vendor\bin\phpcs --standard=phpcs.xml.dist includes/class-plugin.php`
-
-## Next recommended action
-
-Implement the two pending fixes in this order:
-
-1. add `uninstall.php`
-2. update `readme.txt` and `README.md` for request email support
+Proceed with the protected file storage hardening pass first, then finish i18n packaging with a generated POT file, then run documented live smoke tests.

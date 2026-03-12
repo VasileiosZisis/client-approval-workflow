@@ -10,6 +10,8 @@ Current package name: `client-approval-workflow`
 
 Current public/admin brand: `SignoffFlow`
 
+Current release version: `0.2.0`
+
 Implemented so far:
 
 - Milestone 1: plugin bootstrap, settings page, capabilities
@@ -20,10 +22,11 @@ Implemented so far:
 - Milestone 6: event log and email notifications for updates/files
 - Milestone 7: security hardening, portal UX polish, i18n scaffolding, WP.org readme draft
 - Milestone 8: approvals extension hooks, Pro detection helper, and minimal placeholder UI
+- Milestone 9: release packaging docs, changelog, uninstall handler, and validation pass
 
 Planned next:
 
-- QA, packaging, and release prep
+- release candidate validation on a live WordPress install
 
 ## Requirements
 
@@ -43,6 +46,11 @@ Planned next:
 
 - `composer lint`
 - `composer lint:fix`
+
+## Release Docs
+
+- Release checklist: `RELEASE.md`
+- Changelog: `CHANGELOG.md`
 
 ## Current Plugin Flow
 
