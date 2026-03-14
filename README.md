@@ -90,10 +90,23 @@ Request, update, and file notifications use `wp_mail()` and are controlled by th
 
 Emails are sent to all WordPress users assigned to the related client record.
 
+The Notifications section in `SignoffFlow > Settings` now includes an `Email delivery help` block that explains the mail-transport dependency and a simple manual test flow.
+
 For local environments where outbound mail is not configured:
 
 - `SignoffFlow > Event Log` records the update/file event and a separate `Email attempt` entry with the targeted recipients
 - the triggering staff user also gets a one-time admin notice after the save redirect showing the `wp_mail()` attempt result and recipients
+
+Recommended local testing tools:
+
+- Mailpit
+- MailHog
+
+Recommended delivery testing options:
+
+- SMTP
+- Postmark
+- Mailtrap
 
 This makes it possible to verify notification flow locally even when no real message is delivered.
 

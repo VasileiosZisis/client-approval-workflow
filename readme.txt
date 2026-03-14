@@ -55,6 +55,8 @@ Yes. SignoffFlow can send request, update, and file notifications with `wp_mail(
 
 Yes, but local mail delivery depends on your environment. SignoffFlow also records `Email attempt` entries in the Event Log and shows a one-time admin debug notice after a notification attempt so you can verify the flow locally.
 
+The Notifications settings screen also includes an Email delivery help section with a simple test flow and recommendations for Mailpit, MailHog, SMTP, Postmark, and Mailtrap.
+
 == Screenshots ==
 
 1. Client portal dashboard with Waiting on you summary

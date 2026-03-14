@@ -52,7 +52,9 @@
 
 2. Email delivery depends on the site mail transport
    - Risk: `wp_mail()` may succeed logically but not deliver in local/staging environments
-   - Recommended next step: add a small diagnostics section on the settings page or a documented test flow for SMTP/Postmark/Mailpit, without adding tracking or external calls automatically
+   - Current state: SignoffFlow now includes an admin `Email delivery help` block in the Notifications settings section, plus repo/readme guidance for local and delivery testing
+   - Remaining limitation: this is guidance only and still depends on the site's mail transport or SMTP plugin
+   - Recommended next step: optional future polish could add a docs link or example SMTP plugin setup notes without adding background checks or external calls
    - Likely files: `includes/class-settings.php`, `README.md`, `readme.txt`
 
 3. No generated POT file is shipped yet
@@ -69,9 +71,9 @@
 
 1. Document the remaining Nginx/server rule limitation for protected files.
 2. Generate and ship the POT file. This is low risk and finishes the i18n packaging work.
-3. Improve mail diagnostics/documentation for local and staging verification.
-4. Run and document live smoke tests on a clean WordPress install.
+3. Run and document live smoke tests on a clean WordPress install.
+4. Optional future polish for email guidance if needed.
 
 ## Recommended next action
 
-Proceed with the POT generation pass next, then improve mail diagnostics/docs, then run documented live smoke tests.
+Proceed with the POT generation pass next, then run documented live smoke tests.

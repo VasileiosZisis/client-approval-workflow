@@ -144,6 +144,14 @@ class Settings
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
 		);
+
+		add_settings_field(
+			'cliapwo_notification_diagnostics',
+			__('Email delivery help', 'client-approval-workflow'),
+			array($this, 'render_notification_diagnostics_field'),
+			self::PAGE_SLUG,
+			'cliapwo_notifications_section'
+		);
 	}
 
 	/**
@@ -329,7 +337,7 @@ class Settings
 	 */
 	public function render_notifications_section()
 	{
-		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files. SignoffFlow relies on your WordPress/site mail transport to deliver them.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -469,6 +477,36 @@ class Settings
 				<?php checked(! empty($settings['notify_requests'])); ?> />
 			<?php esc_html_e('Send email notifications when a new request is created.', 'client-approval-workflow'); ?>
 		</label>
+	<?php
+	}
+
+	/**
+	 * Render the notification diagnostics/help field.
+	 *
+	 * @return void
+	 */
+	public function render_notification_diagnostics_field()
+	{
+	?>
+		<p class="description">
+			<?php esc_html_e('SignoffFlow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site.', 'client-approval-workflow'); ?>
+		</p>
+		<p class="description">
+			<?php esc_html_e('Local and staging environments often do not send real email unless SMTP or a mail testing tool is configured.', 'client-approval-workflow'); ?>
+		</p>
+		<p class="description">
+			<?php esc_html_e('Recommended local testing tools: Mailpit or MailHog. Recommended delivery testing options: SMTP, Postmark, or Mailtrap.', 'client-approval-workflow'); ?>
+		</p>
+		<p class="description">
+			<strong><?php esc_html_e('Simple test flow', 'client-approval-workflow'); ?></strong>
+		</p>
+		<ol class="description" style="margin-top:0;">
+			<li><?php esc_html_e('Make sure a portal page is configured and at least one client has assigned WordPress users with valid email addresses.', 'client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Confirm your site mail transport works first by sending a WordPress test email through your SMTP plugin or mail testing tool.', 'client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Publish a new request, update, or file for that client.', 'client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Check SignoffFlow > Event Log for the event entry and the related Email attempt entry.', 'client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('If delivery is configured, confirm the assigned client users received the email.', 'client-approval-workflow'); ?></li>
+		</ol>
 <?php
 	}
 }
