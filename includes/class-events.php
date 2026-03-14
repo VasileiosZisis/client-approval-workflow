@@ -50,6 +50,8 @@ class Events
 		add_action('init', array($this, 'register_post_type'));
 		add_filter('manage_' . self::POST_TYPE . '_posts_columns', array($this, 'filter_event_columns'));
 		add_action('manage_' . self::POST_TYPE . '_posts_custom_column', array($this, 'render_event_column'), 10, 2);
+		add_filter('post_row_actions', array($this, 'filter_event_row_actions'), 10, 2);
+		add_filter('bulk_actions-edit-' . self::POST_TYPE, array($this, 'filter_event_bulk_actions'));
 		add_action('cliapwo_request_created', array($this, 'handle_request_created'), 10, 2);
 		add_action('cliapwo_update_created', array($this, 'handle_update_created'), 10, 2);
 		add_action('cliapwo_file_uploaded', array($this, 'handle_file_uploaded'), 10, 3);
@@ -84,19 +86,19 @@ class Events
 				'supports'            => array('title', 'editor'),
 				'capability_type'     => 'post',
 				'capabilities'        => array(
-					'edit_post'              => 'cliapwo_manage_portal',
+					'edit_post'              => 'do_not_allow',
 					'read_post'              => 'cliapwo_manage_portal',
-					'delete_post'            => 'cliapwo_manage_portal',
+					'delete_post'            => 'do_not_allow',
 					'edit_posts'             => 'cliapwo_manage_portal',
-					'edit_others_posts'      => 'cliapwo_manage_portal',
+					'edit_others_posts'      => 'do_not_allow',
 					'publish_posts'          => 'do_not_allow',
 					'read_private_posts'     => 'cliapwo_manage_portal',
-					'delete_posts'           => 'cliapwo_manage_portal',
-					'delete_private_posts'   => 'cliapwo_manage_portal',
-					'delete_published_posts' => 'cliapwo_manage_portal',
-					'delete_others_posts'    => 'cliapwo_manage_portal',
-					'edit_private_posts'     => 'cliapwo_manage_portal',
-					'edit_published_posts'   => 'cliapwo_manage_portal',
+					'delete_posts'           => 'do_not_allow',
+					'delete_private_posts'   => 'do_not_allow',
+					'delete_published_posts' => 'do_not_allow',
+					'delete_others_posts'    => 'do_not_allow',
+					'edit_private_posts'     => 'do_not_allow',
+					'edit_published_posts'   => 'do_not_allow',
 					'create_posts'           => 'do_not_allow',
 				),
 				'map_meta_cap'        => false,
@@ -407,6 +409,35 @@ class Events
 
 		$object = get_post(absint(get_post_meta($post_id, self::OBJECT_ID_META_KEY, true)));
 		echo $object instanceof \WP_Post ? esc_html($object->post_title) : esc_html__('Unknown', 'client-approval-workflow');
+	}
+
+	/**
+	 * Remove row actions from the Event Log list table.
+	 *
+	 * @param array<string, string> $actions Existing row actions.
+	 * @param \WP_Post              $post    Current post object.
+	 * @return array<string, string>
+	 */
+	public function filter_event_row_actions($actions, $post)
+	{
+		if (! $post instanceof \WP_Post || self::POST_TYPE !== $post->post_type) {
+			return $actions;
+		}
+
+		return array();
+	}
+
+	/**
+	 * Remove bulk actions from the Event Log list table.
+	 *
+	 * @param array<string, string> $actions Existing bulk actions.
+	 * @return array<string, string>
+	 */
+	public function filter_event_bulk_actions($actions)
+	{
+		unset($actions);
+
+		return array();
 	}
 
 	/**
