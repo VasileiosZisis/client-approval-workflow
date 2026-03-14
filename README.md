@@ -72,9 +72,9 @@ Planned next:
 - Code-facing identifiers use the `cliapwo` prefix.
 - PHP namespace uses `ClientApprovalWorkflow\`.
 
-## Known Limitation
+## Protected File Storage
 
-Files are currently stored as WordPress Media Library attachments and exposed to clients through a protected download endpoint.
+Files are stored in a dedicated `cliapwo-private` uploads subdirectory and are served only through the protected SignoffFlow download handler.
 
 The protected endpoint enforces:
 
@@ -82,11 +82,7 @@ The protected endpoint enforces:
 - nonce verification
 - client assignment checks
 
-However, direct attachment URLs may still be accessible if someone knows the raw media URL.
-
-Planned mitigation:
-
-- move protected files to a non-public or server-protected storage path in a later milestone
+Apache hardening files are created automatically for that storage directory. On Nginx-based hosts, equivalent server rules may still need to be added manually because Nginx does not honor `.htaccess`.
 
 ## Notifications and Local Testing
 

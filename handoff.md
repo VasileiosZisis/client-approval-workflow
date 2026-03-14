@@ -44,10 +44,11 @@
 
 ## Known issues to tackle next
 
-1. Protected files still rely on Media Library storage
-   - Risk: a raw attachment URL may still be reachable if someone knows it
-   - Recommended next step: move protected file storage out of the public uploads path or add server-level protection for a dedicated subdirectory
-   - Likely files: `includes/class-files.php`, `README.md`, `readme.txt`
+1. Protected file storage is now plugin-managed, but Nginx may still need manual deny rules
+   - Current state: files are stored in `wp-content/uploads/cliapwo-private/` and served only through the protected download handler
+   - Remaining limitation: Apache hardening files are written automatically, but Nginx does not honor `.htaccess`
+   - Recommended next step: document an example Nginx deny rule and optionally add an admin diagnostics note
+   - Likely files: `README.md`, `readme.txt`, `includes/class-files.php`
 
 2. Email delivery depends on the site mail transport
    - Risk: `wp_mail()` may succeed logically but not deliver in local/staging environments
@@ -66,11 +67,11 @@
 
 ## Recommended order of work
 
-1. Harden file storage/downloads first. This is the highest-impact security limitation.
+1. Document the remaining Nginx/server rule limitation for protected files.
 2. Generate and ship the POT file. This is low risk and finishes the i18n packaging work.
 3. Improve mail diagnostics/documentation for local and staging verification.
 4. Run and document live smoke tests on a clean WordPress install.
 
 ## Recommended next action
 
-Proceed with the protected file storage hardening pass first, then finish i18n packaging with a generated POT file, then run documented live smoke tests.
+Proceed with the POT generation pass next, then improve mail diagnostics/docs, then run documented live smoke tests.

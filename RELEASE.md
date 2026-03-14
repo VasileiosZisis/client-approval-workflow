@@ -10,7 +10,7 @@
 
 - Run `composer lint`
 - Run PHP lint across all plugin PHP files
-- Confirm `uninstall.php` exists and is non-destructive by default
+- Confirm `uninstall.php` exists and is non-destructive by default unless the opt-in cleanup setting is enabled
 - Confirm `readme.txt` title, stable tag, and changelog match the plugin version
 
 ## Manual smoke test
@@ -23,11 +23,12 @@
 6. Verify the assigned user can view the portal and only their own portal.
 7. Verify request completion works from the portal.
 8. Verify file download access control works.
-9. Verify Event Log entries are created.
-10. If mail transport is configured, verify request, update, and file notifications.
+9. Verify uploaded files land under `wp-content/uploads/cliapwo-private/`.
+10. Verify Event Log entries are created.
+11. If mail transport is configured, verify request, update, and file notifications.
 
 ## Known issues
 
-- Files are still stored as normal Media Library attachments, so direct raw attachment URLs may still be reachable if someone knows them.
-- `wp_mail()` behavior still depends on the site’s mail transport; local environments may only show Event Log and admin debug notices.
+- Protected files now live in `wp-content/uploads/cliapwo-private/`, but Nginx hosts may still require a matching deny rule because Nginx does not honor `.htaccess`.
+- `wp_mail()` behavior still depends on the site's mail transport; local environments may only show Event Log and admin debug notices.
 - This release pass does not include a generated POT file yet.

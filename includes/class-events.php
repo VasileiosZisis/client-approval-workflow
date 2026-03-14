@@ -273,18 +273,18 @@ class Events
 	/**
 	 * Log and notify for uploaded client files.
 	 *
-	 * @param int $file_post_id   File post ID.
-	 * @param int $client_id      Client post ID.
-	 * @param int $attachment_id  Attachment ID.
+	 * @param int    $file_post_id      File post ID.
+	 * @param int    $client_id         Client post ID.
+	 * @param string $stored_file_path  Stored relative path.
 	 * @return void
 	 */
-	public function handle_file_uploaded($file_post_id, $client_id, $attachment_id)
+	public function handle_file_uploaded($file_post_id, $client_id, $stored_file_path)
 	{
-		$file_post_id  = absint($file_post_id);
-		$client_id     = absint($client_id);
-		$attachment_id = absint($attachment_id);
-		$file_post     = get_post($file_post_id);
-		$client        = get_post($client_id);
+		$file_post_id     = absint($file_post_id);
+		$client_id        = absint($client_id);
+		$stored_file_path = ltrim(wp_normalize_path((string) $stored_file_path), '/');
+		$file_post        = get_post($file_post_id);
+		$client           = get_post($client_id);
 
 		if (! $file_post instanceof \WP_Post || Files::POST_TYPE !== $file_post->post_type) {
 			return;
@@ -296,9 +296,8 @@ class Events
 
 		$file_name = (string) get_post_meta($file_post_id, Files::ORIGINAL_FILENAME_META_KEY, true);
 
-		if ('' === $file_name && $attachment_id > 0) {
-			$file_path = get_attached_file($attachment_id);
-			$file_name = is_string($file_path) && '' !== $file_path ? basename($file_path) : $file_post->post_title;
+		if ('' === $file_name && '' !== $stored_file_path) {
+			$file_name = basename($stored_file_path);
 		}
 
 		if ('' === $file_name) {

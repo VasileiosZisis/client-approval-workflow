@@ -26,9 +26,9 @@ class Files
 	public const CLIENT_META_KEY = 'cliapwo_client_id';
 
 	/**
-	 * Attachment ID meta key.
+	 * Stored relative path meta key.
 	 */
-	public const ATTACHMENT_META_KEY = 'cliapwo_attachment_id';
+	public const STORED_RELATIVE_PATH_META_KEY = 'cliapwo_stored_relative_path';
 
 	/**
 	 * Original filename meta key.
@@ -44,6 +44,16 @@ class Files
 	 * Mime type meta key.
 	 */
 	public const MIME_TYPE_META_KEY = 'cliapwo_mime_type';
+
+	/**
+	 * Uploader ID meta key.
+	 */
+	public const UPLOADER_ID_META_KEY = 'cliapwo_uploaded_by';
+
+	/**
+	 * Upload timestamp meta key.
+	 */
+	public const UPLOADED_AT_META_KEY = 'cliapwo_uploaded_at';
 
 	/**
 	 * Save nonce action.
@@ -71,9 +81,14 @@ class Files
 	public const UPLOAD_FIELD_NAME = 'cliapwo_file_upload';
 
 	/**
-	 * Last notified attachment ID meta key.
+	 * Last notified relative path meta key.
 	 */
-	public const LAST_NOTIFIED_ATTACHMENT_META_KEY = 'cliapwo_last_notified_attachment_id';
+	public const LAST_NOTIFIED_FILE_META_KEY = 'cliapwo_last_notified_file_path';
+
+	/**
+	 * Protected storage subdirectory name.
+	 */
+	public const STORAGE_DIRECTORY_NAME = 'cliapwo-private';
 
 	/**
 	 * Register module hooks.
@@ -86,6 +101,7 @@ class Files
 		add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
 		add_action('post_edit_form_tag', array($this, 'add_upload_form_enctype'));
 		add_action('save_post_' . self::POST_TYPE, array($this, 'save_file_meta'), 10, 2);
+		add_action('before_delete_post', array($this, 'delete_file_assets'));
 		add_action('admin_notices', array($this, 'render_admin_notices'));
 		add_filter('manage_' . self::POST_TYPE . '_posts_columns', array($this, 'filter_file_columns'));
 		add_action('manage_' . self::POST_TYPE . '_posts_custom_column', array($this, 'render_file_column'), 10, 2);
@@ -191,10 +207,12 @@ class Files
 
 		wp_nonce_field(self::SAVE_NONCE_ACTION, self::SAVE_NONCE_NAME);
 
-		$client_id     = self::get_client_id_for_file($post->ID);
-		$attachment_id = self::get_attachment_id_for_file($post->ID);
-		$attachment    = $attachment_id > 0 ? get_post($attachment_id) : null;
-		$clients       = get_posts(
+		$client_id          = self::get_client_id_for_file($post->ID);
+		$stored_relative    = self::get_stored_relative_path_for_file($post->ID);
+		$stored_file_path   = self::get_stored_file_path($post->ID);
+		$has_stored_file    = '' !== $stored_relative && '' !== $stored_file_path && file_exists($stored_file_path);
+		$original_file_name = (string) get_post_meta($post->ID, self::ORIGINAL_FILENAME_META_KEY, true);
+		$clients            = get_posts(
 			array(
 				'post_type'              => Clients::POST_TYPE,
 				'post_status'            => 'publish',
@@ -234,22 +252,22 @@ class Files
 				name="<?php echo esc_attr(self::UPLOAD_FIELD_NAME); ?>" />
 		</p>
 
-		<?php if ($attachment instanceof \WP_Post) : ?>
-			<p class="description">
-				<?php
-				printf(
-					/* translators: %s: file name */
-					esc_html__('Current file: %s', 'client-approval-workflow'),
-					esc_html((string) get_post_meta($post->ID, self::ORIGINAL_FILENAME_META_KEY, true))
-				);
-				?>
+		<?php if ($has_stored_file) : ?>
+			<p>
+				<strong><?php esc_html_e('Current file', 'client-approval-workflow'); ?>:</strong>
+				<?php echo esc_html('' !== $original_file_name ? $original_file_name : basename($stored_file_path)); ?>
 			</p>
+		<?php elseif ('' !== $stored_relative) : ?>
+			<p class="description"><?php esc_html_e('A protected file is referenced for this record, but it is missing from storage.', 'client-approval-workflow'); ?></p>
 		<?php else : ?>
 			<p class="description"><?php esc_html_e('No file uploaded yet.', 'client-approval-workflow'); ?></p>
 		<?php endif; ?>
 
 		<p class="description">
-			<?php esc_html_e('Allowed file types follow the site upload settings. Uploading a new file replaces the linked download for this record.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Allowed file types follow your WordPress upload settings. Uploading a new file replaces the current file for this record.', 'client-approval-workflow'); ?>
+		</p>
+		<p class="description">
+			<?php esc_html_e('Client downloads always go through SignoffFlow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory.', 'client-approval-workflow'); ?>
 		</p>
 		<?php
 	}
@@ -309,96 +327,50 @@ class Files
 			delete_post_meta($post_id, self::CLIENT_META_KEY);
 		}
 
-		$attachment_id = self::get_attachment_id_for_file($post_id);
-		$file_data     = array(
-			'name'     => '',
-			'type'     => '',
-			'tmp_name' => '',
-			'error'    => UPLOAD_ERR_NO_FILE,
-			'size'     => 0,
-		);
-
-		if (isset($_FILES[self::UPLOAD_FIELD_NAME]) && is_array($_FILES[self::UPLOAD_FIELD_NAME])) {
-			if (isset($_FILES[self::UPLOAD_FIELD_NAME]['name'])) {
-				$file_data['name'] = sanitize_file_name(wp_unslash((string) $_FILES[self::UPLOAD_FIELD_NAME]['name']));
-			}
-
-			if (isset($_FILES[self::UPLOAD_FIELD_NAME]['type'])) {
-				$file_data['type'] = sanitize_mime_type(wp_unslash((string) $_FILES[self::UPLOAD_FIELD_NAME]['type']));
-			}
-
-			if (isset($_FILES[self::UPLOAD_FIELD_NAME]['tmp_name'])) {
-				$file_data['tmp_name'] = sanitize_text_field(wp_unslash((string) $_FILES[self::UPLOAD_FIELD_NAME]['tmp_name']));
-			}
-
-			if (isset($_FILES[self::UPLOAD_FIELD_NAME]['error'])) {
-				$file_data['error'] = absint(wp_unslash($_FILES[self::UPLOAD_FIELD_NAME]['error']));
-			}
-
-			if (isset($_FILES[self::UPLOAD_FIELD_NAME]['size'])) {
-				$file_data['size'] = absint(wp_unslash($_FILES[self::UPLOAD_FIELD_NAME]['size']));
-			}
-		}
+		$file_data = $this->get_uploaded_file_data();
 
 		if (UPLOAD_ERR_NO_FILE !== $file_data['error']) {
-			if (UPLOAD_ERR_OK !== $file_data['error']) {
+			$stored_file = $this->store_uploaded_file($file_data);
+
+			if (is_wp_error($stored_file)) {
 				set_transient(
 					'cliapwo_file_upload_error_' . $post_id,
-					__('The file upload failed. Please try again.', 'client-approval-workflow'),
+					$stored_file->get_error_message(),
 					MINUTE_IN_SECONDS
 				);
 				return;
 			}
 
-			if ('' === $file_data['name'] || '' === $file_data['tmp_name']) {
-				set_transient(
-					'cliapwo_file_upload_error_' . $post_id,
-					__('The uploaded file data is incomplete.', 'client-approval-workflow'),
-					MINUTE_IN_SECONDS
-				);
-				return;
-			}
+			$this->delete_current_stored_file($post_id);
+			$this->delete_legacy_attachment($post_id);
 
-			$original_name = $file_data['name'];
-			$file_check    = wp_check_filetype_and_ext($file_data['tmp_name'], $original_name);
-			$allowed_mimes = get_allowed_mime_types();
-			$extension     = is_array($file_check) && isset($file_check['ext']) ? (string) $file_check['ext'] : '';
-			$mime_type     = is_array($file_check) && isset($file_check['type']) ? sanitize_mime_type((string) $file_check['type']) : '';
-
-			if ('' === $extension || '' === $mime_type || ! in_array($mime_type, $allowed_mimes, true)) {
-				set_transient(
-					'cliapwo_file_upload_error_' . $post_id,
-					__('That file type is not allowed.', 'client-approval-workflow'),
-					MINUTE_IN_SECONDS
-				);
-				return;
-			}
-
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			require_once ABSPATH . 'wp-admin/includes/media.php';
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-
-			$attachment_id = media_handle_upload(self::UPLOAD_FIELD_NAME, $post_id);
-
-			if (is_wp_error($attachment_id)) {
-				set_transient(
-					'cliapwo_file_upload_error_' . $post_id,
-					$attachment_id->get_error_message(),
-					MINUTE_IN_SECONDS
-				);
-				return;
-			}
-
-			$file_path = get_attached_file($attachment_id);
-			$file_size = is_string($file_path) && '' !== $file_path && file_exists($file_path) ? filesize($file_path) : 0;
-
-			update_post_meta($post_id, self::ATTACHMENT_META_KEY, $attachment_id);
-			update_post_meta($post_id, self::ORIGINAL_FILENAME_META_KEY, $original_name);
-			update_post_meta($post_id, self::MIME_TYPE_META_KEY, $mime_type);
-			update_post_meta($post_id, self::FILE_SIZE_META_KEY, absint($file_size));
+			update_post_meta($post_id, self::STORED_RELATIVE_PATH_META_KEY, $stored_file['relative_path']);
+			update_post_meta($post_id, self::ORIGINAL_FILENAME_META_KEY, $stored_file['original_name']);
+			update_post_meta($post_id, self::MIME_TYPE_META_KEY, $stored_file['mime_type']);
+			update_post_meta($post_id, self::FILE_SIZE_META_KEY, $stored_file['file_size']);
+			update_post_meta($post_id, self::UPLOADER_ID_META_KEY, get_current_user_id());
+			update_post_meta($post_id, self::UPLOADED_AT_META_KEY, current_time('mysql', true));
 		}
 
-		$this->maybe_dispatch_upload_event($post_id, $post, $client_id, $attachment_id);
+		$this->maybe_dispatch_upload_event($post_id, $post, $client_id, self::get_stored_relative_path_for_file($post_id));
+	}
+
+	/**
+	 * Delete stored assets when a file post is permanently deleted.
+	 *
+	 * @param int $post_id Post ID being deleted.
+	 * @return void
+	 */
+	public function delete_file_assets($post_id)
+	{
+		$post = get_post($post_id);
+
+		if (! $post instanceof \WP_Post || self::POST_TYPE !== $post->post_type) {
+			return;
+		}
+
+		$this->delete_current_stored_file($post_id);
+		$this->delete_legacy_attachment($post_id);
 	}
 
 	/**
@@ -511,14 +483,13 @@ class Files
 			);
 		}
 
-		$attachment_id = self::get_attachment_id_for_file($file_post_id);
-		$file_path     = $attachment_id > 0 ? get_attached_file($attachment_id) : '';
-		$file_name     = (string) get_post_meta($file_post_id, self::ORIGINAL_FILENAME_META_KEY, true);
-		$mime_type     = (string) get_post_meta($file_post_id, self::MIME_TYPE_META_KEY, true);
+		$file_path = self::get_stored_file_path($file_post_id);
+		$file_name = (string) get_post_meta($file_post_id, self::ORIGINAL_FILENAME_META_KEY, true);
+		$mime_type = (string) get_post_meta($file_post_id, self::MIME_TYPE_META_KEY, true);
 
-		if (! is_string($file_path) || '' === $file_path || ! file_exists($file_path)) {
+		if ('' === $file_path || ! file_exists($file_path)) {
 			wp_die(
-				esc_html__('The requested file is missing from storage.', 'client-approval-workflow'),
+				esc_html__('The requested file is missing from protected storage.', 'client-approval-workflow'),
 				esc_html__('Not Found', 'client-approval-workflow'),
 				array(
 					'response' => 404,
@@ -534,12 +505,15 @@ class Files
 			$mime_type = 'application/octet-stream';
 		}
 
+		$file_size = filesize($file_path);
+
 		nocache_headers();
 		header('Content-Description: File Transfer');
 		header('Content-Type: ' . $mime_type);
 		header('Content-Disposition: attachment; filename="' . str_replace('"', '', $file_name) . '"');
-		header('Content-Length: ' . (string) filesize($file_path));
+		header('Content-Length: ' . (string) absint($file_size));
 		header('X-Robots-Tag: noindex, nofollow', true);
+		header('Content-Transfer-Encoding: binary');
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- direct streaming is required for protected downloads.
 		readfile($file_path);
 		exit;
@@ -616,14 +590,47 @@ class Files
 	}
 
 	/**
-	 * Get the linked attachment ID for a file post.
+	 * Get the stored relative path for a file post.
 	 *
 	 * @param int $file_post_id File post ID.
-	 * @return int
+	 * @return string
 	 */
-	public static function get_attachment_id_for_file($file_post_id)
+	public static function get_stored_relative_path_for_file($file_post_id)
 	{
-		return absint(get_post_meta($file_post_id, self::ATTACHMENT_META_KEY, true));
+		$relative_path = get_post_meta($file_post_id, self::STORED_RELATIVE_PATH_META_KEY, true);
+
+		if (! is_string($relative_path) || '' === $relative_path) {
+			return '';
+		}
+
+		$relative_path = ltrim(wp_normalize_path($relative_path), '/');
+
+		return self::is_valid_relative_path($relative_path) ? $relative_path : '';
+	}
+
+	/**
+	 * Get the absolute stored file path for a file post.
+	 *
+	 * @param int $file_post_id File post ID.
+	 * @return string
+	 */
+	public static function get_stored_file_path($file_post_id)
+	{
+		$relative_path = self::get_stored_relative_path_for_file($file_post_id);
+
+		if ('' === $relative_path) {
+			return '';
+		}
+
+		$storage_directory = self::get_storage_directory_path();
+
+		if (is_wp_error($storage_directory)) {
+			return '';
+		}
+
+		$file_name = basename($relative_path);
+
+		return wp_normalize_path(trailingslashit($storage_directory) . $file_name);
 	}
 
 	/**
@@ -688,7 +695,7 @@ class Files
 					'value' => $client_id,
 				),
 				array(
-					'key'     => self::ATTACHMENT_META_KEY,
+					'key'     => self::STORED_RELATIVE_PATH_META_KEY,
 					'compare' => 'EXISTS',
 				),
 			),
@@ -698,42 +705,313 @@ class Files
 	}
 
 	/**
-	 * Fire an upload event once per attachment when the file is client-visible.
+	 * Read and sanitize uploaded file data.
 	 *
-	 * @param int      $post_id       File post ID.
-	 * @param \WP_Post $post          File post object.
-	 * @param int      $client_id     Linked client ID.
-	 * @param int      $attachment_id Attachment ID.
+	 * @return array<string, int|string>
+	 */
+	private function get_uploaded_file_data()
+	{
+		$file_data = array(
+			'name'     => '',
+			'type'     => '',
+			'tmp_name' => '',
+			'error'    => UPLOAD_ERR_NO_FILE,
+			'size'     => 0,
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- save_file_meta() verifies capability and nonce before calling this helper.
+		if (! isset($_FILES[self::UPLOAD_FIELD_NAME]) || ! is_array($_FILES[self::UPLOAD_FIELD_NAME])) {
+			return $file_data;
+		}
+
+		if (isset($_FILES[self::UPLOAD_FIELD_NAME]['name'])) {
+			$file_data['name'] = sanitize_file_name(wp_unslash((string) $_FILES[self::UPLOAD_FIELD_NAME]['name']));
+		}
+
+		if (isset($_FILES[self::UPLOAD_FIELD_NAME]['type'])) {
+			$file_data['type'] = sanitize_mime_type(wp_unslash((string) $_FILES[self::UPLOAD_FIELD_NAME]['type']));
+		}
+
+		if (isset($_FILES[self::UPLOAD_FIELD_NAME]['tmp_name'])) {
+			// Keep the raw temp path intact. Unslashing can corrupt Windows paths.
+			$file_data['tmp_name'] = trim((string) $_FILES[self::UPLOAD_FIELD_NAME]['tmp_name']);
+		}
+
+		if (isset($_FILES[self::UPLOAD_FIELD_NAME]['error'])) {
+			$file_data['error'] = absint(wp_unslash($_FILES[self::UPLOAD_FIELD_NAME]['error']));
+		}
+
+		if (isset($_FILES[self::UPLOAD_FIELD_NAME]['size'])) {
+			$file_data['size'] = absint(wp_unslash($_FILES[self::UPLOAD_FIELD_NAME]['size']));
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		return $file_data;
+	}
+
+	/**
+	 * Store an uploaded file in protected plugin-managed storage.
+	 *
+	 * @param array<string, int|string> $file_data Sanitized uploaded file data.
+	 * @return array<string, int|string>|\WP_Error
+	 */
+	private function store_uploaded_file(array $file_data)
+	{
+		if (UPLOAD_ERR_OK !== (int) $file_data['error']) {
+			return new \WP_Error(
+				'cliapwo_upload_failed',
+				__('The file upload failed. Please try again.', 'client-approval-workflow')
+			);
+		}
+
+		$original_name = isset($file_data['name']) ? (string) $file_data['name'] : '';
+		$tmp_name      = isset($file_data['tmp_name']) ? (string) $file_data['tmp_name'] : '';
+
+		if ('' === $original_name || '' === $tmp_name) {
+			return new \WP_Error(
+				'cliapwo_upload_incomplete',
+				__('The uploaded file data is incomplete.', 'client-approval-workflow')
+			);
+		}
+
+		if (! is_uploaded_file($tmp_name)) {
+			return new \WP_Error(
+				'cliapwo_upload_invalid',
+				__('The uploaded file could not be validated.', 'client-approval-workflow')
+			);
+		}
+
+		$file_check    = wp_check_filetype_and_ext($tmp_name, $original_name);
+		$allowed_mimes = get_allowed_mime_types();
+		$extension     = is_array($file_check) && isset($file_check['ext']) ? sanitize_file_name((string) $file_check['ext']) : '';
+		$mime_type     = is_array($file_check) && isset($file_check['type']) ? sanitize_mime_type((string) $file_check['type']) : '';
+
+		if ('' === $extension || '' === $mime_type || ! in_array($mime_type, $allowed_mimes, true)) {
+			return new \WP_Error(
+				'cliapwo_upload_mime_not_allowed',
+				__('That file type is not allowed.', 'client-approval-workflow')
+			);
+		}
+
+		$storage_directory = self::ensure_storage_directory();
+
+		if (is_wp_error($storage_directory)) {
+			return $storage_directory;
+		}
+
+		$stored_file_name = sanitize_file_name(wp_generate_password(20, false, false) . '.' . $extension);
+		$stored_file_name = wp_unique_filename($storage_directory, $stored_file_name);
+		$destination_path = wp_normalize_path(trailingslashit($storage_directory) . $stored_file_name);
+
+		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.move_uploaded_file_move_uploaded_file -- protected storage requires a controlled move into plugin-managed uploads space.
+		$move_succeeded = move_uploaded_file($tmp_name, $destination_path);
+
+		if (! $move_succeeded || ! file_exists($destination_path)) {
+			return new \WP_Error(
+				'cliapwo_upload_move_failed',
+				__('The uploaded file could not be moved into protected storage.', 'client-approval-workflow')
+			);
+		}
+
+		$file_size     = filesize($destination_path);
+		$relative_path = self::build_relative_path($stored_file_name);
+
+		return array(
+			'relative_path' => $relative_path,
+			'original_name' => $original_name,
+			'mime_type'     => $mime_type,
+			'file_size'     => absint($file_size),
+		);
+	}
+
+	/**
+	 * Ensure the protected storage directory exists and has hardening files.
+	 *
+	 * @return string|\WP_Error
+	 */
+	private static function ensure_storage_directory()
+	{
+		$storage_directory = self::get_storage_directory_path();
+
+		if (is_wp_error($storage_directory)) {
+			return $storage_directory;
+		}
+
+		if (! is_dir($storage_directory) && ! wp_mkdir_p($storage_directory)) {
+			return new \WP_Error(
+				'cliapwo_storage_directory_creation_failed',
+				__('The protected storage directory could not be created.', 'client-approval-workflow')
+			);
+		}
+
+		$hardening_result = self::write_storage_hardening_files($storage_directory);
+
+		if (is_wp_error($hardening_result)) {
+			return $hardening_result;
+		}
+
+		return $storage_directory;
+	}
+
+	/**
+	 * Resolve the protected storage directory path.
+	 *
+	 * @return string|\WP_Error
+	 */
+	private static function get_storage_directory_path()
+	{
+		$uploads = wp_upload_dir();
+
+		if (! is_array($uploads) || ! empty($uploads['error']) || empty($uploads['basedir']) || ! is_string($uploads['basedir'])) {
+			return new \WP_Error(
+				'cliapwo_storage_directory_unavailable',
+				__('The uploads directory is not available for protected files.', 'client-approval-workflow')
+			);
+		}
+
+		return wp_normalize_path(trailingslashit($uploads['basedir']) . self::STORAGE_DIRECTORY_NAME);
+	}
+
+	/**
+	 * Write server hardening files for the protected storage directory.
+	 *
+	 * Note: Nginx does not honor .htaccess, so equivalent server rules still
+	 * need to be configured outside the plugin on Nginx-based hosts.
+	 *
+	 * @param string $storage_directory Absolute storage directory path.
+	 * @return true|\WP_Error
+	 */
+	private static function write_storage_hardening_files($storage_directory)
+	{
+		$hardening_files = array(
+			'index.php' => "<?php\n// Silence is golden.\n",
+			'.htaccess' => "Options -Indexes\n<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from all\n</IfModule>\n",
+		);
+
+		foreach ($hardening_files as $file_name => $file_contents) {
+			$file_path = wp_normalize_path(trailingslashit($storage_directory) . $file_name);
+
+			if (file_exists($file_path)) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- writing minimal hardening files is required for protected storage setup.
+			$bytes_written = file_put_contents($file_path, $file_contents, LOCK_EX);
+
+			if (false === $bytes_written) {
+				return new \WP_Error(
+					'cliapwo_storage_hardening_failed',
+					__('The protected storage directory could not be hardened.', 'client-approval-workflow')
+				);
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Build the stored relative path from a server-side file name.
+	 *
+	 * @param string $stored_file_name Stored file name.
+	 * @return string
+	 */
+	private static function build_relative_path($stored_file_name)
+	{
+		return self::STORAGE_DIRECTORY_NAME . '/' . basename(sanitize_file_name($stored_file_name));
+	}
+
+	/**
+	 * Validate a stored relative path.
+	 *
+	 * @param string $relative_path Relative file path.
+	 * @return bool
+	 */
+	private static function is_valid_relative_path($relative_path)
+	{
+		$expected_prefix = self::STORAGE_DIRECTORY_NAME . '/';
+
+		if (0 !== strpos($relative_path, $expected_prefix)) {
+			return false;
+		}
+
+		$file_name = basename($relative_path);
+
+		return '' !== $file_name && $expected_prefix . $file_name === $relative_path;
+	}
+
+	/**
+	 * Delete the current stored file for a file post, if present.
+	 *
+	 * @param int $post_id File post ID.
 	 * @return void
 	 */
-	private function maybe_dispatch_upload_event($post_id, $post, $client_id, $attachment_id)
+	private function delete_current_stored_file($post_id)
+	{
+		$file_path = self::get_stored_file_path($post_id);
+
+		if ('' !== $file_path && file_exists($file_path)) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- protected storage cleanup requires direct file deletion.
+			unlink($file_path);
+		}
+
+		delete_post_meta($post_id, self::STORED_RELATIVE_PATH_META_KEY);
+	}
+
+	/**
+	 * Delete any legacy attachment left over from pre-hardening builds.
+	 *
+	 * @param int $post_id File post ID.
+	 * @return void
+	 */
+	private function delete_legacy_attachment($post_id)
+	{
+		$attachment_id = absint(get_post_meta($post_id, 'cliapwo_attachment_id', true));
+
+		if ($attachment_id > 0) {
+			wp_delete_attachment($attachment_id, true);
+		}
+
+		delete_post_meta($post_id, 'cliapwo_attachment_id');
+		delete_post_meta($post_id, 'cliapwo_last_notified_attachment_id');
+	}
+
+	/**
+	 * Fire an upload event once per stored file when the file is client-visible.
+	 *
+	 * @param int      $post_id          File post ID.
+	 * @param \WP_Post $post             File post object.
+	 * @param int      $client_id        Linked client ID.
+	 * @param string   $stored_file_path Stored relative path.
+	 * @return void
+	 */
+	private function maybe_dispatch_upload_event($post_id, $post, $client_id, $stored_file_path)
 	{
 		if (! $post instanceof \WP_Post || 'publish' !== $post->post_status) {
 			return;
 		}
 
-		$client_id     = absint($client_id);
-		$attachment_id = absint($attachment_id);
+		$client_id        = absint($client_id);
+		$stored_file_path = ltrim(wp_normalize_path((string) $stored_file_path), '/');
 
-		if ($client_id <= 0 || $attachment_id <= 0) {
+		if ($client_id <= 0 || ! self::is_valid_relative_path($stored_file_path)) {
 			return;
 		}
 
-		$last_notified_attachment_id = absint(get_post_meta($post_id, self::LAST_NOTIFIED_ATTACHMENT_META_KEY, true));
+		$last_notified_file_path = (string) get_post_meta($post_id, self::LAST_NOTIFIED_FILE_META_KEY, true);
 
-		if ($attachment_id === $last_notified_attachment_id) {
+		if ($stored_file_path === $last_notified_file_path) {
 			return;
 		}
 
 		/**
 		 * Fires when a file upload becomes visible to a client.
 		 *
-		 * @param int $post_id       File post ID.
-		 * @param int $client_id     Client post ID.
-		 * @param int $attachment_id Attachment ID.
+		 * @param int    $post_id          File post ID.
+		 * @param int    $client_id        Client post ID.
+		 * @param string $stored_file_path Stored relative path.
 		 */
-		do_action('cliapwo_file_uploaded', $post_id, $client_id, $attachment_id);
-		do_action('cliapwo_after_file_uploaded', $post_id, $client_id, $attachment_id);
-		update_post_meta($post_id, self::LAST_NOTIFIED_ATTACHMENT_META_KEY, $attachment_id);
+		do_action('cliapwo_file_uploaded', $post_id, $client_id, $stored_file_path);
+		do_action('cliapwo_after_file_uploaded', $post_id, $client_id, $stored_file_path);
+		update_post_meta($post_id, self::LAST_NOTIFIED_FILE_META_KEY, $stored_file_path);
 	}
 }

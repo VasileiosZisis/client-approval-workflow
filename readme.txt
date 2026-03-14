@@ -43,7 +43,9 @@ Only WordPress users assigned to that client, plus staff users with the `cliapwo
 
 = How are files protected? =
 
-Clients receive protected download links that go through an access-checked endpoint. The plugin does not expose raw attachment URLs in the portal UI.
+Clients receive protected download links that go through an access-checked endpoint. Files are stored in a dedicated `cliapwo-private` uploads subdirectory instead of standard public Media Library URLs, and the portal UI does not expose raw file paths.
+
+Apache hardening files are created automatically for that directory. Nginx hosts may still need an equivalent deny rule added at the server level.
 
 = Does the plugin send email notifications? =
 

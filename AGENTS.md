@@ -83,6 +83,7 @@ These rules apply to ALL files in this repository. For WordPress task workflows,
 
 15. Trademarks and naming
 
+- Do NOT use the restricted term "WordPress" in the plugin name.
 - Respect trademarks/copyrights/project names.
 - Do not use protected product names as the leading term in slugs/names without permission/ownership.
 
