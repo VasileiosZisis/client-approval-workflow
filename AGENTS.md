@@ -1,6 +1,7 @@
 # AGENTS.md — Rules for building WordPress plugins (WordPress.org directory compatible)
 
 These rules apply to ALL files in this repository. For WordPress task workflows, consult local skills under .agents/skills. If a skill conflicts with this repo’s AGENTS.md, AGENTS.md wins.
+IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for any WordPress tasks.
 
 ## WordPress.org Plugin Directory compliance (must-follow)
 

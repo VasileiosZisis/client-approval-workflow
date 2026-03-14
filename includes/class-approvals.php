@@ -93,8 +93,8 @@ class Approvals
 
 		add_submenu_page(
 			Settings::PAGE_SLUG,
-			__('Approvals', 'client-approval-workflow'),
-			__('Approvals', 'client-approval-workflow'),
+			__('Approvals', 'signoffflow'),
+			__('Approvals', 'signoffflow'),
 			'cliapwo_manage_portal',
 			self::PAGE_SLUG,
 			array($this, 'render_page')
@@ -110,8 +110,8 @@ class Approvals
 	{
 		if (! current_user_can('cliapwo_manage_portal')) {
 			wp_die(
-				esc_html__('You are not allowed to manage approvals.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('You are not allowed to manage approvals.', 'signoffflow'),
+				esc_html__('Forbidden', 'signoffflow'),
 				array(
 					'response' => 403,
 				)
@@ -124,11 +124,11 @@ class Approvals
 		}
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e('Approvals', 'client-approval-workflow'); ?></h1>
-			<p><?php esc_html_e('Approvals are reserved for the SignoffFlow Pro add-on. The free plugin keeps the menu location, schema, and hooks ready so a Pro module can attach cleanly.', 'client-approval-workflow'); ?></p>
+			<h1><?php esc_html_e('Approvals', 'signoffflow'); ?></h1>
+			<p><?php esc_html_e('Approvals are reserved for the SignoffFlow Pro add-on. The free plugin keeps the menu location, schema, and hooks ready so a Pro module can attach cleanly.', 'signoffflow'); ?></p>
 
-			<h2><?php esc_html_e('Extension contract', 'client-approval-workflow'); ?></h2>
-			<p><?php esc_html_e('The reserved post type, statuses, object types, and meta keys below define the approvals data model used by the extension hooks.', 'client-approval-workflow'); ?></p>
+			<h2><?php esc_html_e('Extension contract', 'signoffflow'); ?></h2>
+			<p><?php esc_html_e('The reserved post type, statuses, object types, and meta keys below define the approvals data model used by the extension hooks.', 'signoffflow'); ?></p>
 
 			<pre><?php echo esc_html(wp_json_encode(self::get_schema(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)); ?></pre>
 		</div>

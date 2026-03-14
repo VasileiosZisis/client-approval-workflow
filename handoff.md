@@ -5,7 +5,7 @@
 - Plugin: `SignoffFlow`
 - Package: `client-approval-workflow`
 - Main file: `client-approval-workflow.php`
-- Text domain: `client-approval-workflow`
+- Text domain: `signoffflow`
 - Namespace: `ClientApprovalWorkflow\`
 - Prefix: `cliapwo`
 - Current release version: `0.2.0`
@@ -57,12 +57,7 @@
    - Recommended next step: optional future polish could add a docs link or example SMTP plugin setup notes without adding background checks or external calls
    - Likely files: `includes/class-settings.php`, `README.md`, `readme.txt`
 
-3. No generated POT file is shipped yet
-   - Risk: translation scaffolding exists, but translators do not have an extracted source catalog yet
-   - Recommended next step: generate `languages/client-approval-workflow.pot` and document the command in the repo
-   - Likely files: `languages/client-approval-workflow.pot` (new), `README.md`, possibly `composer.json`
-
-4. End-to-end live WordPress smoke tests are still manual and not recorded
+3. End-to-end live WordPress smoke tests are still manual and not recorded
    - Risk: packaging is validated, but release confidence still depends on local manual verification
    - Recommended next step: run the smoke test list from `RELEASE.md` on a clean WP install and capture results in a short QA note
    - Likely files: `RELEASE.md`, `README.md`, optional `QA.md` (new)
@@ -70,10 +65,9 @@
 ## Recommended order of work
 
 1. Document the remaining Nginx/server rule limitation for protected files.
-2. Generate and ship the POT file. This is low risk and finishes the i18n packaging work.
-3. Run and document live smoke tests on a clean WordPress install.
-4. Optional future polish for email guidance if needed.
+2. Run and document live smoke tests on a clean WordPress install.
+3. Optional future polish for email guidance if needed.
 
 ## Recommended next action
 
-Proceed with the POT generation pass next, then run documented live smoke tests.
+Proceed with live smoke tests next, then tighten any release notes based on those results.

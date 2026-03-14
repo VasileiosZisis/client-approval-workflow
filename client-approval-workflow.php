@@ -6,7 +6,7 @@
  * Version:           0.2.0
  * Author:      Vasileios Zisis
  * Author URI:  https://profiles.wordpress.org/vzisis/
- * Text Domain:       client-approval-workflow
+ * Text Domain:       signoffflow
  * Domain Path:       /languages
  * Requires at least: 6.0
  * Requires PHP:      7.4
