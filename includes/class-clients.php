@@ -26,11 +26,6 @@ class Clients
 	public const ASSIGNED_USERS_META_KEY = 'cliapwo_assigned_users';
 
 	/**
-	 * Contact email meta key.
-	 */
-	public const CONTACT_EMAIL_META_KEY = 'cliapwo_contact_email';
-
-	/**
 	 * Notes meta key.
 	 */
 	public const NOTES_META_KEY = 'cliapwo_client_notes';
@@ -55,6 +50,8 @@ class Clients
 		add_action('init', array($this, 'register_post_type'));
 		add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
 		add_action('save_post_' . self::POST_TYPE, array($this, 'save_client_meta'), 10, 2);
+		add_filter('manage_' . self::POST_TYPE . '_posts_columns', array($this, 'filter_client_columns'));
+		add_action('manage_' . self::POST_TYPE . '_posts_custom_column', array($this, 'render_client_column'), 10, 2);
 	}
 
 	/**
@@ -142,7 +139,6 @@ class Clients
 		wp_nonce_field(self::SAVE_NONCE_ACTION, self::SAVE_NONCE_NAME);
 
 		$assigned_user_ids = self::get_assigned_user_ids($post->ID);
-		$contact_email     = get_post_meta($post->ID, self::CONTACT_EMAIL_META_KEY, true);
 		$notes             = get_post_meta($post->ID, self::NOTES_META_KEY, true);
 		$users             = get_users(
 			array(
@@ -153,13 +149,7 @@ class Clients
 		$wp_roles          = wp_roles();
 		?>
 		<p>
-			<label for="cliapwo_contact_email"><strong><?php esc_html_e('Contact email', 'client-approval-workflow'); ?></strong></label><br />
-			<input
-				type="email"
-				class="regular-text"
-				id="cliapwo_contact_email"
-				name="cliapwo_contact_email"
-				value="<?php echo esc_attr((string) $contact_email); ?>" />
+			<?php esc_html_e('Use the title field above for the client or account name. Portal contact details come from the WordPress users assigned below.', 'client-approval-workflow'); ?>
 		</p>
 
 		<p>
@@ -171,9 +161,30 @@ class Clients
 				name="cliapwo_client_notes"><?php echo esc_textarea((string) $notes); ?></textarea>
 		</p>
 
+		<p><strong><?php esc_html_e('Current portal user details', 'client-approval-workflow'); ?></strong></p>
+		<?php if (empty($assigned_user_ids)) : ?>
+			<p class="description"><?php esc_html_e('No WordPress users are assigned yet.', 'client-approval-workflow'); ?></p>
+		<?php else : ?>
+			<ul style="margin:0 0 16px 18px; list-style:disc;">
+				<?php foreach ($users as $user) : ?>
+					<?php if (! $user instanceof \WP_User || ! in_array((int) $user->ID, $assigned_user_ids, true)) : ?>
+						<?php continue; ?>
+					<?php endif; ?>
+					<li>
+						<strong><?php echo esc_html($user->user_login); ?></strong>
+						<?php if ('' !== (string) $user->user_email) : ?>
+							<?php echo esc_html(' - ' . $user->user_email); ?>
+						<?php else : ?>
+							<?php esc_html_e(' - no email set', 'client-approval-workflow'); ?>
+						<?php endif; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
+
 		<p><strong><?php esc_html_e('Assigned portal users', 'client-approval-workflow'); ?></strong></p>
 		<p class="description">
-			<?php esc_html_e('Select the WordPress user accounts that can log in and view this client portal.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Select the WordPress user accounts that can log in and view this client portal. Usernames and email addresses come from the WordPress Users screen.', 'client-approval-workflow'); ?>
 		</p>
 		<?php if (empty($users)) : ?>
 			<p><?php esc_html_e('No WordPress users are available to assign.', 'client-approval-workflow'); ?></p>
@@ -202,9 +213,12 @@ class Clients
 							name="cliapwo_assigned_users[]"
 							value="<?php echo esc_attr((string) $user->ID); ?>"
 							<?php checked(in_array((int) $user->ID, $assigned_user_ids, true)); ?> />
-						<?php echo esc_html($user->display_name); ?>
+						<?php echo esc_html($user->user_login); ?>
 						<?php if (! empty($user->user_email)) : ?>
 							<?php echo esc_html(' (' . $user->user_email . ')'); ?>
+						<?php endif; ?>
+						<?php if ('' !== (string) $user->display_name && $user->display_name !== $user->user_login) : ?>
+							<?php echo esc_html(' - ' . $user->display_name); ?>
 						<?php endif; ?>
 						<?php if (! empty($role_labels)) : ?>
 							<?php echo esc_html(' - ' . implode(', ', $role_labels)); ?>
@@ -266,17 +280,7 @@ class Clients
 			update_post_meta($post_id, self::ASSIGNED_USERS_META_KEY, $assigned_user_ids);
 		}
 
-		$contact_email = '';
-
-		if (isset($_POST['cliapwo_contact_email'])) {
-			$contact_email = sanitize_email(wp_unslash($_POST['cliapwo_contact_email']));
-		}
-
-		if ('' === $contact_email) {
-			delete_post_meta($post_id, self::CONTACT_EMAIL_META_KEY);
-		} else {
-			update_post_meta($post_id, self::CONTACT_EMAIL_META_KEY, $contact_email);
-		}
+		delete_post_meta($post_id, 'cliapwo_contact_email');
 
 		$notes = '';
 
@@ -289,6 +293,68 @@ class Clients
 		} else {
 			update_post_meta($post_id, self::NOTES_META_KEY, $notes);
 		}
+	}
+
+	/**
+	 * Adjust the Clients list table columns.
+	 *
+	 * @param array<string, string> $columns Existing columns.
+	 * @return array<string, string>
+	 */
+	public function filter_client_columns(array $columns)
+	{
+		$client_columns = array();
+
+		foreach ($columns as $key => $label) {
+			if ('title' === $key) {
+				$client_columns['title'] = __('Client / Account', 'client-approval-workflow');
+				$client_columns['cliapwo_portal_users'] = __('Portal users', 'client-approval-workflow');
+				continue;
+			}
+
+			$client_columns[$key] = $label;
+		}
+
+		return $client_columns;
+	}
+
+	/**
+	 * Render custom columns on the Clients list table.
+	 *
+	 * @param string $column  Column key.
+	 * @param int    $post_id Client post ID.
+	 * @return void
+	 */
+	public function render_client_column($column, $post_id)
+	{
+		if ('cliapwo_portal_users' !== $column) {
+			return;
+		}
+
+		$users = self::get_assigned_users($post_id);
+
+		if (empty($users)) {
+			esc_html_e('No assigned users', 'client-approval-workflow');
+			return;
+		}
+
+		$user_labels = array();
+
+		foreach ($users as $user) {
+			if (! $user instanceof \WP_User) {
+				continue;
+			}
+
+			$label = $user->user_login;
+
+			if ('' !== (string) $user->user_email) {
+				$label .= ' (' . $user->user_email . ')';
+			}
+
+			$user_labels[] = $label;
+		}
+
+		echo esc_html(implode(', ', $user_labels));
 	}
 
 	/**
@@ -483,18 +549,7 @@ class Clients
 	 */
 	public static function get_assigned_user_emails($client_id)
 	{
-		$user_ids = self::get_assigned_user_ids($client_id);
-
-		if (empty($user_ids)) {
-			return array();
-		}
-
-		$users = get_users(
-			array(
-				'include' => $user_ids,
-				'orderby' => 'include',
-			)
-		);
+		$users = self::get_assigned_users($client_id);
 
 		if (! is_array($users) || empty($users)) {
 			return array();
@@ -517,6 +572,30 @@ class Clients
 		}
 
 		return array_values(array_unique($emails));
+	}
+
+	/**
+	 * Get the assigned WordPress users for a client.
+	 *
+	 * @param int $client_id Client post ID.
+	 * @return array<int, \WP_User>
+	 */
+	public static function get_assigned_users($client_id)
+	{
+		$user_ids = self::get_assigned_user_ids($client_id);
+
+		if (empty($user_ids)) {
+			return array();
+		}
+
+		$users = get_users(
+			array(
+				'include' => $user_ids,
+				'orderby' => 'include',
+			)
+		);
+
+		return is_array($users) ? $users : array();
 	}
 
 	/**

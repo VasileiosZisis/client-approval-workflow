@@ -215,7 +215,7 @@ class Requests
 				</option>
 			</select>
 		</p>
-		<p class="description"><?php esc_html_e('Clients can mark requests complete from the portal. Staff can reopen or override status here or from the portal preview.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Assigned portal users can mark requests complete from the portal. Staff can reopen or override status here or from the portal preview.', 'client-approval-workflow'); ?></p>
 		<?php
 	}
 

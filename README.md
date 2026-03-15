@@ -56,13 +56,13 @@ Planned next:
 
 1. Activate the plugin.
 2. Configure the portal page in `SignoffFlow > Settings`.
-3. Create a client in `SignoffFlow > Clients`.
-4. Assign one or more WordPress users to that client.
+3. Create a client account in `SignoffFlow > Clients`.
+4. Assign one or more WordPress portal users to that client account.
 5. Create updates in `SignoffFlow > Updates`.
 6. Upload downloadable files in `SignoffFlow > Files`.
 7. Create client requests/tasks in `SignoffFlow > Requests`.
-8. Visit the portal page as an assigned client user to view updates, files, and requests.
-9. Let client users mark requests complete from the portal; staff can reopen or override statuses.
+8. Visit the portal page as an assigned portal user to view that client account's updates, files, and requests.
+9. Let portal users mark requests complete from the portal; staff can reopen or override statuses.
 10. Review `SignoffFlow > Event Log` for update/file events and email attempt records.
 
 ## Repository Conventions
@@ -88,7 +88,7 @@ Apache hardening files are created automatically for that storage directory. On 
 
 Request, update, and file notifications use `wp_mail()` and are controlled by the `Request emails`, `Update emails`, and `File emails` settings in `SignoffFlow > Settings`.
 
-Emails are sent to all WordPress users assigned to the related client record.
+Emails are sent to all WordPress users assigned to the related client account.
 
 The Notifications section in `SignoffFlow > Settings` now includes an `Email delivery help` block that explains the mail-transport dependency and a simple manual test flow.
 
@@ -113,7 +113,7 @@ This makes it possible to verify notification flow locally even when no real mes
 ## Security Notes
 
 - All privileged admin mutations should use capability checks and nonces.
-- Portal access is based on client-user assignment plus `cliapwo_view_portal`.
+- Portal access is based on client-account assignments plus `cliapwo_view_portal`.
 - Staff/admin actions use `cliapwo_manage_portal`.
 
 ## License

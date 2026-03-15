@@ -178,7 +178,7 @@ class Updates
 				</option>
 			<?php endforeach; ?>
 		</select>
-		<p class="description"><?php esc_html_e('Updates are shown only in the assigned client portal.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Updates are shown only in the assigned client account portal.', 'client-approval-workflow'); ?></p>
 		<?php
 	}
 

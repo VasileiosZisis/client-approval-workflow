@@ -206,8 +206,8 @@ class Admin
 
 			<ol style="margin:0 0 12px 18px;">
 				<li><?php esc_html_e('Create or confirm your portal page.', 'client-approval-workflow'); ?></li>
-				<li><?php esc_html_e('Create a client and assign at least one WordPress user.', 'client-approval-workflow'); ?></li>
-				<li><?php esc_html_e('Add updates, files, or requests and review the portal as that assigned user.', 'client-approval-workflow'); ?></li>
+				<li><?php esc_html_e('Create a client account and assign at least one WordPress portal user.', 'client-approval-workflow'); ?></li>
+				<li><?php esc_html_e('Add updates, files, or requests and review the portal as one of the assigned portal users.', 'client-approval-workflow'); ?></li>
 			</ol>
 
 			<?php if ($has_valid_portal) : ?>

@@ -14,12 +14,12 @@ Client portal for agencies: share updates, files, and client requests privately.
 
 SignoffFlow is a **client portal** and **client approval workflow** plugin for agencies, freelancers, and service teams.
 
-Create a private portal per client where you can:
+Create a private portal workspace per client account where you can:
 * Share **project updates** (timeline)
 * Share **files** with protected downloads
 * Send **client requests/tasks** and track completion (great for approvals and sign-off)
 
-Portal access is restricted to WordPress users assigned to a client, plus staff users with management capability.
+Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
 
 This plugin only outputs front-end content on the portal page via the `[cliapwo_portal]` shortcode.
 
@@ -33,9 +33,9 @@ This plugin only outputs front-end content on the portal page via the `[cliapwo_
 1. Go to `SignoffFlow > Settings`.
 2. Use the `Quick setup` panel to create a sample portal page, or create a page manually and add `[cliapwo_portal]`.
 3. Confirm that page is selected as the portal page in SignoffFlow settings.
-4. Create a client in `SignoffFlow > Clients` and assign one or more users.
-5. Add updates, files, and requests for that client.
-6. Log in as an assigned client user to view the portal and complete requests.
+4. Create a client account in `SignoffFlow > Clients` and assign one or more WordPress portal users.
+5. Add updates, files, and requests for that client account.
+6. Log in as an assigned portal user to view the portal and complete requests.
 
 == Installation ==
 
@@ -44,15 +44,15 @@ This plugin only outputs front-end content on the portal page via the `[cliapwo_
 3. Go to `SignoffFlow > Settings`.
 4. Use the optional `Quick setup` panel to create a sample portal page automatically, or create your own page and add the `[cliapwo_portal]` shortcode.
 5. Confirm the portal page is selected in SignoffFlow settings.
-6. Create a client in `SignoffFlow > Clients`.
-7. Assign one or more WordPress users to that client.
-8. Add updates, files, and requests for that client.
+6. Create a client account in `SignoffFlow > Clients`.
+7. Assign one or more WordPress portal users to that client account.
+8. Add updates, files, and requests for that client account.
 
 == Frequently Asked Questions ==
 
 = Who can see a client portal? =
 
-Only WordPress users assigned to that client, plus staff users with the `cliapwo_manage_portal` capability.
+Only WordPress users assigned to that client account, plus staff users with the `cliapwo_manage_portal` capability.
 
 = How are files protected? =
 
@@ -62,7 +62,7 @@ Apache hardening files are created automatically for that directory. Nginx hosts
 
 = Does the plugin send email notifications? =
 
-Yes. SignoffFlow can send request, update, and file notifications with `wp_mail()` to all WordPress users assigned to the related client. Notification types can be toggled in `SignoffFlow > Settings`.
+Yes. SignoffFlow can send request, update, and file notifications with `wp_mail()` to all WordPress users assigned to the related client account. Notification types can be toggled in `SignoffFlow > Settings`.
 
 = Can I test notifications on a local site? =
 
@@ -81,24 +81,6 @@ The Notifications settings screen also includes an Email delivery help section w
 
 == Changelog ==
 
-= 0.2.0 =
-
-* Prepared the first release-ready package for SignoffFlow
-* Added release packaging docs and uninstall handling
-* Added request, update, and file notifications with event-log visibility
-* Added Pro extension hooks, approvals schema, and Pro detection helper
-
-= 0.1.0 =
-
-* Initial public milestone build of SignoffFlow
-* Added plugin settings, capabilities, client management, portal rendering, updates, files, requests, event log, and notifications for requests, updates, and files
-
-== Upgrade Notice ==
-
-= 0.2.0 =
-
-Release-ready packaging update with final milestone features, uninstall handling, and documentation improvements.
-
-= 0.1.0 =
+= 1.0.0 =
 
 Initial release.

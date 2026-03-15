@@ -22,7 +22,7 @@ class Lifecycle
 	 */
 	public static function activate()
 	{
-		self::add_capabilities();
+		self::ensure_roles();
 
 		if (false === get_option(Settings::OPTION_KEY, false)) {
 			add_option(Settings::OPTION_KEY, Settings::get_default_settings());
@@ -42,6 +42,16 @@ class Lifecycle
 	public static function deactivate()
 	{
 		// Intentionally left blank.
+	}
+
+	/**
+	 * Ensure plugin roles and capabilities exist.
+	 *
+	 * @return void
+	 */
+	public static function ensure_roles()
+	{
+		self::add_capabilities();
 	}
 
 	/**
@@ -72,7 +82,33 @@ class Lifecycle
 		}
 
 		if ($client_role instanceof \WP_Role) {
+			self::sync_client_role_capabilities($client_role);
 			$client_role->add_cap('cliapwo_view_portal');
 		}
+	}
+
+	/**
+	 * Keep the client role limited to the minimum portal capabilities.
+	 *
+	 * @param \WP_Role $client_role Client role object.
+	 * @return void
+	 */
+	private static function sync_client_role_capabilities(\WP_Role $client_role)
+	{
+		$allowed_caps = array(
+			'read',
+			'cliapwo_view_portal',
+		);
+
+		foreach (array_keys((array) $client_role->capabilities) as $capability) {
+			if (in_array($capability, $allowed_caps, true)) {
+				continue;
+			}
+
+			$client_role->remove_cap($capability);
+		}
+
+		$client_role->add_cap('read');
+		$client_role->add_cap('cliapwo_view_portal');
 	}
 }

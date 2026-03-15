@@ -108,7 +108,7 @@ class Portal
 					</p>
 				<?php endif; ?>
 				<h2><?php echo esc_html($client->post_title); ?></h2>
-				<p><?php esc_html_e('Welcome to your client-approval-workflow portal.', 'client-approval-workflow'); ?></p>
+				<p><?php esc_html_e('Welcome to your SignoffFlow portal.', 'client-approval-workflow'); ?></p>
 				<?php if ($is_staff_preview) : ?>
 					<p class="cliapwo-portal__preview-note">
 						<?php esc_html_e('You are previewing this portal as staff.', 'client-approval-workflow'); ?>
@@ -219,7 +219,7 @@ class Portal
 										/* translators: 1: date, 2: author name */
 										esc_html__('Posted on %1$s by %2$s', 'client-approval-workflow'),
 										esc_html(get_the_date('', $update_id)),
-										esc_html($author_name ? $author_name : __('client-approval-workflow', 'client-approval-workflow'))
+										esc_html($author_name ? $author_name : __('SignoffFlow', 'client-approval-workflow'))
 									);
 									?>
 								</p>

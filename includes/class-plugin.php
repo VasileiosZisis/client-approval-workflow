@@ -16,6 +16,13 @@ defined('ABSPATH') || exit;
 class Plugin
 {
 	/**
+	 * Client-only access service.
+	 *
+	 * @var Client_Access
+	 */
+	private $client_access;
+
+	/**
 	 * Settings service.
 	 *
 	 * @var Settings
@@ -83,15 +90,16 @@ class Plugin
 	 */
 	public function __construct()
 	{
-		$this->settings = new Settings();
-		$this->admin    = new Admin($this->settings);
-		$this->clients  = new Clients();
-		$this->updates  = new Updates();
-		$this->portal   = new Portal();
-		$this->files    = new Files();
-		$this->requests = new Requests();
-		$this->events   = new Events();
-		$this->approvals = new Approvals();
+		$this->client_access = new Client_Access();
+		$this->settings      = new Settings();
+		$this->admin         = new Admin($this->settings);
+		$this->clients       = new Clients();
+		$this->updates       = new Updates();
+		$this->portal        = new Portal();
+		$this->files         = new Files();
+		$this->requests      = new Requests();
+		$this->events        = new Events();
+		$this->approvals     = new Approvals();
 	}
 
 	/**
@@ -101,6 +109,7 @@ class Plugin
 	 */
 	public function run()
 	{
+		$this->client_access->register();
 		$this->settings->register();
 		$this->admin->register();
 		$this->clients->register();

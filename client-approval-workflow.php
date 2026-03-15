@@ -25,6 +25,7 @@ define('CLIAPWO_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-plugin.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-lifecycle.php';
+require_once CLIAPWO_PLUGIN_DIR . 'includes/class-client-access.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-settings.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-admin.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-clients.php';
@@ -37,6 +38,7 @@ require_once CLIAPWO_PLUGIN_DIR . 'includes/class-approvals.php';
 
 register_activation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'activate'));
 register_deactivation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'deactivate'));
+add_action('init', array(\ClientApprovalWorkflow\Lifecycle::class, 'ensure_roles'));
 
 $cliapwo_plugin = new \ClientApprovalWorkflow\Plugin();
 $cliapwo_plugin->run();
