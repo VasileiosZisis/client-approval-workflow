@@ -151,16 +151,17 @@ class Portal
 		$requests_count   = $this->get_query_count($requests_query);
 		$files_count      = $this->get_query_count($files_query);
 		$is_staff_preview = current_user_can('cliapwo_manage_portal') && ! in_array($current_user_id, Clients::get_assigned_user_ids($client->ID), true);
-		$root_style       = $this->get_root_style_attribute($primary_color);
+		$wrapper_classes  = $this->get_wrapper_classes($client->ID, $current_user_id, $is_staff_preview);
+		$root_style       = $this->get_root_style_attribute($primary_color, $settings, $client->ID, $current_user_id, $is_staff_preview);
 
 		ob_start();
 ?>
 		<div
-			class="cliapwo-portal"
+			class="<?php echo esc_attr($wrapper_classes); ?>"
 			style="<?php echo esc_attr($root_style); ?>">
 			<?php do_action('cliapwo_before_render_portal', $client->ID, $current_user_id); ?>
 
-			<header class="cliapwo-portal__header cliapwo-card">
+			<header class="<?php echo esc_attr($this->get_section_classes('header', array('cliapwo-portal__header', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
 				<div class="cliapwo-portal__eyebrow"><?php esc_html_e('Portal overview', 'client-approval-workflow'); ?></div>
 				<?php if ('' !== $logo_url) : ?>
 					<p class="cliapwo-portal__brand">
@@ -189,7 +190,7 @@ class Portal
 				<?php endif; ?>
 			</header>
 
-			<section class="cliapwo-portal__summary cliapwo-card cliapwo-card--accent">
+			<section class="<?php echo esc_attr($this->get_section_classes('summary', array('cliapwo-portal__section', 'cliapwo-portal__summary', 'cliapwo-card', 'cliapwo-card--accent'), $client->ID, $current_user_id)); ?>">
 				<div class="cliapwo-portal__section-header">
 					<div>
 						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Waiting on you', 'client-approval-workflow'); ?></h3>
@@ -211,7 +212,7 @@ class Portal
 			</section>
 
 			<div class="cliapwo-portal__main">
-				<section class="cliapwo-portal__updates cliapwo-card">
+				<section class="<?php echo esc_attr($this->get_section_classes('updates', array('cliapwo-portal__section', 'cliapwo-portal__updates', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
 					<div class="cliapwo-portal__section-header">
 						<div>
 							<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Updates', 'client-approval-workflow'); ?></h3>
@@ -276,7 +277,7 @@ class Portal
 				</section>
 
 				<div class="cliapwo-portal__grid">
-					<section class="cliapwo-portal__requests cliapwo-card">
+					<section class="<?php echo esc_attr($this->get_section_classes('requests', array('cliapwo-portal__section', 'cliapwo-portal__requests', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
 						<div class="cliapwo-portal__section-header">
 							<div>
 								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Requests', 'client-approval-workflow'); ?></h3>
@@ -346,7 +347,7 @@ class Portal
 						<?php endif; ?>
 					</section>
 
-					<section class="cliapwo-portal__files cliapwo-card">
+					<section class="<?php echo esc_attr($this->get_section_classes('files', array('cliapwo-portal__section', 'cliapwo-portal__files', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
 						<div class="cliapwo-portal__section-header">
 							<div>
 								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Files', 'client-approval-workflow'); ?></h3>
@@ -516,10 +517,12 @@ class Portal
 	private function wrap_empty_state($content, array $settings)
 	{
 		$primary_color = isset($settings['primary_color']) ? sanitize_hex_color((string) $settings['primary_color']) : false;
-		$root_style    = $this->get_root_style_attribute($primary_color);
+		$root_style    = $this->get_root_style_attribute($primary_color, $settings, 0, get_current_user_id(), false);
+		$classes       = $this->get_wrapper_classes(0, get_current_user_id(), false);
 
 		return sprintf(
-			'<div class="cliapwo-portal" style="%1$s">%2$s</div>',
+			'<div class="%1$s" style="%2$s">%3$s</div>',
+			esc_attr($classes),
 			esc_attr($root_style),
 			$content
 		);
@@ -531,10 +534,14 @@ class Portal
 	 * CSS custom properties are exposed on the portal root so future versions
 	 * can support customization without changing the markup structure.
 	 *
-	 * @param string|false $primary_color Sanitized primary color.
+	 * @param string|false        $primary_color    Sanitized primary color.
+	 * @param array<string,mixed> $settings         Plugin settings.
+	 * @param int                 $client_id        Client post ID, if available.
+	 * @param int                 $current_user_id  Current user ID.
+	 * @param bool                $is_staff_preview Whether this is a staff preview.
 	 * @return string
 	 */
-	private function get_root_style_attribute($primary_color)
+	private function get_root_style_attribute($primary_color, array $settings, $client_id, $current_user_id, $is_staff_preview)
 	{
 		$primary_color = is_string($primary_color) && '' !== $primary_color ? $primary_color : '#1d4ed8';
 
@@ -548,7 +555,24 @@ class Portal
 			'--cliapwo-bg'             => '#f8fafc',
 			'--cliapwo-card-bg'        => '#ffffff',
 			'--cliapwo-border'         => '#e2e8f0',
+			'--cliapwo-max-width'      => '1120px',
+			'--cliapwo-radius-xl'      => '28px',
+			'--cliapwo-radius-lg'      => '24px',
+			'--cliapwo-radius-md'      => '18px',
+			'--cliapwo-shadow-lg'      => '0 24px 60px rgba(15,23,42,0.08)',
+			'--cliapwo-shadow-md'      => '0 16px 40px rgba(15,23,42,0.06)',
 		);
+
+		/**
+		 * Filter the CSS custom properties exposed on the portal root wrapper.
+		 *
+		 * @param array<string, string> $variables         Portal CSS variable map.
+		 * @param array<string, mixed>  $settings          Plugin settings.
+		 * @param int                   $client_id         Client post ID, if available.
+		 * @param int                   $current_user_id   Current user ID.
+		 * @param bool                  $is_staff_preview  Whether the portal is being previewed by staff.
+		 */
+		$variables = apply_filters('cliapwo_portal_style_vars', $variables, $settings, absint($client_id), absint($current_user_id), (bool) $is_staff_preview);
 
 		$declarations = array();
 
@@ -584,6 +608,65 @@ class Portal
 		$blue  = hexdec(substr($hex_color, 4, 2));
 
 		return sprintf('rgba(%d,%d,%d,%s)', $red, $green, $blue, (string) $alpha);
+	}
+
+	/**
+	 * Return filterable wrapper classes for the portal root.
+	 *
+	 * @param int  $client_id        Client post ID, if available.
+	 * @param int  $current_user_id  Current user ID.
+	 * @param bool $is_staff_preview Whether the portal is being previewed by staff.
+	 * @return string
+	 */
+	private function get_wrapper_classes($client_id, $current_user_id, $is_staff_preview)
+	{
+		$classes = array('cliapwo-portal');
+
+		if ($is_staff_preview) {
+			$classes[] = 'cliapwo-portal--staff-preview';
+		}
+
+		/**
+		 * Filter the portal root wrapper classes.
+		 *
+		 * @param array<int, string> $classes          Portal wrapper classes.
+		 * @param int                $client_id        Client post ID, if available.
+		 * @param int                $current_user_id  Current user ID.
+		 * @param bool               $is_staff_preview Whether the portal is being previewed by staff.
+		 */
+		$classes = apply_filters('cliapwo_portal_wrapper_classes', $classes, absint($client_id), absint($current_user_id), (bool) $is_staff_preview);
+
+		$classes = array_filter(array_map('sanitize_html_class', (array) $classes));
+
+		return implode(' ', array_unique($classes));
+	}
+
+	/**
+	 * Return filterable classes for major portal sections.
+	 *
+	 * @param string             $section         Section identifier.
+	 * @param array<int, string> $classes      Default section classes.
+	 * @param int                $client_id       Client post ID.
+	 * @param int                $current_user_id Current user ID.
+	 * @return string
+	 */
+	private function get_section_classes($section, array $classes, $client_id, $current_user_id)
+	{
+		$section = sanitize_key((string) $section);
+
+		/**
+		 * Filter portal section classes.
+		 *
+		 * @param array<int, string> $classes         Section classes.
+		 * @param string             $section         Section identifier.
+		 * @param int                $client_id       Client post ID.
+		 * @param int                $current_user_id Current user ID.
+		 */
+		$classes = apply_filters('cliapwo_portal_section_classes', $classes, $section, absint($client_id), absint($current_user_id));
+
+		$classes = array_filter(array_map('sanitize_html_class', (array) $classes));
+
+		return implode(' ', array_unique($classes));
 	}
 
 	/**

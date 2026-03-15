@@ -167,6 +167,14 @@ class Settings
 			self::PAGE_SLUG,
 			'cliapwo_advanced_section'
 		);
+
+		add_settings_field(
+			'cliapwo_portal_styling_help',
+			__('Portal styling help', 'client-approval-workflow'),
+			array($this, 'render_portal_styling_help_field'),
+			self::PAGE_SLUG,
+			'cliapwo_advanced_section'
+		);
 	}
 
 	/**
@@ -557,5 +565,42 @@ class Settings
 		</label>
 		<p class="description"><?php esc_html_e('This removes SignoffFlow settings, client accounts, updates, files, requests, event log entries, and protected uploaded files when the plugin is deleted.', 'client-approval-workflow'); ?></p>
 	<?php
+	}
+
+	/**
+	 * Render the developer-oriented portal styling help field.
+	 *
+	 * @return void
+	 */
+	public function render_portal_styling_help_field()
+	{
+		?>
+		<p class="description">
+			<?php esc_html_e('Developers can customize the portal styling from a theme or site-specific plugin without editing SignoffFlow directly.', 'client-approval-workflow'); ?>
+		</p>
+		<p class="description">
+			<?php
+			printf(
+				/* translators: 1: root wrapper class, 2: CSS variable name, 3: CSS variable name, 4: CSS variable name */
+				esc_html__('Use the root wrapper %1$s and CSS variables such as %2$s, %3$s, and %4$s for targeted overrides.', 'client-approval-workflow'),
+				'.cliapwo-portal',
+				'--cliapwo-primary',
+				'--cliapwo-max-width',
+				'--cliapwo-radius-lg'
+			);
+			?>
+		</p>
+		<p class="description">
+			<?php
+			printf(
+				/* translators: 1: filter name, 2: filter name, 3: filter name */
+				esc_html__('Advanced integrations can also use the filters %1$s, %2$s, and %3$s to adjust wrapper classes, CSS variables, and section classes.', 'client-approval-workflow'),
+				'cliapwo_portal_wrapper_classes',
+				'cliapwo_portal_style_vars',
+				'cliapwo_portal_section_classes'
+			);
+			?>
+		</p>
+		<?php
 	}
 }

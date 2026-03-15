@@ -1,73 +1,58 @@
 # Handoff
 
-## Current state
+## Current task
 
-- Plugin: `client-approval-workflow`
-- Package: `client-approval-workflow`
-- Main file: `client-approval-workflow.php`
-- Text domain: `client-approval-workflow`
-- Namespace: `ClientApprovalWorkflow\`
-- Prefix: `cliapwo`
-- Current release version: `0.2.0`
+Implement the SignoffFlow v1.1 portal styling extensibility pass.
 
-## Milestones completed
+This is a follow-up to the v1 portal styling foundation. The goal is to keep the default portal UI polished while making it easier for site owners and developers to customize safely.
 
-- M1 through M9 are implemented
-- Recent fixes include:
-  - release packaging/version bump to `0.2.0`
-  - `CHANGELOG.md` and `RELEASE.md`
-  - explicit `uninstall.php`
-  - request email docs updates
-  - file upload sanitization tightened for Plugin Check
-  - approvals submenu hidden unless Pro is active
+## Scope for this pass
 
-## Current worktree focus
+- keep the existing default portal styling in the free plugin
+- avoid page-builder complexity
+- avoid large settings UI additions
+- keep styling scoped to the portal wrapper only
+- improve customization ergonomics with a small, stable API surface
 
-- Release/readme/docs are updated for `0.2.0`
-- Remaining work is now centered on known issues and post-release hardening
-- `AGENTS.md` is user-modified in the worktree and should be treated as off-limits unless explicitly requested
+## Implementation targets
 
-## Completed in M9
+1. Review and stabilize the current portal CSS classes and CSS variables
+2. Add a minimal set of practical filters/hooks, likely around:
+   - portal wrapper classes
+   - portal inline style variables
+   - major section classes
+3. Add concise customization documentation for:
+   - root wrapper class
+   - major section classes
+   - supported CSS variables
+   - any new filters/hooks
+4. Keep any future design-control ideas as recommendations only unless they are truly tiny
 
-1. Prepared a release-ready build
-2. Bumped plugin version to `0.2.0`
-3. Added/updated changelog and release docs
-4. Ran available syntax/lint validation
-5. Documented final checklist and known issues
+## Likely files to touch
 
-## Validation completed
+- `includes/class-portal.php`
+- `assets/css/portal.css`
+- `README.md` only if a short repo-facing note becomes useful
+- a new concise styling reference file if needed
 
-- PHP lint across plugin PHP files passed
-- `composer lint` passed
-- Version/readme consistency was checked
-- Live browser/wp-admin smoke testing was not run from this environment
+## Constraints to preserve
 
-## Known issues to tackle next
+- text domain remains `client-approval-workflow`
+- plugin branding remains `SignoffFlow`
+- use the `cliapwo` prefix for hooks/filters/classes/handles where applicable
+- do not add a custom CSS field in this pass
+- do not add white-label or per-client branding in this pass
 
-1. Protected file storage is now plugin-managed, but Nginx may still need manual deny rules
-   - Current state: files are stored in `wp-content/uploads/cliapwo-private/` and served only through the protected download handler
-   - Remaining limitation: Apache hardening files are written automatically, but Nginx does not honor `.htaccess`
-   - Recommended next step: document an example Nginx deny rule and optionally add an admin diagnostics note
-   - Likely files: `README.md`, `readme.txt`, `includes/class-files.php`
+## Deliverables expected
 
-2. Email delivery depends on the site mail transport
-   - Risk: `wp_mail()` may succeed logically but not deliver in local/staging environments
-   - Current state: client-approval-workflow now includes an admin `Email delivery help` block in the Notifications settings section, plus repo/readme guidance for local and delivery testing
-   - Remaining limitation: this is guidance only and still depends on the site's mail transport or SMTP plugin
-   - Recommended next step: optional future polish could add a docs link or example SMTP plugin setup notes without adding background checks or external calls
-   - Likely files: `includes/class-settings.php`, `README.md`, `readme.txt`
+- small code-level extensibility improvements
+- a documented customization API surface
+- Free vs Pro recommendations for styling-related features
+- manual test steps
+- suggested commit messages
 
-3. End-to-end live WordPress smoke tests are still manual and not recorded
-   - Risk: packaging is validated, but release confidence still depends on local manual verification
-   - Recommended next step: run the smoke test list from `RELEASE.md` on a clean WP install and capture results in a short QA note
-   - Likely files: `RELEASE.md`, `README.md`, optional `QA.md` (new)
+## Notes
 
-## Recommended order of work
-
-1. Document the remaining Nginx/server rule limitation for protected files.
-2. Run and document live smoke tests on a clean WordPress install.
-3. Optional future polish for email guidance if needed.
-
-## Recommended next action
-
-Proceed with live smoke tests next, then tighten any release notes based on those results.
+- The current portal styling foundation is already implemented with `assets/css/portal.css`
+- The portal currently uses CSS variables on the root wrapper and scoped card/grid/button/status classes
+- This pass should refine and expose that structure, not redesign it from scratch

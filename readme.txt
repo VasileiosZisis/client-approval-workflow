@@ -70,6 +70,12 @@ Yes, but local mail delivery depends on your environment. SignoffFlow also recor
 
 The Notifications settings screen also includes an Email delivery help section with a simple test flow and recommendations for Mailpit, MailHog, SMTP, Postmark, and Mailtrap.
 
+= Can developers customize the portal styling? =
+
+Yes. The portal uses a stable root wrapper (`.cliapwo-portal`), documented CSS variables, and a small set of filters for wrapper classes, section classes, and inline style variables.
+
+For installed sites, see the Portal styling help note in `SignoffFlow > Settings`. Customizations should be added from a theme or site-specific plugin rather than by editing SignoffFlow directly.
+
 == Screenshots ==
 
 1. Client portal dashboard with Waiting on you summary
