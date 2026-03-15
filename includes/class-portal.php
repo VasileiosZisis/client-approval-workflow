@@ -68,7 +68,7 @@ class Portal
 		$portal_page_id = isset($settings['portal_page_id']) ? absint($settings['portal_page_id']) : 0;
 		$post_content   = is_string($post->post_content) ? $post->post_content : '';
 
-		if ( ( $portal_page_id > 0 && $post->ID === $portal_page_id ) || has_shortcode($post_content, 'cliapwo_portal') ) {
+		if ( ( $portal_page_id > 0 && $post->ID === $portal_page_id ) || has_shortcode( $post_content, 'cliapwo_portal' ) ) {
 			wp_enqueue_style(self::STYLE_HANDLE);
 		}
 	}
@@ -90,7 +90,7 @@ class Portal
 		wp_enqueue_style(self::STYLE_HANDLE);
 
 		if (! is_user_logged_in()) {
-			$login_url = wp_login_url( $this->get_portal_url() );
+			$login_url = wp_login_url($this->get_portal_url());
 
 			if (! headers_sent()) {
 				wp_safe_redirect($login_url);
@@ -147,14 +147,14 @@ class Portal
 		$open_requests    = Requests::get_open_request_count_for_client($client->ID);
 		$logo_url         = $this->get_branding_logo_url($settings);
 		$primary_color    = isset($settings['primary_color']) ? sanitize_hex_color((string) $settings['primary_color']) : false;
-		$updates_count    = absint($updates_query->found_posts);
-		$requests_count   = absint($requests_query->found_posts);
-		$files_count      = absint($files_query->found_posts);
+		$updates_count    = $this->get_query_count($updates_query);
+		$requests_count   = $this->get_query_count($requests_query);
+		$files_count      = $this->get_query_count($files_query);
 		$is_staff_preview = current_user_can('cliapwo_manage_portal') && ! in_array($current_user_id, Clients::get_assigned_user_ids($client->ID), true);
 		$root_style       = $this->get_root_style_attribute($primary_color);
 
 		ob_start();
-		?>
+?>
 		<div
 			class="cliapwo-portal"
 			style="<?php echo esc_attr($root_style); ?>">
@@ -193,7 +193,6 @@ class Portal
 				<div class="cliapwo-portal__section-header">
 					<div>
 						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Waiting on you', 'client-approval-workflow'); ?></h3>
-						<p class="cliapwo-portal__section-intro"><?php esc_html_e('Keep this area focused on the next client action.', 'client-approval-workflow'); ?></p>
 					</div>
 				</div>
 				<?php if ($open_requests > 0) : ?>
@@ -212,202 +211,202 @@ class Portal
 			</section>
 
 			<div class="cliapwo-portal__main">
-			<section class="cliapwo-portal__updates cliapwo-card">
-				<div class="cliapwo-portal__section-header">
-					<div>
-						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Updates', 'client-approval-workflow'); ?></h3>
-						<p class="cliapwo-portal__section-intro"><?php esc_html_e('Latest progress and delivery notes from your team.', 'client-approval-workflow'); ?></p>
-					</div>
-				</div>
-
-				<?php if ($updates_query->have_posts()) : ?>
-					<div class="cliapwo-portal__timeline">
-						<?php while ($updates_query->have_posts()) : ?>
-							<?php
-							$updates_query->the_post();
-							$update_id    = get_the_ID();
-							$author_name  = get_the_author_meta('display_name', (int) get_post_field('post_author', $update_id));
-							$update_title = get_the_title($update_id);
-							?>
-							<article class="cliapwo-portal__update">
-								<h4><?php echo esc_html($update_title); ?></h4>
-								<p class="cliapwo-portal__meta">
-									<?php
-									printf(
-										/* translators: 1: date, 2: author name */
-										esc_html__('Posted on %1$s by %2$s', 'client-approval-workflow'),
-										esc_html(get_the_date('', $update_id)),
-										esc_html($author_name ? $author_name : __('SignoffFlow', 'client-approval-workflow'))
-									);
-									?>
-								</p>
-								<div class="cliapwo-portal__content">
-									<?php echo wp_kses_post(wpautop((string) get_post_field('post_content', $update_id))); ?>
-								</div>
-							</article>
-						<?php endwhile; ?>
+				<section class="cliapwo-portal__updates cliapwo-card">
+					<div class="cliapwo-portal__section-header">
+						<div>
+							<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Updates', 'client-approval-workflow'); ?></h3>
+							<p class="cliapwo-portal__section-intro"><?php esc_html_e('Latest progress and delivery notes from your team.', 'client-approval-workflow'); ?></p>
+						</div>
 					</div>
 
-					<?php
-					$pagination = paginate_links(
-						array(
-							'current' => $paged,
-							'total'   => (int) $updates_query->max_num_pages,
-							'type'    => 'list',
-						)
-					);
-
-					if (is_string($pagination) && '' !== $pagination) {
-						echo '<div class="cliapwo-portal__pagination">';
-						echo wp_kses_post($pagination);
-						echo '</div>';
-					}
-					?>
-				<?php else : ?>
-					<p class="cliapwo-empty">
-						<?php
-						echo esc_html(
-							$is_staff_preview
-								? __('No updates yet. Publish a client update from client-approval-workflow > Updates.', 'client-approval-workflow')
-								: __('No updates yet. New project updates will appear here.', 'client-approval-workflow')
-						);
-						?>
-					</p>
-				<?php endif; ?>
-			</section>
-
-			<div class="cliapwo-portal__grid">
-			<section class="cliapwo-portal__requests cliapwo-card">
-				<div class="cliapwo-portal__section-header">
-					<div>
-						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Requests', 'client-approval-workflow'); ?></h3>
-						<p class="cliapwo-portal__section-intro"><?php esc_html_e('Outstanding actions and confirmations for this client account.', 'client-approval-workflow'); ?></p>
-					</div>
-				</div>
-				<?php if ($requests_query->have_posts()) : ?>
-					<ul class="cliapwo-portal__request-list cliapwo-list">
-						<?php while ($requests_query->have_posts()) : ?>
-							<?php
-							$requests_query->the_post();
-							$request_id      = get_the_ID();
-							$request_status  = Requests::get_status_for_request($request_id);
-							$can_manage      = current_user_can('cliapwo_manage_portal');
-							$can_complete    = ! $can_manage && Requests::STATUS_OPEN === $request_status;
-							$can_reopen      = $can_manage && Requests::STATUS_COMPLETE === $request_status;
-							$can_force_close = $can_manage && Requests::STATUS_OPEN === $request_status;
-							?>
-							<li class="cliapwo-portal__request">
-								<div class="cliapwo-portal__request-header">
-									<strong><?php echo esc_html(get_the_title($request_id)); ?></strong>
-									<span class="cliapwo-portal__request-status cliapwo-status cliapwo-status--<?php echo esc_attr(sanitize_html_class($request_status)); ?>">
-										<?php echo esc_html(Requests::get_status_label($request_status)); ?>
-									</span>
-								</div>
-
-								<?php if ('' !== (string) get_post_field('post_content', $request_id)) : ?>
-									<div class="cliapwo-portal__request-content">
-										<?php echo wp_kses_post(wpautop((string) get_post_field('post_content', $request_id))); ?>
-									</div>
-								<?php endif; ?>
-
-								<?php if ($can_complete || $can_reopen || $can_force_close) : ?>
-									<form
-										method="post"
-										action="<?php echo esc_url(admin_url('admin-post.php')); ?>"
-										class="cliapwo-portal__request-form">
-										<input type="hidden" name="action" value="<?php echo esc_attr(Requests::STATUS_UPDATE_ACTION); ?>" />
-										<input type="hidden" name="cliapwo_request_id" value="<?php echo esc_attr((string) $request_id); ?>" />
-										<?php wp_nonce_field(Requests::STATUS_UPDATE_ACTION, Requests::STATUS_UPDATE_NONCE_NAME); ?>
-
-										<?php if ($can_complete) : ?>
-											<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
-											<button type="submit" class="cliapwo-button"><?php esc_html_e('Mark complete', 'client-approval-workflow'); ?></button>
-										<?php elseif ($can_reopen) : ?>
-											<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_OPEN); ?>" />
-											<button type="submit" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Reopen', 'client-approval-workflow'); ?></button>
-										<?php elseif ($can_force_close) : ?>
-											<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
-											<button type="submit" class="cliapwo-button"><?php esc_html_e('Complete for client', 'client-approval-workflow'); ?></button>
-										<?php endif; ?>
-									</form>
-								<?php endif; ?>
-							</li>
-						<?php endwhile; ?>
-					</ul>
-				<?php else : ?>
-					<p class="cliapwo-empty">
-						<?php
-						echo esc_html(
-							$is_staff_preview
-								? __('No requests yet. Add one from client-approval-workflow > Requests.', 'client-approval-workflow')
-								: __('No requests yet. Your team will add anything they still need from you here.', 'client-approval-workflow')
-						);
-						?>
-					</p>
-				<?php endif; ?>
-			</section>
-
-			<section class="cliapwo-portal__files cliapwo-card">
-				<div class="cliapwo-portal__section-header">
-					<div>
-						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Files', 'client-approval-workflow'); ?></h3>
-						<p class="cliapwo-portal__section-intro"><?php esc_html_e('Shared deliverables and protected downloads for this client account.', 'client-approval-workflow'); ?></p>
-					</div>
-				</div>
-
-				<?php if ($files_query->have_posts()) : ?>
-					<ul class="cliapwo-portal__file-list cliapwo-list">
-						<?php while ($files_query->have_posts()) : ?>
-							<?php
-							$files_query->the_post();
-							$file_post_id = get_the_ID();
-							$file_name    = (string) get_post_meta($file_post_id, Files::ORIGINAL_FILENAME_META_KEY, true);
-							$mime_type    = (string) get_post_meta($file_post_id, Files::MIME_TYPE_META_KEY, true);
-							$file_size    = absint(get_post_meta($file_post_id, Files::FILE_SIZE_META_KEY, true));
-							$download_url = Files::get_download_url($file_post_id);
-							?>
-							<li class="cliapwo-portal__file">
-								<a href="<?php echo esc_url($download_url); ?>" class="cliapwo-portal__file-link">
-									<span class="cliapwo-portal__file-name"><?php echo esc_html('' !== $file_name ? $file_name : get_the_title($file_post_id)); ?></span>
-								</a>
-								<?php if ($file_size > 0 || '' !== $mime_type) : ?>
-									<span class="cliapwo-portal__file-meta">
+					<?php if ($updates_query->have_posts()) : ?>
+						<div class="cliapwo-portal__timeline">
+							<?php while ($updates_query->have_posts()) : ?>
+								<?php
+								$updates_query->the_post();
+								$update_id    = get_the_ID();
+								$author_name  = get_the_author_meta('display_name', (int) get_post_field('post_author', $update_id));
+								$update_title = get_the_title($update_id);
+								?>
+								<article class="cliapwo-portal__update">
+									<h4><?php echo esc_html($update_title); ?></h4>
+									<p class="cliapwo-portal__meta">
 										<?php
-										$file_meta = array();
-
-										if ($file_size > 0) {
-											$file_meta[] = size_format($file_size);
-										}
-
-										if ('' !== $mime_type) {
-											$file_meta[] = $mime_type;
-										}
-
-										echo esc_html(implode(' / ', $file_meta));
+										printf(
+											/* translators: 1: date, 2: author name */
+											esc_html__('Posted on %1$s by %2$s', 'client-approval-workflow'),
+											esc_html(get_the_date('', $update_id)),
+											esc_html($author_name ? $author_name : __('SignoffFlow', 'client-approval-workflow'))
+										);
 										?>
-									</span>
-								<?php endif; ?>
-							</li>
-						<?php endwhile; ?>
-					</ul>
-				<?php else : ?>
-					<p class="cliapwo-empty">
+									</p>
+									<div class="cliapwo-portal__content">
+										<?php echo wp_kses_post(wpautop((string) get_post_field('post_content', $update_id))); ?>
+									</div>
+								</article>
+							<?php endwhile; ?>
+						</div>
+
 						<?php
-						echo esc_html(
-							$is_staff_preview
-								? __('No files yet. Upload one from client-approval-workflow > Files.', 'client-approval-workflow')
-								: __('No files yet. Shared deliverables and downloads will appear here.', 'client-approval-workflow')
+						$pagination = paginate_links(
+							array(
+								'current' => $paged,
+								'total'   => (int) $updates_query->max_num_pages,
+								'type'    => 'list',
+							)
 						);
+
+						if (is_string($pagination) && '' !== $pagination) {
+							echo '<div class="cliapwo-portal__pagination">';
+							echo wp_kses_post($pagination);
+							echo '</div>';
+						}
 						?>
-					</p>
-				<?php endif; ?>
-			</section>
-			</div>
+					<?php else : ?>
+						<p class="cliapwo-empty">
+							<?php
+							echo esc_html(
+								$is_staff_preview
+									? __('No updates yet. Publish a client update from client-approval-workflow > Updates.', 'client-approval-workflow')
+									: __('No updates yet. New project updates will appear here.', 'client-approval-workflow')
+							);
+							?>
+						</p>
+					<?php endif; ?>
+				</section>
+
+				<div class="cliapwo-portal__grid">
+					<section class="cliapwo-portal__requests cliapwo-card">
+						<div class="cliapwo-portal__section-header">
+							<div>
+								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Requests', 'client-approval-workflow'); ?></h3>
+								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Outstanding actions and confirmations for this client account.', 'client-approval-workflow'); ?></p>
+							</div>
+						</div>
+						<?php if ($requests_query->have_posts()) : ?>
+							<ul class="cliapwo-portal__request-list cliapwo-list">
+								<?php while ($requests_query->have_posts()) : ?>
+									<?php
+									$requests_query->the_post();
+									$request_id      = get_the_ID();
+									$request_status  = Requests::get_status_for_request($request_id);
+									$can_manage      = current_user_can('cliapwo_manage_portal');
+									$can_complete    = ! $can_manage && Requests::STATUS_OPEN === $request_status;
+									$can_reopen      = $can_manage && Requests::STATUS_COMPLETE === $request_status;
+									$can_force_close = $can_manage && Requests::STATUS_OPEN === $request_status;
+									?>
+									<li class="cliapwo-portal__request">
+										<div class="cliapwo-portal__request-header">
+											<strong><?php echo esc_html(get_the_title($request_id)); ?></strong>
+											<span class="cliapwo-portal__request-status cliapwo-status cliapwo-status--<?php echo esc_attr(sanitize_html_class($request_status)); ?>">
+												<?php echo esc_html(Requests::get_status_label($request_status)); ?>
+											</span>
+										</div>
+
+										<?php if ('' !== (string) get_post_field('post_content', $request_id)) : ?>
+											<div class="cliapwo-portal__request-content">
+												<?php echo wp_kses_post(wpautop((string) get_post_field('post_content', $request_id))); ?>
+											</div>
+										<?php endif; ?>
+
+										<?php if ($can_complete || $can_reopen || $can_force_close) : ?>
+											<form
+												method="post"
+												action="<?php echo esc_url(admin_url('admin-post.php')); ?>"
+												class="cliapwo-portal__request-form">
+												<input type="hidden" name="action" value="<?php echo esc_attr(Requests::STATUS_UPDATE_ACTION); ?>" />
+												<input type="hidden" name="cliapwo_request_id" value="<?php echo esc_attr((string) $request_id); ?>" />
+												<?php wp_nonce_field(Requests::STATUS_UPDATE_ACTION, Requests::STATUS_UPDATE_NONCE_NAME); ?>
+
+												<?php if ($can_complete) : ?>
+													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
+													<button type="submit" class="cliapwo-button"><?php esc_html_e('Mark complete', 'client-approval-workflow'); ?></button>
+												<?php elseif ($can_reopen) : ?>
+													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_OPEN); ?>" />
+													<button type="submit" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Reopen', 'client-approval-workflow'); ?></button>
+												<?php elseif ($can_force_close) : ?>
+													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
+													<button type="submit" class="cliapwo-button"><?php esc_html_e('Complete for client', 'client-approval-workflow'); ?></button>
+												<?php endif; ?>
+											</form>
+										<?php endif; ?>
+									</li>
+								<?php endwhile; ?>
+							</ul>
+						<?php else : ?>
+							<p class="cliapwo-empty">
+								<?php
+								echo esc_html(
+									$is_staff_preview
+										? __('No requests yet. Add one from client-approval-workflow > Requests.', 'client-approval-workflow')
+										: __('No requests yet. Your team will add anything they still need from you here.', 'client-approval-workflow')
+								);
+								?>
+							</p>
+						<?php endif; ?>
+					</section>
+
+					<section class="cliapwo-portal__files cliapwo-card">
+						<div class="cliapwo-portal__section-header">
+							<div>
+								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Files', 'client-approval-workflow'); ?></h3>
+								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Shared deliverables and protected downloads for this client account.', 'client-approval-workflow'); ?></p>
+							</div>
+						</div>
+
+						<?php if ($files_query->have_posts()) : ?>
+							<ul class="cliapwo-portal__file-list cliapwo-list">
+								<?php while ($files_query->have_posts()) : ?>
+									<?php
+									$files_query->the_post();
+									$file_post_id = get_the_ID();
+									$file_name    = (string) get_post_meta($file_post_id, Files::ORIGINAL_FILENAME_META_KEY, true);
+									$mime_type    = (string) get_post_meta($file_post_id, Files::MIME_TYPE_META_KEY, true);
+									$file_size    = absint(get_post_meta($file_post_id, Files::FILE_SIZE_META_KEY, true));
+									$download_url = Files::get_download_url($file_post_id);
+									?>
+									<li class="cliapwo-portal__file">
+										<a href="<?php echo esc_url($download_url); ?>" class="cliapwo-portal__file-link">
+											<span class="cliapwo-portal__file-name"><?php echo esc_html('' !== $file_name ? $file_name : get_the_title($file_post_id)); ?></span>
+										</a>
+										<?php if ($file_size > 0 || '' !== $mime_type) : ?>
+											<span class="cliapwo-portal__file-meta">
+												<?php
+												$file_meta = array();
+
+												if ($file_size > 0) {
+													$file_meta[] = size_format($file_size);
+												}
+
+												if ('' !== $mime_type) {
+													$file_meta[] = $mime_type;
+												}
+
+												echo esc_html(implode(' / ', $file_meta));
+												?>
+											</span>
+										<?php endif; ?>
+									</li>
+								<?php endwhile; ?>
+							</ul>
+						<?php else : ?>
+							<p class="cliapwo-empty">
+								<?php
+								echo esc_html(
+									$is_staff_preview
+										? __('No files yet. Upload one from client-approval-workflow > Files.', 'client-approval-workflow')
+										: __('No files yet. Shared deliverables and downloads will appear here.', 'client-approval-workflow')
+								);
+								?>
+							</p>
+						<?php endif; ?>
+					</section>
+				</div>
 			</div>
 
 			<?php do_action('cliapwo_after_render_portal', $client->ID, $current_user_id); ?>
 		</div>
-		<?php
+<?php
 		wp_reset_postdata();
 
 		return (string) ob_get_clean();
@@ -585,5 +584,25 @@ class Portal
 		$blue  = hexdec(substr($hex_color, 4, 2));
 
 		return sprintf('rgba(%d,%d,%d,%s)', $red, $green, $blue, (string) $alpha);
+	}
+
+	/**
+	 * Return a reliable count for a query used in portal summary badges.
+	 *
+	 * Some private portal queries intentionally disable found rows for
+	 * performance, so found_posts may be zero even when posts are loaded.
+	 *
+	 * @param \WP_Query $query Query instance.
+	 * @return int
+	 */
+	private function get_query_count(\WP_Query $query)
+	{
+		$found_posts = absint($query->found_posts);
+
+		if ($found_posts > 0) {
+			return $found_posts;
+		}
+
+		return is_array($query->posts) ? count($query->posts) : 0;
 	}
 }
