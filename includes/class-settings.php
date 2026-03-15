@@ -327,7 +327,7 @@ class Settings
 	 */
 	public function render_branding_section()
 	{
-		echo '<p>' . esc_html__('Set the logo and primary color used across the client-approval-workflow portal experience.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Set the logo and primary color used across the SignoffFlow portal experience.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -337,7 +337,7 @@ class Settings
 	 */
 	public function render_notifications_section()
 	{
-		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files. client-approval-workflow relies on your WordPress/site mail transport to deliver them.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files. SignoffFlow relies on your WordPress/site mail transport to deliver them.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -489,7 +489,7 @@ class Settings
 	{
 	?>
 		<p class="description">
-			<?php esc_html_e('client-approval-workflow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('SignoffFlow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site.', 'client-approval-workflow'); ?>
 		</p>
 		<p class="description">
 			<?php esc_html_e('Local and staging environments often do not send real email unless SMTP or a mail testing tool is configured.', 'client-approval-workflow'); ?>
@@ -504,7 +504,7 @@ class Settings
 			<li><?php esc_html_e('Make sure a portal page is configured and at least one client has assigned WordPress users with valid email addresses.', 'client-approval-workflow'); ?></li>
 			<li><?php esc_html_e('Confirm your site mail transport works first by sending a WordPress test email through your SMTP plugin or mail testing tool.', 'client-approval-workflow'); ?></li>
 			<li><?php esc_html_e('Publish a new request, update, or file for that client.', 'client-approval-workflow'); ?></li>
-			<li><?php esc_html_e('Check client-approval-workflow > Event Log for the event entry and the related Email attempt entry.', 'client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Check SignoffFlow > Event Log for the event entry and the related Email attempt entry.', 'client-approval-workflow'); ?></li>
 			<li><?php esc_html_e('If delivery is configured, confirm the assigned client users received the email.', 'client-approval-workflow'); ?></li>
 		</ol>
 <?php

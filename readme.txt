@@ -1,40 +1,52 @@
 === SignoffFlow - Client Approval Workflow & Client Portal  ===
 Contributors: vzisis
-Tags: client approval workflow, client portal, approvals, agency client portal, file sharing
+Tags: client-portal, approvals, agency, file-sharing, project-management
 Requires at least: 6.0
-Tested up to: 6.9.3
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-SignoffFlow is a client approval workflow and client portal plugin for WordPress that gives service businesses a private place to share updates, files, and requests with each client.
+Client portal for agencies: share updates, files, and client requests privately. Built for approvals and client sign-off.
 
 == Description ==
 
-SignoffFlow helps agencies, freelancers, and service teams keep client communication organized inside WordPress.
+SignoffFlow is a **client portal** and **client approval workflow** plugin for agencies, freelancers, and service teams.
 
-Core features in the current free plugin:
+Create a private portal per client where you can:
+* Share **project updates** (timeline)
+* Share **files** with protected downloads
+* Send **client requests/tasks** and track completion (great for approvals and sign-off)
 
-* Private client portal access tied to assigned WordPress users
-* Client updates timeline
-* Protected file downloads through a permission-checked endpoint
-* Client requests/tasks with completion tracking
-* Event log for update, file, and email-attempt activity
-* Email notifications for new requests, updates, and uploaded files
-* Basic branding settings for logo and primary color
+Portal access is restricted to WordPress users assigned to a client, plus staff users with management capability.
 
-This repository build keeps the admin experience WordPress-native and focuses on secure access control, capability checks, nonces, and minimal theme-compatible portal output.
+This plugin only outputs front-end content on the portal page via the `[cliapwo_portal]` shortcode.
+
+=== Use cases ===
+* Collect client sign-off on deliverables and tasks
+* Keep client communication out of email threads
+* Share files securely with per-client access control
+* Provide a branded agency client portal experience
+
+== Getting started ==
+1. Go to `SignoffFlow > Settings`.
+2. Use the `Quick setup` panel to create a sample portal page, or create a page manually and add `[cliapwo_portal]`.
+3. Confirm that page is selected as the portal page in SignoffFlow settings.
+4. Create a client in `SignoffFlow > Clients` and assign one or more users.
+5. Add updates, files, and requests for that client.
+6. Log in as an assigned client user to view the portal and complete requests.
 
 == Installation ==
 
 1. Upload the plugin folder to `/wp-content/plugins/` or install it as a zip in WordPress.
 2. Activate **SignoffFlow** through the WordPress Plugins screen.
 3. Go to `SignoffFlow > Settings`.
-4. Choose a portal page and place the `[cliapwo_portal]` shortcode on that page.
-5. Create a client in `SignoffFlow > Clients`.
-6. Assign one or more WordPress users to that client.
-7. Add updates, files, and requests for that client.
+4. Use the optional `Quick setup` panel to create a sample portal page automatically, or create your own page and add the `[cliapwo_portal]` shortcode.
+5. Confirm the portal page is selected in SignoffFlow settings.
+6. Create a client in `SignoffFlow > Clients`.
+7. Assign one or more WordPress users to that client.
+8. Add updates, files, and requests for that client.
 
 == Frequently Asked Questions ==
 

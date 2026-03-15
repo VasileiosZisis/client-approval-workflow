@@ -27,6 +27,8 @@ class Lifecycle
 		if (false === get_option(Settings::OPTION_KEY, false)) {
 			add_option(Settings::OPTION_KEY, Settings::get_default_settings());
 		}
+
+		set_transient('cliapwo_plugin_activated', 1, MINUTE_IN_SECONDS);
 	}
 
 	/**
