@@ -152,6 +152,21 @@ class Settings
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
 		);
+
+		add_settings_section(
+			'cliapwo_advanced_section',
+			__('Advanced', 'client-approval-workflow'),
+			array($this, 'render_advanced_section'),
+			self::PAGE_SLUG
+		);
+
+		add_settings_field(
+			'cliapwo_delete_data_on_uninstall',
+			__('Delete data on uninstall', 'client-approval-workflow'),
+			array($this, 'render_delete_data_on_uninstall_field'),
+			self::PAGE_SLUG,
+			'cliapwo_advanced_section'
+		);
 	}
 
 	/**
@@ -185,6 +200,7 @@ class Settings
 			'notify_updates'    => 1,
 			'notify_files'      => 1,
 			'notify_requests'   => 1,
+			'delete_data_on_uninstall' => 0,
 		);
 	}
 
@@ -249,13 +265,14 @@ class Settings
 		}
 
 		return array(
-			'portal_page_id'    => $portal_page_id,
-			'branding_logo_id'  => $branding_logo_id,
-			'branding_logo_url' => $branding_logo_url,
-			'primary_color'     => $primary_color,
-			'notify_updates'    => $this->sanitize_toggle($input, 'notify_updates'),
-			'notify_files'      => $this->sanitize_toggle($input, 'notify_files'),
-			'notify_requests'   => $this->sanitize_toggle($input, 'notify_requests'),
+			'portal_page_id'            => $portal_page_id,
+			'branding_logo_id'          => $branding_logo_id,
+			'branding_logo_url'         => $branding_logo_url,
+			'primary_color'             => $primary_color,
+			'notify_updates'            => $this->sanitize_toggle($input, 'notify_updates'),
+			'notify_files'              => $this->sanitize_toggle($input, 'notify_files'),
+			'notify_requests'           => $this->sanitize_toggle($input, 'notify_requests'),
+			'delete_data_on_uninstall'  => $this->sanitize_toggle($input, 'delete_data_on_uninstall'),
 		);
 	}
 
@@ -338,6 +355,16 @@ class Settings
 	public function render_notifications_section()
 	{
 		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files. SignoffFlow relies on your WordPress/site mail transport to deliver them.', 'client-approval-workflow') . '</p>';
+	}
+
+	/**
+	 * Render the advanced section description.
+	 *
+	 * @return void
+	 */
+	public function render_advanced_section()
+	{
+		echo '<p>' . esc_html__('Use these settings carefully. Uninstall cleanup is optional and disabled by default.', 'client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -508,5 +535,27 @@ class Settings
 			<li><?php esc_html_e('If delivery is configured, confirm the assigned client users received the email.', 'client-approval-workflow'); ?></li>
 		</ol>
 <?php
+	}
+
+	/**
+	 * Render the uninstall cleanup toggle.
+	 *
+	 * @return void
+	 */
+	public function render_delete_data_on_uninstall_field()
+	{
+		$settings = self::get_settings();
+	?>
+		<label for="cliapwo_delete_data_on_uninstall">
+			<input
+				id="cliapwo_delete_data_on_uninstall"
+				type="checkbox"
+				name="<?php echo esc_attr(self::OPTION_KEY); ?>[delete_data_on_uninstall]"
+				value="1"
+				<?php checked(! empty($settings['delete_data_on_uninstall'])); ?> />
+			<?php esc_html_e('Delete SignoffFlow data when the plugin is uninstalled.', 'client-approval-workflow'); ?>
+		</label>
+		<p class="description"><?php esc_html_e('This removes SignoffFlow settings, client accounts, updates, files, requests, event log entries, and protected uploaded files when the plugin is deleted.', 'client-approval-workflow'); ?></p>
+	<?php
 	}
 }
