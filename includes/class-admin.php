@@ -50,8 +50,8 @@ class Admin
 	public function register_menu()
 	{
 		add_menu_page(
-			__('SignoffFlow', 'signoffflow'),
-			__('SignoffFlow', 'signoffflow'),
+			__('client-approval-workflow', 'client-approval-workflow'),
+			__('SignoffFlow', 'client-approval-workflow'),
 			'cliapwo_manage_portal',
 			Settings::PAGE_SLUG,
 			array($this, 'render_settings_page'),
@@ -61,8 +61,8 @@ class Admin
 
 		add_submenu_page(
 			Settings::PAGE_SLUG,
-			__('Settings', 'signoffflow'),
-			__('Settings', 'signoffflow'),
+			__('Settings', 'client-approval-workflow'),
+			__('Settings', 'client-approval-workflow'),
 			'cliapwo_manage_portal',
 			Settings::PAGE_SLUG,
 			array($this, 'render_settings_page')
@@ -78,8 +78,8 @@ class Admin
 	{
 		if (! current_user_can('cliapwo_manage_portal')) {
 			wp_die(
-				esc_html__('You are not allowed to manage SignoffFlow settings.', 'signoffflow'),
-				esc_html__('Forbidden', 'signoffflow'),
+				esc_html__('You are not allowed to manage client-approval-workflow settings.', 'client-approval-workflow'),
+				esc_html__('Forbidden', 'client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -87,7 +87,7 @@ class Admin
 		}
 ?>
 		<div class="wrap">
-			<h1><?php esc_html_e('SignoffFlow Settings', 'signoffflow'); ?></h1>
+			<h1><?php esc_html_e('client-approval-workflow Settings', 'client-approval-workflow'); ?></h1>
 
 			<?php settings_errors(); ?>
 
@@ -95,7 +95,7 @@ class Admin
 				<?php
 				settings_fields(Settings::OPTION_GROUP);
 				do_settings_sections(Settings::PAGE_SLUG);
-				submit_button(__('Save Settings', 'signoffflow'));
+				submit_button(__('Save Settings', 'client-approval-workflow'));
 				?>
 			</form>
 		</div>

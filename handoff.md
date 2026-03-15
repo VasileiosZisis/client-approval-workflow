@@ -2,10 +2,10 @@
 
 ## Current state
 
-- Plugin: `SignoffFlow`
+- Plugin: `client-approval-workflow`
 - Package: `client-approval-workflow`
 - Main file: `client-approval-workflow.php`
-- Text domain: `signoffflow`
+- Text domain: `client-approval-workflow`
 - Namespace: `ClientApprovalWorkflow\`
 - Prefix: `cliapwo`
 - Current release version: `0.2.0`
@@ -52,7 +52,7 @@
 
 2. Email delivery depends on the site mail transport
    - Risk: `wp_mail()` may succeed logically but not deliver in local/staging environments
-   - Current state: SignoffFlow now includes an admin `Email delivery help` block in the Notifications settings section, plus repo/readme guidance for local and delivery testing
+   - Current state: client-approval-workflow now includes an admin `Email delivery help` block in the Notifications settings section, plus repo/readme guidance for local and delivery testing
    - Remaining limitation: this is guidance only and still depends on the site's mail transport or SMTP plugin
    - Recommended next step: optional future polish could add a docs link or example SMTP plugin setup notes without adding background checks or external calls
    - Likely files: `includes/class-settings.php`, `README.md`, `readme.txt`

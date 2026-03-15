@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name:       SignoffFlow
+ * Plugin Name:       SignoffFlow - Client Approval Workflow & Client Portal
  * Description:       Client approval workflow and client portal foundations for service businesses.
  * Version:           0.2.0
  * Author:      Vasileios Zisis
  * Author URI:  https://profiles.wordpress.org/vzisis/
- * Text Domain:       signoffflow
+ * Text Domain:       client-approval-workflow
  * Domain Path:       /languages
  * Requires at least: 6.0
  * Requires PHP:      7.4
@@ -123,7 +123,7 @@ function cliapwo_get_requests_query_for_client($client_id, array $args = array()
 }
 
 /**
- * Determine whether the SignoffFlow Pro add-on is active.
+ * Determine whether the client-approval-workflow Pro add-on is active.
  *
  * @return bool
  */
@@ -132,7 +132,7 @@ function cliapwo_is_pro_active()
 	$is_active = defined('CLIAPWO_PRO_VERSION') || class_exists('\ClientApprovalWorkflowPro\Plugin');
 
 	/**
-	 * Filter whether the SignoffFlow Pro add-on is active.
+	 * Filter whether the client-approval-workflow Pro add-on is active.
 	 *
 	 * @param bool $is_active Whether Pro is active.
 	 */

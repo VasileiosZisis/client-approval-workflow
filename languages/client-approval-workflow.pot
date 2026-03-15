@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: SignoffFlow 0.2.0\n"
+"Project-Id-Version: client-approval-workflow 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-14 19:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Domain: signoffflow\n"
+"X-Domain: client-approval-workflow\n"
 
 #: includes/class-portal.php:126
 msgid "%d request needs your attention."
@@ -19,15 +19,15 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/class-events.php:338
-msgid "A new file has been uploaded to your SignoffFlow portal."
+msgid "A new file has been uploaded to your client-approval-workflow portal."
 msgstr ""
 
 #: includes/class-events.php:243
-msgid "A new request has been added to your SignoffFlow portal."
+msgid "A new request has been added to your client-approval-workflow portal."
 msgstr ""
 
 #: includes/class-events.php:160
-msgid "A new update has been posted in your SignoffFlow portal."
+msgid "A new update has been posted in your client-approval-workflow portal."
 msgstr ""
 
 #: includes/class-files.php:261
@@ -59,7 +59,7 @@ msgid "Approvals"
 msgstr ""
 
 #: includes/class-approvals.php:128
-msgid "Approvals are reserved for the SignoffFlow Pro add-on. The free plugin keeps the menu location, schema, and hooks ready so a Pro module can attach cleanly."
+msgid "Approvals are reserved for the client-approval-workflow Pro add-on. The free plugin keeps the menu location, schema, and hooks ready so a Pro module can attach cleanly."
 msgstr ""
 
 #: includes/class-clients.php:174
@@ -71,7 +71,7 @@ msgid "Branding"
 msgstr ""
 
 #: includes/class-settings.php:507
-msgid "Check SignoffFlow > Event Log for the event entry and the related Email attempt entry."
+msgid "Check client-approval-workflow > Event Log for the event entry and the related Email attempt entry."
 msgstr ""
 
 #: includes/class-settings.php:215
@@ -91,7 +91,7 @@ msgid "Client Details"
 msgstr ""
 
 #: includes/class-files.php:270
-msgid "Client downloads always go through SignoffFlow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory."
+msgid "Client downloads always go through client-approval-workflow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory."
 msgstr ""
 
 #: includes/class-events.php:317
@@ -174,7 +174,7 @@ msgid "Email delivery help"
 msgstr ""
 
 #: includes/class-settings.php:340
-msgid "Enable or disable the client emails sent for new requests, updates, and uploaded files. SignoffFlow relies on your WordPress/site mail transport to deliver them."
+msgid "Enable or disable the client emails sent for new requests, updates, and uploaded files. client-approval-workflow relies on your WordPress/site mail transport to deliver them."
 msgstr ""
 
 #: includes/class-settings.php:287
@@ -322,7 +322,7 @@ msgid "No files yet. Shared deliverables and downloads will appear here."
 msgstr ""
 
 #: includes/class-portal.php:302
-msgid "No files yet. Upload one from SignoffFlow > Files."
+msgid "No files yet. Upload one from client-approval-workflow > Files."
 msgstr ""
 
 #: includes/class-portal.php:70
@@ -334,7 +334,7 @@ msgid "No requests found."
 msgstr ""
 
 #: includes/class-portal.php:194
-msgid "No requests yet. Add one from SignoffFlow > Requests."
+msgid "No requests yet. Add one from client-approval-workflow > Requests."
 msgstr ""
 
 #: includes/class-portal.php:195
@@ -350,7 +350,7 @@ msgid "No updates yet. New project updates will appear here."
 msgstr ""
 
 #: includes/class-portal.php:251
-msgid "No updates yet. Publish a client update from SignoffFlow > Updates."
+msgid "No updates yet. Publish a client update from client-approval-workflow > Updates."
 msgstr ""
 
 #: includes/class-files.php:467 includes/class-files.php:493 includes/class-requests.php:399
@@ -498,7 +498,7 @@ msgid "Send email notifications when a new update is posted."
 msgstr ""
 
 #: includes/class-settings.php:330
-msgid "Set the logo and primary color used across the SignoffFlow portal experience."
+msgid "Set the logo and primary color used across the client-approval-workflow portal experience."
 msgstr ""
 
 #: includes/class-admin.php:64 includes/class-admin.php:65
@@ -506,23 +506,23 @@ msgid "Settings"
 msgstr ""
 
 #: includes/class-admin.php:53 includes/class-admin.php:54 includes/class-portal.php:222
-msgid "SignoffFlow"
+msgid "client-approval-workflow"
 msgstr ""
 
 #: includes/class-admin.php:90
-msgid "SignoffFlow Settings"
+msgid "client-approval-workflow Settings"
 msgstr ""
 
 #: includes/class-events.php:674
-msgid "SignoffFlow attempted wp_mail() for %1$s. Result: %2$s. Recipients: %3$s"
+msgid "client-approval-workflow attempted wp_mail() for %1$s. Result: %2$s. Recipients: %3$s"
 msgstr ""
 
 #: includes/class-portal.php:106
-msgid "SignoffFlow logo"
+msgid "client-approval-workflow logo"
 msgstr ""
 
 #: includes/class-settings.php:492
-msgid "SignoffFlow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site."
+msgid "client-approval-workflow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site."
 msgstr ""
 
 #: includes/class-settings.php:501
@@ -662,7 +662,7 @@ msgid "Waiting on you"
 msgstr ""
 
 #: includes/class-portal.php:111
-msgid "Welcome to your SignoffFlow portal."
+msgid "Welcome to your client-approval-workflow portal."
 msgstr ""
 
 #: includes/class-files.php:448
@@ -670,7 +670,7 @@ msgid "You are not allowed to download files."
 msgstr ""
 
 #: includes/class-admin.php:81
-msgid "You are not allowed to manage SignoffFlow settings."
+msgid "You are not allowed to manage client-approval-workflow settings."
 msgstr ""
 
 #: includes/class-approvals.php:113

@@ -35,6 +35,8 @@ $cliapwo_file_post_ids = get_posts(
 );
 
 foreach ($cliapwo_file_post_ids as $cliapwo_file_post_id) {
+	delete_transient('cliapwo_file_upload_error_' . (int) $cliapwo_file_post_id);
+
 	$cliapwo_relative_path = get_post_meta((int) $cliapwo_file_post_id, 'cliapwo_stored_relative_path', true);
 
 	if (is_string($cliapwo_relative_path) && '' !== $cliapwo_relative_path && '' !== $cliapwo_basedir) {
@@ -87,6 +89,19 @@ foreach ($cliapwo_post_types as $cliapwo_post_type) {
 delete_option('cliapwo_settings');
 delete_transient('cliapwo_plugin_activated');
 
+$cliapwo_manager_user_ids = get_users(
+	array(
+		'fields'     => 'ids',
+		'capability' => 'cliapwo_manage_portal',
+	)
+);
+
+if (is_array($cliapwo_manager_user_ids)) {
+	foreach ($cliapwo_manager_user_ids as $cliapwo_manager_user_id) {
+		delete_transient('cliapwo_mail_debug_notice_' . (int) $cliapwo_manager_user_id);
+	}
+}
+
 if ('' !== $cliapwo_basedir) {
 	$cliapwo_private_directory = wp_normalize_path(trailingslashit($cliapwo_basedir) . 'cliapwo-private');
 
@@ -107,36 +122,6 @@ if ('' !== $cliapwo_basedir) {
 		rmdir($cliapwo_private_directory);
 	}
 }
-
-global $wpdb;
-
-$wpdb->query(
-	$wpdb->prepare(
-		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like('_transient_cliapwo_file_upload_error_') . '%'
-	)
-);
-
-$wpdb->query(
-	$wpdb->prepare(
-		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like('_transient_timeout_cliapwo_file_upload_error_') . '%'
-	)
-);
-
-$wpdb->query(
-	$wpdb->prepare(
-		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like('_transient_cliapwo_mail_debug_notice_') . '%'
-	)
-);
-
-$wpdb->query(
-	$wpdb->prepare(
-		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like('_transient_timeout_cliapwo_mail_debug_notice_') . '%'
-	)
-);
 
 $cliapwo_admin_role = get_role('administrator');
 

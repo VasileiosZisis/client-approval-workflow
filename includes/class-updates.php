@@ -75,15 +75,15 @@ class Updates
 			self::POST_TYPE,
 			array(
 				'labels'              => array(
-					'name'          => __('Updates', 'signoffflow'),
-					'singular_name' => __('Update', 'signoffflow'),
-					'menu_name'     => __('Updates', 'signoffflow'),
-					'add_new_item'  => __('Add Update', 'signoffflow'),
-					'edit_item'     => __('Edit Update', 'signoffflow'),
-					'new_item'      => __('New Update', 'signoffflow'),
-					'view_item'     => __('View Update', 'signoffflow'),
-					'search_items'  => __('Search Updates', 'signoffflow'),
-					'not_found'     => __('No updates found.', 'signoffflow'),
+					'name'          => __('Updates', 'client-approval-workflow'),
+					'singular_name' => __('Update', 'client-approval-workflow'),
+					'menu_name'     => __('Updates', 'client-approval-workflow'),
+					'add_new_item'  => __('Add Update', 'client-approval-workflow'),
+					'edit_item'     => __('Edit Update', 'client-approval-workflow'),
+					'new_item'      => __('New Update', 'client-approval-workflow'),
+					'view_item'     => __('View Update', 'client-approval-workflow'),
+					'search_items'  => __('Search Updates', 'client-approval-workflow'),
+					'not_found'     => __('No updates found.', 'client-approval-workflow'),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -124,7 +124,7 @@ class Updates
 	{
 		add_meta_box(
 			'cliapwo_update_details',
-			__('Update Details', 'signoffflow'),
+			__('Update Details', 'client-approval-workflow'),
 			array($this, 'render_update_details_meta_box'),
 			self::POST_TYPE,
 			'side',
@@ -160,13 +160,13 @@ class Updates
 		);
 		?>
 		<p>
-			<label for="cliapwo_update_client_id"><strong><?php esc_html_e('Client', 'signoffflow'); ?></strong></label>
+			<label for="cliapwo_update_client_id"><strong><?php esc_html_e('Client', 'client-approval-workflow'); ?></strong></label>
 		</p>
 		<select
 			class="widefat"
 			id="cliapwo_update_client_id"
 			name="cliapwo_update_client_id">
-			<option value="0"><?php esc_html_e('Select a client', 'signoffflow'); ?></option>
+			<option value="0"><?php esc_html_e('Select a client', 'client-approval-workflow'); ?></option>
 			<?php foreach ($clients as $client) : ?>
 				<?php if (! $client instanceof \WP_Post) : ?>
 					<?php continue; ?>
@@ -178,7 +178,7 @@ class Updates
 				</option>
 			<?php endforeach; ?>
 		</select>
-		<p class="description"><?php esc_html_e('Updates are shown only in the assigned client portal.', 'signoffflow'); ?></p>
+		<p class="description"><?php esc_html_e('Updates are shown only in the assigned client portal.', 'client-approval-workflow'); ?></p>
 		<?php
 	}
 
@@ -250,7 +250,7 @@ class Updates
 	 */
 	public function filter_update_columns($columns)
 	{
-		$columns['cliapwo_update_client'] = __('Client', 'signoffflow');
+		$columns['cliapwo_update_client'] = __('Client', 'client-approval-workflow');
 
 		return $columns;
 	}
@@ -272,7 +272,7 @@ class Updates
 		$client    = $client_id > 0 ? get_post($client_id) : null;
 
 		if (! $client instanceof \WP_Post) {
-			echo esc_html__('Unassigned', 'signoffflow');
+			echo esc_html__('Unassigned', 'client-approval-workflow');
 			return;
 		}
 
@@ -320,6 +320,7 @@ class Updates
 			'order'                  => 'DESC',
 			'update_post_meta_cache' => true,
 			'update_post_term_cache' => false,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- portal updates are filtered by private client linkage and client-visible status stored in post meta.
 			'meta_query'             => array(
 				array(
 					'key'   => self::CLIENT_META_KEY,

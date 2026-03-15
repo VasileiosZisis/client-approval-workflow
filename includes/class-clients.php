@@ -68,15 +68,15 @@ class Clients
 			self::POST_TYPE,
 			array(
 				'labels'              => array(
-					'name'          => __('Clients', 'signoffflow'),
-					'singular_name' => __('Client', 'signoffflow'),
-					'menu_name'     => __('Clients', 'signoffflow'),
-					'add_new_item'  => __('Add Client', 'signoffflow'),
-					'edit_item'     => __('Edit Client', 'signoffflow'),
-					'new_item'      => __('New Client', 'signoffflow'),
-					'view_item'     => __('View Client', 'signoffflow'),
-					'search_items'  => __('Search Clients', 'signoffflow'),
-					'not_found'     => __('No clients found.', 'signoffflow'),
+					'name'          => __('Clients', 'client-approval-workflow'),
+					'singular_name' => __('Client', 'client-approval-workflow'),
+					'menu_name'     => __('Clients', 'client-approval-workflow'),
+					'add_new_item'  => __('Add Client', 'client-approval-workflow'),
+					'edit_item'     => __('Edit Client', 'client-approval-workflow'),
+					'new_item'      => __('New Client', 'client-approval-workflow'),
+					'view_item'     => __('View Client', 'client-approval-workflow'),
+					'search_items'  => __('Search Clients', 'client-approval-workflow'),
+					'not_found'     => __('No clients found.', 'client-approval-workflow'),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -119,7 +119,7 @@ class Clients
 	{
 		add_meta_box(
 			'cliapwo_client_details',
-			__('Client Details', 'signoffflow'),
+			__('Client Details', 'client-approval-workflow'),
 			array($this, 'render_client_details_meta_box'),
 			self::POST_TYPE,
 			'normal',
@@ -153,7 +153,7 @@ class Clients
 		$wp_roles          = wp_roles();
 		?>
 		<p>
-			<label for="cliapwo_contact_email"><strong><?php esc_html_e('Contact email', 'signoffflow'); ?></strong></label><br />
+			<label for="cliapwo_contact_email"><strong><?php esc_html_e('Contact email', 'client-approval-workflow'); ?></strong></label><br />
 			<input
 				type="email"
 				class="regular-text"
@@ -163,7 +163,7 @@ class Clients
 		</p>
 
 		<p>
-			<label for="cliapwo_client_notes"><strong><?php esc_html_e('Internal notes', 'signoffflow'); ?></strong></label><br />
+			<label for="cliapwo_client_notes"><strong><?php esc_html_e('Internal notes', 'client-approval-workflow'); ?></strong></label><br />
 			<textarea
 				class="large-text"
 				rows="5"
@@ -171,12 +171,12 @@ class Clients
 				name="cliapwo_client_notes"><?php echo esc_textarea((string) $notes); ?></textarea>
 		</p>
 
-		<p><strong><?php esc_html_e('Assigned portal users', 'signoffflow'); ?></strong></p>
+		<p><strong><?php esc_html_e('Assigned portal users', 'client-approval-workflow'); ?></strong></p>
 		<p class="description">
-			<?php esc_html_e('Select the WordPress user accounts that can log in and view this client portal.', 'signoffflow'); ?>
+			<?php esc_html_e('Select the WordPress user accounts that can log in and view this client portal.', 'client-approval-workflow'); ?>
 		</p>
 		<?php if (empty($users)) : ?>
-			<p><?php esc_html_e('No WordPress users are available to assign.', 'signoffflow'); ?></p>
+			<p><?php esc_html_e('No WordPress users are available to assign.', 'client-approval-workflow'); ?></p>
 		<?php else : ?>
 			<fieldset>
 				<?php foreach ($users as $user) : ?>
@@ -435,6 +435,7 @@ class Clients
 				'no_found_rows'          => true,
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- assigned user IDs are stored as serialized post meta in a private plugin CPT until a dedicated relation model exists.
 				'meta_query'             => array(
 					'relation' => 'OR',
 					array(

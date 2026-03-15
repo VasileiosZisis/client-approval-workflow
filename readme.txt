@@ -1,7 +1,8 @@
-=== Client Approval Workflow & Client Portal for WordPress - SignoffFlow ===
+=== SignoffFlow - Client Approval Workflow & Client Portal  ===
 Contributors: vzisis
 Tags: client approval workflow, client portal, approvals, agency client portal, file sharing
 Requires at least: 6.0
+Tested up to: 6.9.3
 Requires PHP: 7.4
 Stable tag: 0.2.0
 License: GPLv2 or later

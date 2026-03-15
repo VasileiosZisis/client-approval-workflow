@@ -69,12 +69,12 @@ class Events
 			self::POST_TYPE,
 			array(
 				'labels'              => array(
-					'name'          => __('Event Log', 'signoffflow'),
-					'singular_name' => __('Event', 'signoffflow'),
-					'menu_name'     => __('Event Log', 'signoffflow'),
-					'view_item'     => __('View Event', 'signoffflow'),
-					'search_items'  => __('Search Events', 'signoffflow'),
-					'not_found'     => __('No events found.', 'signoffflow'),
+					'name'          => __('Event Log', 'client-approval-workflow'),
+					'singular_name' => __('Event', 'client-approval-workflow'),
+					'menu_name'     => __('Event Log', 'client-approval-workflow'),
+					'view_item'     => __('View Event', 'client-approval-workflow'),
+					'search_items'  => __('Search Events', 'client-approval-workflow'),
+					'not_found'     => __('No events found.', 'client-approval-workflow'),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -130,13 +130,13 @@ class Events
 
 		$title = sprintf(
 			/* translators: %s: update title */
-			__('Update posted: %s', 'signoffflow'),
+			__('Update posted: %s', 'client-approval-workflow'),
 			$update->post_title
 		);
 
 		$details = sprintf(
 			/* translators: 1: client name, 2: update title */
-			__("Client: %1\$s\nUpdate: %2\$s", 'signoffflow'),
+			__("Client: %1\$s\nUpdate: %2\$s", 'client-approval-workflow'),
 			$client->post_title,
 			$update->post_title
 		);
@@ -150,27 +150,27 @@ class Events
 		$portal_url = $this->get_portal_url();
 		$subject    = sprintf(
 			/* translators: 1: site name, 2: client name */
-			__('[%1$s] New portal update for %2$s', 'signoffflow'),
+			__('[%1$s] New portal update for %2$s', 'client-approval-workflow'),
 			wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES),
 			$client->post_title
 		);
 		$message    = implode(
 			"\n\n",
 			array(
-				__('A new update has been posted in your SignoffFlow portal.', 'signoffflow'),
+				__('A new update has been posted in your client-approval-workflow portal.', 'client-approval-workflow'),
 				sprintf(
 					/* translators: %s: client name */
-					__('Client: %s', 'signoffflow'),
+					__('Client: %s', 'client-approval-workflow'),
 					$client->post_title
 				),
 				sprintf(
 					/* translators: %s: update title */
-					__('Update: %s', 'signoffflow'),
+					__('Update: %s', 'client-approval-workflow'),
 					$update->post_title
 				),
 				sprintf(
 					/* translators: %s: portal URL */
-					__('Portal link: %s', 'signoffflow'),
+					__('Portal link: %s', 'client-approval-workflow'),
 					$portal_url
 				),
 			)
@@ -183,7 +183,7 @@ class Events
 			$update_id,
 			sprintf(
 				/* translators: %s: update title */
-				__('update "%s"', 'signoffflow'),
+				__('update "%s"', 'client-approval-workflow'),
 				$update->post_title
 			)
 		);
@@ -213,13 +213,13 @@ class Events
 
 		$title = sprintf(
 			/* translators: %s: request title */
-			__('Request created: %s', 'signoffflow'),
+			__('Request created: %s', 'client-approval-workflow'),
 			$request->post_title
 		);
 
 		$details = sprintf(
 			/* translators: 1: client name, 2: request title */
-			__("Client: %1\$s\nRequest: %2\$s", 'signoffflow'),
+			__("Client: %1\$s\nRequest: %2\$s", 'client-approval-workflow'),
 			$client->post_title,
 			$request->post_title
 		);
@@ -233,27 +233,27 @@ class Events
 		$portal_url = $this->get_portal_url();
 		$subject    = sprintf(
 			/* translators: 1: site name, 2: client name */
-			__('[%1$s] New request for %2$s', 'signoffflow'),
+			__('[%1$s] New request for %2$s', 'client-approval-workflow'),
 			wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES),
 			$client->post_title
 		);
 		$message    = implode(
 			"\n\n",
 			array(
-				__('A new request has been added to your SignoffFlow portal.', 'signoffflow'),
+				__('A new request has been added to your client-approval-workflow portal.', 'client-approval-workflow'),
 				sprintf(
 					/* translators: %s: client name */
-					__('Client: %s', 'signoffflow'),
+					__('Client: %s', 'client-approval-workflow'),
 					$client->post_title
 				),
 				sprintf(
 					/* translators: %s: request title */
-					__('Request: %s', 'signoffflow'),
+					__('Request: %s', 'client-approval-workflow'),
 					$request->post_title
 				),
 				sprintf(
 					/* translators: %s: portal URL */
-					__('Portal link: %s', 'signoffflow'),
+					__('Portal link: %s', 'client-approval-workflow'),
 					$portal_url
 				),
 			)
@@ -266,7 +266,7 @@ class Events
 			$request_id,
 			sprintf(
 				/* translators: %s: request title */
-				__('request "%s"', 'signoffflow'),
+				__('request "%s"', 'client-approval-workflow'),
 				$request->post_title
 			)
 		);
@@ -308,13 +308,13 @@ class Events
 
 		$title = sprintf(
 			/* translators: %s: file name */
-			__('File uploaded: %s', 'signoffflow'),
+			__('File uploaded: %s', 'client-approval-workflow'),
 			$file_name
 		);
 
 		$details = sprintf(
 			/* translators: 1: client name, 2: file name */
-			__("Client: %1\$s\nFile: %2\$s", 'signoffflow'),
+			__("Client: %1\$s\nFile: %2\$s", 'client-approval-workflow'),
 			$client->post_title,
 			$file_name
 		);
@@ -328,27 +328,27 @@ class Events
 		$portal_url = $this->get_portal_url();
 		$subject    = sprintf(
 			/* translators: 1: site name, 2: client name */
-			__('[%1$s] New file available for %2$s', 'signoffflow'),
+			__('[%1$s] New file available for %2$s', 'client-approval-workflow'),
 			wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES),
 			$client->post_title
 		);
 		$message    = implode(
 			"\n\n",
 			array(
-				__('A new file has been uploaded to your SignoffFlow portal.', 'signoffflow'),
+				__('A new file has been uploaded to your client-approval-workflow portal.', 'client-approval-workflow'),
 				sprintf(
 					/* translators: %s: client name */
-					__('Client: %s', 'signoffflow'),
+					__('Client: %s', 'client-approval-workflow'),
 					$client->post_title
 				),
 				sprintf(
 					/* translators: %s: file name */
-					__('File: %s', 'signoffflow'),
+					__('File: %s', 'client-approval-workflow'),
 					$file_name
 				),
 				sprintf(
 					/* translators: %s: portal URL */
-					__('Portal link: %s', 'signoffflow'),
+					__('Portal link: %s', 'client-approval-workflow'),
 					$portal_url
 				),
 			)
@@ -361,7 +361,7 @@ class Events
 			$file_post_id,
 			sprintf(
 				/* translators: %s: file name */
-				__('file "%s"', 'signoffflow'),
+				__('file "%s"', 'client-approval-workflow'),
 				$file_name
 			)
 		);
@@ -375,9 +375,9 @@ class Events
 	 */
 	public function filter_event_columns($columns)
 	{
-		$columns['cliapwo_event_type']   = __('Type', 'signoffflow');
-		$columns['cliapwo_event_client'] = __('Client', 'signoffflow');
-		$columns['cliapwo_event_object'] = __('Related item', 'signoffflow');
+		$columns['cliapwo_event_type']   = __('Type', 'client-approval-workflow');
+		$columns['cliapwo_event_client'] = __('Client', 'client-approval-workflow');
+		$columns['cliapwo_event_object'] = __('Related item', 'client-approval-workflow');
 
 		return $columns;
 	}
@@ -399,7 +399,7 @@ class Events
 
 		if ('cliapwo_event_client' === $column) {
 			$client = get_post(absint(get_post_meta($post_id, self::CLIENT_META_KEY, true)));
-			echo $client instanceof \WP_Post ? esc_html($client->post_title) : esc_html__('Unknown', 'signoffflow');
+			echo $client instanceof \WP_Post ? esc_html($client->post_title) : esc_html__('Unknown', 'client-approval-workflow');
 			return;
 		}
 
@@ -408,7 +408,7 @@ class Events
 		}
 
 		$object = get_post(absint(get_post_meta($post_id, self::OBJECT_ID_META_KEY, true)));
-		echo $object instanceof \WP_Post ? esc_html($object->post_title) : esc_html__('Unknown', 'signoffflow');
+		echo $object instanceof \WP_Post ? esc_html($object->post_title) : esc_html__('Unknown', 'client-approval-workflow');
 	}
 
 	/**
@@ -589,22 +589,22 @@ class Events
 	private function get_event_type_label($event_type)
 	{
 		if ('email_attempt' === $event_type) {
-			return __('Email attempt', 'signoffflow');
+			return __('Email attempt', 'client-approval-workflow');
 		}
 
 		if ('request_created' === $event_type) {
-			return __('Request created', 'signoffflow');
+			return __('Request created', 'client-approval-workflow');
 		}
 
 		if ('file_uploaded' === $event_type) {
-			return __('File uploaded', 'signoffflow');
+			return __('File uploaded', 'client-approval-workflow');
 		}
 
 		if ('update_created' === $event_type) {
-			return __('Update created', 'signoffflow');
+			return __('Update created', 'client-approval-workflow');
 		}
 
-		return __('Event', 'signoffflow');
+		return __('Event', 'client-approval-workflow');
 	}
 
 	/**
@@ -620,12 +620,12 @@ class Events
 	private function record_mail_attempt($client_id, $object_id, $context_label, array $emails, $mail_sent)
 	{
 		$result_label = $mail_sent
-			? __('accepted by wp_mail()', 'signoffflow')
-			: __('wp_mail() returned false', 'signoffflow');
+			? __('accepted by wp_mail()', 'client-approval-workflow')
+			: __('wp_mail() returned false', 'client-approval-workflow');
 		$recipients   = implode(', ', $emails);
 		$title        = sprintf(
 			/* translators: %s: object label */
-			__('Email attempt: %s', 'signoffflow'),
+			__('Email attempt: %s', 'client-approval-workflow'),
 			$context_label
 		);
 		$content      = implode(
@@ -633,17 +633,17 @@ class Events
 			array(
 				sprintf(
 					/* translators: %s: object label */
-					__('Context: %s', 'signoffflow'),
+					__('Context: %s', 'client-approval-workflow'),
 					$context_label
 				),
 				sprintf(
 					/* translators: %s: mail result */
-					__('Result: %s', 'signoffflow'),
+					__('Result: %s', 'client-approval-workflow'),
 					$result_label
 				),
 				sprintf(
 					/* translators: %s: recipient list */
-					__('Recipients: %s', 'signoffflow'),
+					__('Recipients: %s', 'client-approval-workflow'),
 					$recipients
 				),
 			)
@@ -671,7 +671,7 @@ class Events
 
 		$message = sprintf(
 			/* translators: 1: object label, 2: mail result, 3: recipient list */
-			__('SignoffFlow attempted wp_mail() for %1$s. Result: %2$s. Recipients: %3$s', 'signoffflow'),
+			__('client-approval-workflow attempted wp_mail() for %1$s. Result: %2$s. Recipients: %3$s', 'client-approval-workflow'),
 			$context_label,
 			$result_label,
 			$recipients

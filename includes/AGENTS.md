@@ -147,6 +147,41 @@ Any handler that changes data, exposes sensitive data, or performs privileged ac
 - Do not add redundant “Settings saved” success notices when the core notice is present.
 - Use `add_settings_error()` for validation issues; let core handle the default success flow.
 
+## Internationalization (i18n) — required
+
+1. Text domain rules
+
+- Text domain MUST match the plugin slug (folder name / WordPress.org slug). :contentReference[oaicite:4]{index=4}
+- Text domain MUST be lowercase, use dashes (not underscores), and contain no spaces. :contentReference[oaicite:5]{index=5}
+
+2. Always include the text domain in gettext calls
+
+- Every translatable string MUST use a gettext function AND include the correct text domain argument:
+  - `__( 'Text', 'your-slug' )`, `_e( 'Text', 'your-slug' )`, `_n( 'Singular', 'Plural', $count, 'your-slug' )`, `_x()`, `_nx()`, etc. :contentReference[oaicite:6]{index=6}
+
+3. Never use a variable or constant for the text domain argument
+
+- Do NOT do: `__( 'Translate me', $text_domain )` or `__( 'Translate me', TEXT_DOMAIN )`. Use the literal slug string. :contentReference[oaicite:7]{index=7}
+
+4. Variables/placeholders must not be inside translatable strings
+
+- Do NOT interpolate variables into the translatable string (e.g., `"Hello $name"`).
+- Use placeholders + `printf/sprintf` (and argument swapping when needed). :contentReference[oaicite:8]{index=8}
+
+5. Translator comments for placeholders/context
+
+- For strings with placeholders or ambiguous meaning, add a translator comment immediately before the gettext call:
+  - `/* translators: 1: ..., 2: ... */` :contentReference[oaicite:9]{index=9}
+
+6. Loading translations (PHP)
+
+- Include `Text Domain:` in the plugin header; add `Domain Path: /languages` if translations are shipped in that folder. :contentReference[oaicite:10]{index=10}
+- If the plugin needs to load translations from its own `/languages` directory (e.g., when not relying on WordPress.org language packs), use `load_plugin_textdomain()` appropriately during initialization. :contentReference[oaicite:11]{index=11}
+
+7. JavaScript translations (if applicable)
+
+- If translating strings in JS, use WordPress’ JS i18n tools (`wp.i18n`) and ensure the translation domain matches the plugin slug. :contentReference[oaicite:12]{index=12}
+
 ## Redirect safety (especially OAuth flows)
 
 1. Prefer safe redirects
