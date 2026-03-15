@@ -1,0 +1,367 @@
+/*
+ * SignoffFlow portal styling.
+ *
+ * These CSS custom properties are exposed on the portal root so later
+ * versions can support targeted customization without restructuring markup.
+ */
+
+.cliapwo-portal {
+	box-sizing: border-box;
+	max-width: 1120px;
+	margin: 0 auto;
+	padding: clamp(20px, 3vw, 32px);
+	border: 1px solid var(--cliapwo-border);
+	border-radius: 28px;
+	background: linear-gradient(180deg, #ffffff 0%, var(--cliapwo-bg) 100%);
+	color: var(--cliapwo-text);
+	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+
+.cliapwo-portal *,
+.cliapwo-portal *::before,
+.cliapwo-portal *::after {
+	box-sizing: border-box;
+}
+
+.cliapwo-portal a {
+	color: var(--cliapwo-primary);
+}
+
+.cliapwo-portal img {
+	max-width: 100%;
+	height: auto;
+}
+
+.cliapwo-card {
+	padding: clamp(20px, 2.8vw, 28px);
+	border: 1px solid var(--cliapwo-border);
+	border-radius: 24px;
+	background: var(--cliapwo-card-bg);
+	box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+}
+
+.cliapwo-card--accent {
+	border-color: var(--cliapwo-primary-border);
+	background: linear-gradient(180deg, var(--cliapwo-primary-soft) 0%, var(--cliapwo-card-bg) 100%);
+}
+
+.cliapwo-portal__header {
+	display: grid;
+	gap: 16px;
+	margin-bottom: 24px;
+}
+
+.cliapwo-portal__eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	width: fit-content;
+	padding: 8px 14px;
+	border-radius: 999px;
+	background: var(--cliapwo-primary-soft);
+	color: var(--cliapwo-primary);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.cliapwo-portal__brand {
+	margin: 0;
+}
+
+.cliapwo-portal__logo {
+	max-width: 200px;
+}
+
+.cliapwo-portal__title,
+.cliapwo-portal__section-title,
+.cliapwo-portal__update h4,
+.cliapwo-portal__request strong {
+	margin: 0;
+	color: var(--cliapwo-text);
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+}
+
+.cliapwo-portal__title {
+	font-size: clamp(1.85rem, 3vw, 2.6rem);
+}
+
+.cliapwo-portal__intro,
+.cliapwo-portal__section-intro,
+.cliapwo-portal__summary-copy,
+.cliapwo-portal__content,
+.cliapwo-portal__request-content,
+.cliapwo-portal__file-meta,
+.cliapwo-portal__meta,
+.cliapwo-empty {
+	margin: 0;
+	color: var(--cliapwo-text-soft);
+	line-height: 1.75;
+}
+
+.cliapwo-portal__stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.cliapwo-status {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: fit-content;
+	padding: 7px 12px;
+	border: 1px solid var(--cliapwo-primary-border);
+	border-radius: 999px;
+	background: var(--cliapwo-primary-soft);
+	color: var(--cliapwo-primary);
+	font-size: 0.86rem;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.cliapwo-status--open,
+.cliapwo-status--preview {
+	border-color: var(--cliapwo-primary-border);
+	background: var(--cliapwo-primary-soft);
+	color: var(--cliapwo-primary);
+}
+
+.cliapwo-status--complete {
+	border-color: rgba(22, 163, 74, 0.18);
+	background: rgba(22, 163, 74, 0.1);
+	color: #15803d;
+}
+
+.cliapwo-portal__preview-note {
+	margin: 0;
+}
+
+.cliapwo-portal__summary {
+	margin-bottom: 24px;
+}
+
+.cliapwo-portal__section-header {
+	display: flex;
+	align-items: start;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 18px;
+}
+
+.cliapwo-portal__section-intro {
+	margin-top: 8px;
+}
+
+.cliapwo-portal__main {
+	display: grid;
+	gap: 24px;
+}
+
+.cliapwo-portal__grid {
+	display: grid;
+	gap: 24px;
+}
+
+.cliapwo-portal__timeline {
+	display: grid;
+	gap: 16px;
+}
+
+.cliapwo-portal__update {
+	position: relative;
+	padding: 20px 20px 20px 24px;
+	border: 1px solid var(--cliapwo-border);
+	border-radius: 20px;
+	background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+}
+
+.cliapwo-portal__update::before {
+	content: "";
+	position: absolute;
+	top: 20px;
+	left: 0;
+	bottom: 20px;
+	width: 4px;
+	border-radius: 999px;
+	background: var(--cliapwo-primary);
+}
+
+.cliapwo-portal__meta {
+	margin: 10px 0 12px;
+	color: var(--cliapwo-text-muted);
+	font-size: 0.95rem;
+}
+
+.cliapwo-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 14px;
+}
+
+.cliapwo-portal__request,
+.cliapwo-portal__file {
+	padding: 18px;
+	border: 1px solid var(--cliapwo-border);
+	border-radius: 18px;
+	background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+}
+
+.cliapwo-portal__request-header,
+.cliapwo-portal__file {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.cliapwo-portal__request-content {
+	margin-top: 12px;
+}
+
+.cliapwo-portal__request-form {
+	margin-top: 16px;
+}
+
+.cliapwo-button,
+.cliapwo-portal button.cliapwo-button,
+.cliapwo-portal a.cliapwo-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 11px 18px;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	background: var(--cliapwo-primary);
+	color: #ffffff;
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1.2;
+	text-decoration: none;
+	box-shadow: 0 12px 24px var(--cliapwo-primary-soft);
+	cursor: pointer;
+}
+
+.cliapwo-button:hover,
+.cliapwo-button:focus,
+.cliapwo-portal button.cliapwo-button:hover,
+.cliapwo-portal button.cliapwo-button:focus,
+.cliapwo-portal a.cliapwo-button:hover,
+.cliapwo-portal a.cliapwo-button:focus {
+	opacity: 0.94;
+	color: #ffffff;
+}
+
+.cliapwo-button--secondary,
+.cliapwo-portal button.cliapwo-button--secondary,
+.cliapwo-portal a.cliapwo-button--secondary {
+	border-color: var(--cliapwo-primary-border);
+	background: #ffffff;
+	color: var(--cliapwo-primary);
+	box-shadow: none;
+}
+
+.cliapwo-portal__file-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	color: var(--cliapwo-text);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.cliapwo-portal__file-link::before {
+	content: "\2193";
+	display: inline-grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 999px;
+	background: var(--cliapwo-primary-soft);
+	color: var(--cliapwo-primary);
+	font-size: 1rem;
+}
+
+.cliapwo-portal__file-link:hover,
+.cliapwo-portal__file-link:focus {
+	color: var(--cliapwo-primary);
+}
+
+.cliapwo-portal__file-name {
+	word-break: break-word;
+}
+
+.cliapwo-empty {
+	padding: 18px;
+	border: 1px dashed var(--cliapwo-border);
+	border-radius: 18px;
+	background: #fcfdff;
+}
+
+.cliapwo-portal__pagination {
+	margin-top: 18px;
+}
+
+.cliapwo-portal .page-numbers {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+}
+
+.cliapwo-portal .page-numbers li {
+	margin: 0;
+}
+
+.cliapwo-portal .page-numbers a,
+.cliapwo-portal .page-numbers span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 40px;
+	height: 40px;
+	padding: 0 12px;
+	border: 1px solid var(--cliapwo-border);
+	border-radius: 12px;
+	background: #ffffff;
+	color: var(--cliapwo-text);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.cliapwo-portal .page-numbers .current {
+	border-color: var(--cliapwo-primary);
+	background: var(--cliapwo-primary);
+	color: #ffffff;
+}
+
+@media (min-width: 960px) {
+	.cliapwo-portal__grid {
+		grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+	}
+}
+
+@media (max-width: 680px) {
+	.cliapwo-portal {
+		padding: 18px;
+		border-radius: 22px;
+	}
+
+	.cliapwo-card {
+		padding: 18px;
+		border-radius: 20px;
+	}
+
+	.cliapwo-portal__request-header,
+	.cliapwo-portal__file {
+		align-items: flex-start;
+	}
+}

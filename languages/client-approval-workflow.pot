@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: client-approval-workflow 0.2.0\n"
+"Project-Id-Version: client-approval-workflow 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-14 19:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
