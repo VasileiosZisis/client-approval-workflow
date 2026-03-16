@@ -78,7 +78,7 @@ For installed sites, see the Portal styling help note in `SignoffFlow > Settings
 
 == Screenshots ==
 
-1. Client portal dashboard with Waiting on you summary
+1. Client portal dashboard with Action required
 2. Updates timeline inside the client portal
 3. Files area with protected client downloads
 4. Requests checklist with client completion actions

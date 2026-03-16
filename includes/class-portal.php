@@ -193,7 +193,7 @@ class Portal
 			<section class="<?php echo esc_attr($this->get_section_classes('summary', array('cliapwo-portal__section', 'cliapwo-portal__summary', 'cliapwo-card', 'cliapwo-card--accent'), $client->ID, $current_user_id)); ?>">
 				<div class="cliapwo-portal__section-header">
 					<div>
-						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Waiting on you', 'client-approval-workflow'); ?></h3>
+						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Action required', 'client-approval-workflow'); ?></h3>
 					</div>
 				</div>
 				<?php if ($open_requests > 0) : ?>
