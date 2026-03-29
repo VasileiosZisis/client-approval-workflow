@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name:       SignoffFlow - Client Approval Workflow & Client Portal
- * Description:       Client approval workflow and client portal foundations for service businesses.
+ * Description:       Private client portal for service businesses with updates, files, and client requests.
  * Version:           1.0.0
  * Author:      Vasileios Zisis
  * Author URI:  https://profiles.wordpress.org/vzisis/
@@ -13,7 +13,7 @@
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
 defined('ABSPATH') || exit;
@@ -34,13 +34,12 @@ require_once CLIAPWO_PLUGIN_DIR . 'includes/class-portal.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-files.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-requests.php';
 require_once CLIAPWO_PLUGIN_DIR . 'includes/class-events.php';
-require_once CLIAPWO_PLUGIN_DIR . 'includes/class-approvals.php';
 
-register_activation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'activate'));
-register_deactivation_hook(CLIAPWO_PLUGIN_FILE, array(\ClientApprovalWorkflow\Lifecycle::class, 'deactivate'));
-add_action('init', array(\ClientApprovalWorkflow\Lifecycle::class, 'ensure_roles'));
+register_activation_hook(CLIAPWO_PLUGIN_FILE, array(\Vzisis\ClientApprovalWorkflow\Lifecycle::class, 'activate'));
+register_deactivation_hook(CLIAPWO_PLUGIN_FILE, array(\Vzisis\ClientApprovalWorkflow\Lifecycle::class, 'deactivate'));
+add_action('init', array(\Vzisis\ClientApprovalWorkflow\Lifecycle::class, 'ensure_roles'));
 
-$cliapwo_plugin = new \ClientApprovalWorkflow\Plugin();
+$cliapwo_plugin = new \Vzisis\ClientApprovalWorkflow\Plugin();
 $cliapwo_plugin->run();
 
 /**
@@ -51,7 +50,7 @@ $cliapwo_plugin->run();
  */
 function cliapwo_get_clients_for_user($user_id = 0)
 {
-	return \ClientApprovalWorkflow\Clients::get_clients_for_user($user_id);
+	return \Vzisis\ClientApprovalWorkflow\Clients::get_clients_for_user($user_id);
 }
 
 /**
@@ -62,7 +61,7 @@ function cliapwo_get_clients_for_user($user_id = 0)
  */
 function cliapwo_get_client_for_user($user_id = 0)
 {
-	return \ClientApprovalWorkflow\Clients::get_client_for_user($user_id);
+	return \Vzisis\ClientApprovalWorkflow\Clients::get_client_for_user($user_id);
 }
 
 /**
@@ -74,7 +73,7 @@ function cliapwo_get_client_for_user($user_id = 0)
  */
 function cliapwo_user_can_view_client($client_id, $user_id = 0)
 {
-	return \ClientApprovalWorkflow\Clients::user_can_view_client($client_id, $user_id);
+	return \Vzisis\ClientApprovalWorkflow\Clients::user_can_view_client($client_id, $user_id);
 }
 
 /**
@@ -86,7 +85,7 @@ function cliapwo_user_can_view_client($client_id, $user_id = 0)
  */
 function cliapwo_get_updates_query_for_client($client_id, array $args = array())
 {
-	return \ClientApprovalWorkflow\Updates::get_updates_query_for_client($client_id, $args);
+	return \Vzisis\ClientApprovalWorkflow\Updates::get_updates_query_for_client($client_id, $args);
 }
 
 /**
@@ -98,7 +97,7 @@ function cliapwo_get_updates_query_for_client($client_id, array $args = array())
  */
 function cliapwo_get_files_query_for_client($client_id, array $args = array())
 {
-	return \ClientApprovalWorkflow\Files::get_files_query_for_client($client_id, $args);
+	return \Vzisis\ClientApprovalWorkflow\Files::get_files_query_for_client($client_id, $args);
 }
 
 /**
@@ -109,7 +108,7 @@ function cliapwo_get_files_query_for_client($client_id, array $args = array())
  */
 function cliapwo_get_file_download_url($file_post_id)
 {
-	return \ClientApprovalWorkflow\Files::get_download_url($file_post_id);
+	return \Vzisis\ClientApprovalWorkflow\Files::get_download_url($file_post_id);
 }
 
 /**
@@ -121,32 +120,5 @@ function cliapwo_get_file_download_url($file_post_id)
  */
 function cliapwo_get_requests_query_for_client($client_id, array $args = array())
 {
-	return \ClientApprovalWorkflow\Requests::get_requests_query_for_client($client_id, $args);
-}
-
-/**
- * Determine whether the client-approval-workflow Pro add-on is active.
- *
- * @return bool
- */
-function cliapwo_is_pro_active()
-{
-	$is_active = defined('CLIAPWO_PRO_VERSION') || class_exists('\ClientApprovalWorkflowPro\Plugin');
-
-	/**
-	 * Filter whether the client-approval-workflow Pro add-on is active.
-	 *
-	 * @param bool $is_active Whether Pro is active.
-	 */
-	return (bool) apply_filters('cliapwo_is_pro_active', $is_active);
-}
-
-/**
- * Get the approvals data contract for extension plugins.
- *
- * @return array<string, mixed>
- */
-function cliapwo_get_approvals_schema()
-{
-	return \ClientApprovalWorkflow\Approvals::get_schema();
+	return \Vzisis\ClientApprovalWorkflow\Requests::get_requests_query_for_client($client_id, $args);
 }

@@ -54,14 +54,6 @@ msgstr ""
 msgid "Allowed file types follow your WordPress upload settings. Uploading a new file replaces the current file for this record."
 msgstr ""
 
-#: includes/class-approvals.php:127 includes/class-approvals.php:96 includes/class-approvals.php:97
-msgid "Approvals"
-msgstr ""
-
-#: includes/class-approvals.php:128
-msgid "Approvals are reserved for the client-approval-workflow Pro add-on. The free plugin keeps the menu location, schema, and hooks ready so a Pro module can attach cleanly."
-msgstr ""
-
 #: includes/class-clients.php:174
 msgid "Assigned portal users"
 msgstr ""
@@ -197,10 +189,6 @@ msgstr ""
 msgid "Event Log"
 msgstr ""
 
-#: includes/class-approvals.php:130
-msgid "Extension contract"
-msgstr ""
-
 #: includes/class-files.php:140
 msgid "File"
 msgstr ""
@@ -229,7 +217,7 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
-#: includes/class-admin.php:82 includes/class-approvals.php:114 includes/class-files.php:429 includes/class-files.php:439 includes/class-files.php:449 includes/class-files.php:479 includes/class-files.php:531 includes/class-requests.php:343 includes/class-requests.php:353 includes/class-requests.php:366 includes/class-requests.php:387 includes/class-requests.php:417 includes/class-requests.php:437
+#: includes/class-admin.php:82 includes/class-files.php:429 includes/class-files.php:439 includes/class-files.php:449 includes/class-files.php:479 includes/class-files.php:531 includes/class-requests.php:343 includes/class-requests.php:353 includes/class-requests.php:366 includes/class-requests.php:387 includes/class-requests.php:417 includes/class-requests.php:437
 msgid "Forbidden"
 msgstr ""
 
@@ -513,8 +501,8 @@ msgstr ""
 msgid "client-approval-workflow Settings"
 msgstr ""
 
-#: includes/class-events.php:674
-msgid "client-approval-workflow attempted wp_mail() for %1$s. Result: %2$s. Recipients: %3$s"
+#: includes/class-events.php:673
+msgid "Email delivery could not be confirmed. Check SignoffFlow > Event Log and verify your WordPress mail transport or SMTP configuration."
 msgstr ""
 
 #: includes/class-portal.php:106
@@ -563,10 +551,6 @@ msgstr ""
 
 #: includes/class-requests.php:398
 msgid "The requested task could not be found."
-msgstr ""
-
-#: includes/class-approvals.php:131
-msgid "The reserved post type, statuses, object types, and meta keys below define the approvals data model used by the extension hooks."
 msgstr ""
 
 #: includes/class-files.php:812
@@ -671,10 +655,6 @@ msgstr ""
 
 #: includes/class-admin.php:81
 msgid "You are not allowed to manage client-approval-workflow settings."
-msgstr ""
-
-#: includes/class-approvals.php:113
-msgid "You are not allowed to manage approvals."
 msgstr ""
 
 #: includes/class-requests.php:365

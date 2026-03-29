@@ -1,4 +1,4 @@
-# assets/AGENTS.md — WordPress JS/CSS/AJAX rules
+# assets/AGENTS.md - WordPress JS/CSS/AJAX rules
 
 Inherits all rules from /AGENTS.md.
 
@@ -30,7 +30,7 @@ Inherits all rules from /AGENTS.md.
 
 4. Prefer registered dependencies and plugin-relative URLs
 
-- Use WordPress’ registered dependencies when available.
+- Use WordPress' registered dependencies when available.
 - Build asset URLs with `plugin_dir_url()` / `plugins_url()` (never hardcode `/wp-content/...`).
 - Use unique, prefixed script/style handles (see /AGENTS.md prefix rules).
 
@@ -66,7 +66,7 @@ Inherits all rules from /AGENTS.md.
 4. Never call privileged endpoints without a nonce
 
 - JS must not issue requests that change server state unless the nonce is present.
-- Do not attempt to “guess”/reuse nonces outside the data provided by PHP.
+- Do not attempt to "guess"/reuse nonces outside the data provided by PHP.
 
 5. Handle failures
 

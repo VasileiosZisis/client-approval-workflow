@@ -28,7 +28,7 @@
 	<!-- Helpful while tuning -->
 	<arg
 		name="exclude"
-		value="Generic.Classes.OpeningBraceSameLine,Generic.Formatting.MultipleStatementAlignment,Generic.Functions.OpeningFunctionBraceKernighanRitchie,Generic.WhiteSpace.ScopeIndent,NormalizedArrays.Arrays.ArrayBraceSpacing,PEAR.Functions.FunctionCallSignature,Squiz.Commenting.FileComment,Squiz.Functions.FunctionDeclarationArgumentSpacing,WordPress.Arrays.ArrayKeySpacingRestrictions,WordPress.Arrays.MultipleStatementAlignment,WordPress.WhiteSpace.CastStructureSpacing,WordPress.WhiteSpace.ControlStructureSpacing,WordPress.WhiteSpace.OperatorSpacing"
+		value="Generic.Classes.OpeningBraceSameLine,Generic.Formatting.MultipleStatementAlignment,Generic.Functions.OpeningFunctionBraceKernighanRitchie,Generic.WhiteSpace.ArbitraryParenthesesSpacing,Generic.WhiteSpace.DisallowSpaceIndent,Generic.WhiteSpace.ScopeIndent,NormalizedArrays.Arrays.ArrayBraceSpacing,PEAR.Functions.FunctionCallSignature,PSR2.Classes.ClassDeclaration,PSR2.Methods.FunctionClosingBrace,Squiz.Commenting.FileComment,Squiz.Commenting.FunctionComment,Squiz.Functions.FunctionDeclarationArgumentSpacing,Universal.WhiteSpace.PrecisionAlignment,WordPress.Arrays.ArrayDeclarationSpacing,WordPress.Arrays.ArrayKeySpacingRestrictions,WordPress.Arrays.MultipleStatementAlignment,WordPress.WhiteSpace.CastStructureSpacing,WordPress.WhiteSpace.ControlStructureSpacing,WordPress.WhiteSpace.OperatorSpacing"
 	/>
 	<arg value="s"/>
 

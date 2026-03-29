@@ -3,10 +3,10 @@
 /**
  * Client requests and portal status actions.
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
-namespace ClientApprovalWorkflow;
+namespace Vzisis\ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 

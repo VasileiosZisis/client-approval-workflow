@@ -36,6 +36,33 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for an
 - The service must provide meaningful functionality and be clearly documented (including Terms of Use where applicable).
 - Do not move arbitrary code out of the plugin just to claim it’s “SaaS”.
 
+## Guideline 5 — Trialware / locked features (strict)
+
+- Code hosted on WordPress.org MUST be fully functional as-is.
+- Do NOT lock, disable, or limit built-in features behind:
+  - license keys
+  - trials
+  - time limits
+  - quotas/usage limits
+  - payments
+  - “Pro active” checks (e.g., `is_pro_active()`) that hide/disable functionality that exists in this codebase
+- If a feature is present in the code in this repository, it MUST be usable without any license/pro gating.
+- It is allowed to mention that additional features exist in a SEPARATE plugin/add-on, but the restricted functionality MUST NOT be shipped (even partially) in the WordPress.org plugin code.
+
+## Guideline 6 — Serviceware (allowed only when legitimate)
+
+- External-service integrations are allowed ONLY if:
+  - the service performs real processing on external servers, AND
+  - the functionality cannot reasonably be done locally by the plugin alone, AND
+  - the service is clearly documented in the readme, including Terms of Use and Privacy Policy links.
+- A “license check” service that merely unlocks local features is NOT serviceware and is NOT allowed in WordPress.org-hosted code.
+
+## Architecture rule derived from 5–6
+
+- Do NOT include “contract/schema/hooks/post types” for Pro-only features inside the free plugin if the feature itself is inaccessible.
+  - If it’s in the free plugin repo, it must be enabled and functional.
+  - Otherwise, move it entirely to the separate add-on/plugin hosted elsewhere.
+
 7. Privacy and tracking
 
 - Do not contact external servers, collect usage data, or track users WITHOUT explicit, informed consent (opt-in).
@@ -66,6 +93,11 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for an
 
 - Do not hijack the admin dashboard.
 - Notices/upsells must be limited in scope (preferably on the plugin’s own pages), used sparingly, and be dismissible when appropriate.
+- Site-wide notices and any dashboard widgets added by the plugin MUST be dismissible or automatically disappear once the issue is resolved.
+- Error notices and alerts MUST clearly explain how the user can fix the problem, and MUST remove themselves when the problem is resolved.
+- Avoid advertising in the WordPress admin; any promotional content must be minimal, contextual, and limited to plugin-specific admin pages.
+- Do NOT use referral tracking in wp-admin notices, links, or promotions.
+- Links to the developer’s own site/social profiles and locally bundled images are allowed only when used sparingly and within the plugin’s own admin experience.
 
 12. Readme and public pages
 
@@ -86,6 +118,7 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for an
 
 - Do NOT use the restricted term "WordPress" in the plugin name.
 - Respect trademarks/copyrights/project names.
+- Do NOT use restricted/trademarked terms in the plugin name (example: "Gutenberg"). If a term is flagged as restricted, it cannot appear anywhere in the plugin name.
 - Do not use protected product names as the leading term in slugs/names without permission/ownership.
 
 ## Internationalization naming rules (i18n)
@@ -150,6 +183,8 @@ D) WordPress “registration” names (strings stored/used globally)
 
 4. Namespaces are encouraged
 
+- Namespaces MUST be globally distinct and not generic. Do not use common/dictionary-word namespaces.
+- Prefer a vendor + plugin namespace pattern.
 - Prefer a plugin-specific PHP namespace for modern code, but still keep classes/functions distinct and readable.
 - Namespaces and prefixes should be consistent across the codebase.
 

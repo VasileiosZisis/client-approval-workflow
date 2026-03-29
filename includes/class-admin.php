@@ -3,10 +3,10 @@
 /**
  * Admin menu and settings page rendering.
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
-namespace ClientApprovalWorkflow;
+namespace Vzisis\ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 

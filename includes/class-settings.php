@@ -3,10 +3,10 @@
 /**
  * Settings registration and sanitization.
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
-namespace ClientApprovalWorkflow;
+namespace Vzisis\ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 

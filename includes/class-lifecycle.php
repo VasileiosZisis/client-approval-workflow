@@ -3,10 +3,10 @@
 /**
  * Activation and deactivation routines.
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
-namespace ClientApprovalWorkflow;
+namespace Vzisis\ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 

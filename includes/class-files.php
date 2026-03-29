@@ -3,10 +3,10 @@
 /**
  * File uploads, listing, and protected downloads.
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
-namespace ClientApprovalWorkflow;
+namespace Vzisis\ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 

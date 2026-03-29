@@ -3,10 +3,10 @@
 /**
  * Event logging and client email notifications.
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
-namespace ClientApprovalWorkflow;
+namespace Vzisis\ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 
@@ -36,9 +36,9 @@ class Events
 	public const OBJECT_ID_META_KEY = 'cliapwo_related_object_id';
 
 	/**
-	 * User-scoped transient prefix for admin mail debug notices.
+	 * User-scoped transient prefix for admin mail failure notices.
 	 */
-	public const MAIL_DEBUG_NOTICE_TRANSIENT_PREFIX = 'cliapwo_mail_debug_notice_';
+	public const MAIL_FAILURE_NOTICE_TRANSIENT_PREFIX = 'cliapwo_mail_failure_notice_';
 
 	/**
 	 * Register the event hooks.
@@ -55,7 +55,7 @@ class Events
 		add_action('cliapwo_request_created', array($this, 'handle_request_created'), 10, 2);
 		add_action('cliapwo_update_created', array($this, 'handle_update_created'), 10, 2);
 		add_action('cliapwo_file_uploaded', array($this, 'handle_file_uploaded'), 10, 3);
-		add_action('admin_notices', array($this, 'render_mail_debug_notice'));
+		add_action('admin_notices', array($this, 'render_mail_failure_notice'));
 	}
 
 	/**
@@ -441,11 +441,11 @@ class Events
 	}
 
 	/**
-	 * Render the one-time admin notice for a mail attempt.
+	 * Render the one-time admin notice for a mail delivery failure.
 	 *
 	 * @return void
 	 */
-	public function render_mail_debug_notice()
+	public function render_mail_failure_notice()
 	{
 		if (! current_user_can('cliapwo_manage_portal')) {
 			return;
@@ -472,15 +472,15 @@ class Events
 			return;
 		}
 
-		$notice = get_transient(self::MAIL_DEBUG_NOTICE_TRANSIENT_PREFIX . $user_id);
+		$notice = get_transient(self::MAIL_FAILURE_NOTICE_TRANSIENT_PREFIX . $user_id);
 
 		if (! is_array($notice) || empty($notice['message'])) {
 			return;
 		}
 
-		delete_transient(self::MAIL_DEBUG_NOTICE_TRANSIENT_PREFIX . $user_id);
+		delete_transient(self::MAIL_FAILURE_NOTICE_TRANSIENT_PREFIX . $user_id);
 		?>
-		<div class="notice notice-info is-dismissible">
+		<div class="notice notice-warning is-dismissible">
 			<p><?php echo esc_html((string) $notice['message']); ?></p>
 		</div>
 		<?php
@@ -608,7 +608,7 @@ class Events
 	}
 
 	/**
-	 * Record a wp_mail() attempt in the event log and next admin response.
+	 * Record a wp_mail() attempt in the event log and, on failure, queue an admin notice.
 	 *
 	 * @param int                $client_id     Client post ID.
 	 * @param int                $object_id     Related object post ID.
@@ -650,18 +650,18 @@ class Events
 		);
 
 		$this->create_event_entry($title, $content, 'email_attempt', $client_id, $object_id);
-		$this->set_mail_debug_notice($context_label, $recipients, $result_label);
+
+		if (! $mail_sent) {
+			$this->set_mail_failure_notice();
+		}
 	}
 
 	/**
-	 * Store a one-time admin notice about a mail attempt for the current user.
+	 * Store a one-time admin notice about a mail delivery failure for the current user.
 	 *
-	 * @param string $context_label Human-readable object label.
-	 * @param string $recipients    Comma-separated recipient list.
-	 * @param string $result_label  Human-readable mail result.
 	 * @return void
 	 */
-	private function set_mail_debug_notice($context_label, $recipients, $result_label)
+	private function set_mail_failure_notice()
 	{
 		$user_id = get_current_user_id();
 
@@ -669,16 +669,13 @@ class Events
 			return;
 		}
 
-		$message = sprintf(
-			/* translators: 1: object label, 2: mail result, 3: recipient list */
-			__('client-approval-workflow attempted wp_mail() for %1$s. Result: %2$s. Recipients: %3$s', 'client-approval-workflow'),
-			$context_label,
-			$result_label,
-			$recipients
+		$message = __(
+			'Email delivery could not be confirmed. Check SignoffFlow > Event Log and verify your WordPress mail transport or SMTP configuration.',
+			'client-approval-workflow'
 		);
 
 		set_transient(
-			self::MAIL_DEBUG_NOTICE_TRANSIENT_PREFIX . $user_id,
+			self::MAIL_FAILURE_NOTICE_TRANSIENT_PREFIX . $user_id,
 			array(
 				'message' => $message,
 			),

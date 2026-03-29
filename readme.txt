@@ -1,6 +1,6 @@
 === SignoffFlow - Client Approval Workflow & Client Portal  ===
 Contributors: vzisis
-Tags: client-portal, approvals, agency, file-sharing, project-management
+Tags: client-portal, agency, file-sharing, project-management, client-communication
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
@@ -8,23 +8,23 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Client portal for agencies: share updates, files, and client requests privately. Built for approvals and client sign-off.
+Client portal for agencies: share updates, files, and client requests privately.
 
 == Description ==
 
-SignoffFlow is a **client portal** and **client approval workflow** plugin for agencies, freelancers, and service teams.
+SignoffFlow is a **client portal** plugin for agencies, freelancers, and service teams.
 
 Create a private portal workspace per client account where you can:
 * Share **project updates** (timeline)
 * Share **files** with protected downloads
-* Send **client requests/tasks** and track completion (great for approvals and sign-off)
+* Send **client requests/tasks** and track completion
 
 Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
 
 This plugin only outputs front-end content on the portal page via the `[cliapwo_portal]` shortcode.
 
 === Use cases ===
-* Collect client sign-off on deliverables and tasks
+* Collect client confirmations on deliverables and tasks
 * Keep client communication out of email threads
 * Share files securely with per-client access control
 * Provide a branded agency client portal experience
@@ -66,7 +66,7 @@ Yes. SignoffFlow can send request, update, and file notifications with `wp_mail(
 
 = Can I test notifications on a local site? =
 
-Yes, but local mail delivery depends on your environment. SignoffFlow also records `Email attempt` entries in the Event Log and shows a one-time admin debug notice after a notification attempt so you can verify the flow locally.
+Yes, but local mail delivery depends on your environment. SignoffFlow records `Email attempt` entries in the Event Log for each notification. If WordPress cannot confirm delivery, SignoffFlow also shows a dismissible admin notice on its own screens so you can check the Event Log and review your mail transport.
 
 The Notifications settings screen also includes an Email delivery help section with a simple test flow and recommendations for Mailpit, MailHog, SMTP, Postmark, and Mailtrap.
 

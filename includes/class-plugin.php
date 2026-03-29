@@ -3,10 +3,10 @@
 /**
  * Plugin bootstrap.
  *
- * @package ClientApprovalWorkflow
+ * @package VzisisClientApprovalWorkflow
  */
 
-namespace ClientApprovalWorkflow;
+namespace Vzisis\ClientApprovalWorkflow;
 
 defined('ABSPATH') || exit;
 
@@ -79,13 +79,6 @@ class Plugin
 	private $events;
 
 	/**
-	 * Approvals extension contract and placeholder service.
-	 *
-	 * @var Approvals
-	 */
-	private $approvals;
-
-	/**
 	 * Constructor.
 	 */
 	public function __construct()
@@ -99,7 +92,6 @@ class Plugin
 		$this->files         = new Files();
 		$this->requests      = new Requests();
 		$this->events        = new Events();
-		$this->approvals     = new Approvals();
 	}
 
 	/**
@@ -118,6 +110,5 @@ class Plugin
 		$this->files->register();
 		$this->requests->register();
 		$this->events->register();
-		$this->approvals->register();
 	}
 }

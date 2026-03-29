@@ -1,12 +1,12 @@
 # SignoffFlow
 
-SignoffFlow is a WordPress plugin for running a private client portal and client approval workflow inside WordPress.
+SignoffFlow is a WordPress plugin for running a private client portal inside WordPress.
 
 It is built for agencies, freelancers, and service businesses that need a simple place to share updates, files, and requests with clients without relying on scattered email threads.
 
 ## What The Plugin Does
 
-The current free plugin includes:
+The plugin includes:
 
 - private client portal access using standard WordPress users
 - client account management inside WordPress admin
@@ -15,7 +15,7 @@ The current free plugin includes:
 - requests/tasks that clients can complete from the portal
 - event logging for key actions
 - email notifications for requests, updates, and files
-- basic branding options for the portal experience
+- branding options for the portal experience
 
 ## How It Works
 
@@ -35,7 +35,7 @@ Repository/package details:
 - plugin folder: `client-approval-workflow`
 - main plugin file: `client-approval-workflow.php`
 - text domain: `client-approval-workflow`
-- namespace: `ClientApprovalWorkflow\\`
+- namespace: `Vzisis\\ClientApprovalWorkflow\\`
 - code prefix: `cliapwo`
 
 ## Requirements
