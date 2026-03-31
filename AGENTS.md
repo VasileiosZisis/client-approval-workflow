@@ -123,10 +123,10 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for an
 
 ## Internationalization naming rules (i18n)
 
-- The plugin text domain MUST match the plugin slug (the plugin folder name / WordPress.org slug). :contentReference[oaicite:0]{index=0}
-- The text domain MUST be lowercase, use dashes (not underscores), and contain no spaces. :contentReference[oaicite:1]{index=1}
-- Add `Text Domain: your-slug` to the plugin header (recommended for clarity; optional since WordPress 4.6). :contentReference[oaicite:2]{index=2}
-- If you ship translations inside the plugin (e.g., `/languages`), set `Domain Path: /languages` in the plugin header. :contentReference[oaicite:3]{index=3}
+- The plugin text domain MUST match the plugin slug (the plugin folder name / WordPress.org slug).
+- The text domain MUST be lowercase, use dashes (not underscores), and contain no spaces.
+- Add `Text Domain: your-slug` to the plugin header. It is optional since WordPress 4.6, but recommended for clarity and for plugin metadata translation.
+- If translations are stored in a `/languages` directory inside the plugin, use `Domain Path: /languages` in the plugin header, with the leading slash. This header can be omitted for plugins in the official WordPress Plugin Directory.
 
 ## Uniqueness rule: names must be globally distinct (avoid conflicts)
 

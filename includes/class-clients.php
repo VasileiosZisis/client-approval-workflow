@@ -65,15 +65,15 @@ class Clients
 			self::POST_TYPE,
 			array(
 				'labels'              => array(
-					'name'          => __('Clients', 'client-approval-workflow'),
-					'singular_name' => __('Client', 'client-approval-workflow'),
-					'menu_name'     => __('Clients', 'client-approval-workflow'),
-					'add_new_item'  => __('Add Client', 'client-approval-workflow'),
-					'edit_item'     => __('Edit Client', 'client-approval-workflow'),
-					'new_item'      => __('New Client', 'client-approval-workflow'),
-					'view_item'     => __('View Client', 'client-approval-workflow'),
-					'search_items'  => __('Search Clients', 'client-approval-workflow'),
-					'not_found'     => __('No clients found.', 'client-approval-workflow'),
+					'name'          => __('Clients', 'signoffflow-client-approval-workflow'),
+					'singular_name' => __('Client', 'signoffflow-client-approval-workflow'),
+					'menu_name'     => __('Clients', 'signoffflow-client-approval-workflow'),
+					'add_new_item'  => __('Add Client', 'signoffflow-client-approval-workflow'),
+					'edit_item'     => __('Edit Client', 'signoffflow-client-approval-workflow'),
+					'new_item'      => __('New Client', 'signoffflow-client-approval-workflow'),
+					'view_item'     => __('View Client', 'signoffflow-client-approval-workflow'),
+					'search_items'  => __('Search Clients', 'signoffflow-client-approval-workflow'),
+					'not_found'     => __('No clients found.', 'signoffflow-client-approval-workflow'),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -116,7 +116,7 @@ class Clients
 	{
 		add_meta_box(
 			'cliapwo_client_details',
-			__('Client Details', 'client-approval-workflow'),
+			__('Client Details', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_client_details_meta_box'),
 			self::POST_TYPE,
 			'normal',
@@ -149,11 +149,11 @@ class Clients
 		$wp_roles          = wp_roles();
 		?>
 		<p>
-			<?php esc_html_e('Use the title field above for the client or account name. Portal contact details come from the WordPress users assigned below.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Use the title field above for the client or account name. Portal contact details come from the WordPress users assigned below.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 
 		<p>
-			<label for="cliapwo_client_notes"><strong><?php esc_html_e('Internal notes', 'client-approval-workflow'); ?></strong></label><br />
+			<label for="cliapwo_client_notes"><strong><?php esc_html_e('Internal notes', 'signoffflow-client-approval-workflow'); ?></strong></label><br />
 			<textarea
 				class="large-text"
 				rows="5"
@@ -161,9 +161,9 @@ class Clients
 				name="cliapwo_client_notes"><?php echo esc_textarea((string) $notes); ?></textarea>
 		</p>
 
-		<p><strong><?php esc_html_e('Current portal user details', 'client-approval-workflow'); ?></strong></p>
+		<p><strong><?php esc_html_e('Current portal user details', 'signoffflow-client-approval-workflow'); ?></strong></p>
 		<?php if (empty($assigned_user_ids)) : ?>
-			<p class="description"><?php esc_html_e('No WordPress users are assigned yet.', 'client-approval-workflow'); ?></p>
+			<p class="description"><?php esc_html_e('No WordPress users are assigned yet.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php else : ?>
 			<ul style="margin:0 0 16px 18px; list-style:disc;">
 				<?php foreach ($users as $user) : ?>
@@ -175,19 +175,19 @@ class Clients
 						<?php if ('' !== (string) $user->user_email) : ?>
 							<?php echo esc_html(' - ' . $user->user_email); ?>
 						<?php else : ?>
-							<?php esc_html_e(' - no email set', 'client-approval-workflow'); ?>
+							<?php esc_html_e(' - no email set', 'signoffflow-client-approval-workflow'); ?>
 						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endif; ?>
 
-		<p><strong><?php esc_html_e('Assigned portal users', 'client-approval-workflow'); ?></strong></p>
+		<p><strong><?php esc_html_e('Assigned portal users', 'signoffflow-client-approval-workflow'); ?></strong></p>
 		<p class="description">
-			<?php esc_html_e('Select the WordPress user accounts that can log in and view this client portal. Usernames and email addresses come from the WordPress Users screen.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Select the WordPress user accounts that can log in and view this client portal. Usernames and email addresses come from the WordPress Users screen.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 		<?php if (empty($users)) : ?>
-			<p><?php esc_html_e('No WordPress users are available to assign.', 'client-approval-workflow'); ?></p>
+			<p><?php esc_html_e('No WordPress users are available to assign.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php else : ?>
 			<fieldset>
 				<?php foreach ($users as $user) : ?>
@@ -307,8 +307,8 @@ class Clients
 
 		foreach ($columns as $key => $label) {
 			if ('title' === $key) {
-				$client_columns['title'] = __('Client / Account', 'client-approval-workflow');
-				$client_columns['cliapwo_portal_users'] = __('Portal users', 'client-approval-workflow');
+				$client_columns['title'] = __('Client / Account', 'signoffflow-client-approval-workflow');
+				$client_columns['cliapwo_portal_users'] = __('Portal users', 'signoffflow-client-approval-workflow');
 				continue;
 			}
 
@@ -334,7 +334,7 @@ class Clients
 		$users = self::get_assigned_users($post_id);
 
 		if (empty($users)) {
-			esc_html_e('No assigned users', 'client-approval-workflow');
+			esc_html_e('No assigned users', 'signoffflow-client-approval-workflow');
 			return;
 		}
 

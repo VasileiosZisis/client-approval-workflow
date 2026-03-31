@@ -70,14 +70,14 @@ class Settings
 
 		add_settings_section(
 			'cliapwo_general_section',
-			__('General', 'client-approval-workflow'),
+			__('General', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_general_section'),
 			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'cliapwo_portal_page_id',
-			__('Portal base page', 'client-approval-workflow'),
+			__('Portal base page', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_portal_page_field'),
 			self::PAGE_SLUG,
 			'cliapwo_general_section'
@@ -85,14 +85,14 @@ class Settings
 
 		add_settings_section(
 			'cliapwo_branding_section',
-			__('Branding', 'client-approval-workflow'),
+			__('Branding', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_branding_section'),
 			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'cliapwo_branding_logo_id',
-			__('Logo media ID', 'client-approval-workflow'),
+			__('Logo media ID', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_logo_id_field'),
 			self::PAGE_SLUG,
 			'cliapwo_branding_section'
@@ -100,7 +100,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_branding_logo_url',
-			__('Logo URL', 'client-approval-workflow'),
+			__('Logo URL', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_logo_url_field'),
 			self::PAGE_SLUG,
 			'cliapwo_branding_section'
@@ -108,7 +108,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_branding_primary_color',
-			__('Primary color', 'client-approval-workflow'),
+			__('Primary color', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_primary_color_field'),
 			self::PAGE_SLUG,
 			'cliapwo_branding_section'
@@ -116,14 +116,14 @@ class Settings
 
 		add_settings_section(
 			'cliapwo_notifications_section',
-			__('Notifications', 'client-approval-workflow'),
+			__('Notifications', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_notifications_section'),
 			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'cliapwo_notify_updates',
-			__('Update emails', 'client-approval-workflow'),
+			__('Update emails', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_notify_updates_field'),
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
@@ -131,7 +131,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_notify_files',
-			__('File emails', 'client-approval-workflow'),
+			__('File emails', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_notify_files_field'),
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
@@ -139,7 +139,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_notify_requests',
-			__('Request emails', 'client-approval-workflow'),
+			__('Request emails', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_notify_requests_field'),
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
@@ -147,7 +147,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_notification_diagnostics',
-			__('Email delivery help', 'client-approval-workflow'),
+			__('Email delivery help', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_notification_diagnostics_field'),
 			self::PAGE_SLUG,
 			'cliapwo_notifications_section'
@@ -155,14 +155,14 @@ class Settings
 
 		add_settings_section(
 			'cliapwo_advanced_section',
-			__('Advanced', 'client-approval-workflow'),
+			__('Advanced', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_advanced_section'),
 			self::PAGE_SLUG
 		);
 
 		add_settings_field(
 			'cliapwo_delete_data_on_uninstall',
-			__('Delete data on uninstall', 'client-approval-workflow'),
+			__('Delete data on uninstall', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_delete_data_on_uninstall_field'),
 			self::PAGE_SLUG,
 			'cliapwo_advanced_section'
@@ -170,7 +170,7 @@ class Settings
 
 		add_settings_field(
 			'cliapwo_portal_styling_help',
-			__('Portal styling help', 'client-approval-workflow'),
+			__('Portal styling help', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_portal_styling_help_field'),
 			self::PAGE_SLUG,
 			'cliapwo_advanced_section'
@@ -236,7 +236,7 @@ class Settings
 				add_settings_error(
 					self::OPTION_KEY,
 					'cliapwo_portal_page_id',
-					__('Choose a valid WordPress page for the portal base page.', 'client-approval-workflow'),
+					__('Choose a valid WordPress page for the portal base page.', 'signoffflow-client-approval-workflow'),
 					'error'
 				);
 				$portal_page_id = (int) $defaults['portal_page_id'];
@@ -252,7 +252,7 @@ class Settings
 				add_settings_error(
 					self::OPTION_KEY,
 					'cliapwo_branding_logo_id',
-					__('Enter a valid media attachment ID for the portal logo.', 'client-approval-workflow'),
+					__('Enter a valid media attachment ID for the portal logo.', 'signoffflow-client-approval-workflow'),
 					'error'
 				);
 				$branding_logo_id = (int) $defaults['branding_logo_id'];
@@ -266,7 +266,7 @@ class Settings
 			add_settings_error(
 				self::OPTION_KEY,
 				'cliapwo_primary_color',
-				__('Enter a valid hex color for the primary color setting.', 'client-approval-workflow'),
+				__('Enter a valid hex color for the primary color setting.', 'signoffflow-client-approval-workflow'),
 				'error'
 			);
 			$primary_color = $defaults['primary_color'];
@@ -309,7 +309,7 @@ class Settings
 			add_settings_error(
 				self::OPTION_KEY,
 				'cliapwo_branding_logo_url',
-				__('Enter a valid URL for the portal logo.', 'client-approval-workflow'),
+				__('Enter a valid URL for the portal logo.', 'signoffflow-client-approval-workflow'),
 				'error'
 			);
 
@@ -342,7 +342,7 @@ class Settings
 	 */
 	public function render_general_section()
 	{
-		echo '<p>' . esc_html__('Choose the WordPress page that hosts the client portal shortcode.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Choose the WordPress page that hosts the client portal shortcode.', 'signoffflow-client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -352,7 +352,7 @@ class Settings
 	 */
 	public function render_branding_section()
 	{
-		echo '<p>' . esc_html__('Set the logo and primary color used across the SignoffFlow portal experience.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Set the logo and primary color used across the SignoffFlow portal experience.', 'signoffflow-client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -362,7 +362,7 @@ class Settings
 	 */
 	public function render_notifications_section()
 	{
-		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files. SignoffFlow relies on your WordPress/site mail transport to deliver them.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Enable or disable the client emails sent for new requests, updates, and uploaded files. SignoffFlow relies on your WordPress/site mail transport to deliver them.', 'signoffflow-client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -372,7 +372,7 @@ class Settings
 	 */
 	public function render_advanced_section()
 	{
-		echo '<p>' . esc_html__('Use these settings carefully. Uninstall cleanup is optional and disabled by default.', 'client-approval-workflow') . '</p>';
+		echo '<p>' . esc_html__('Use these settings carefully. Uninstall cleanup is optional and disabled by default.', 'signoffflow-client-approval-workflow') . '</p>';
 	}
 
 	/**
@@ -384,7 +384,7 @@ class Settings
 	{
 		$settings = self::get_settings();
 		$name     = esc_attr(self::OPTION_KEY . '[portal_page_id]');
-		$none     = esc_html__('Select a page', 'client-approval-workflow');
+		$none     = esc_html__('Select a page', 'signoffflow-client-approval-workflow');
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_dropdown_pages() outputs trusted core-generated select markup.
 		echo wp_dropdown_pages(
 			array(
@@ -412,7 +412,7 @@ class Settings
 			min="0"
 			name="<?php echo esc_attr(self::OPTION_KEY); ?>[branding_logo_id]"
 			value="<?php echo esc_attr((string) $settings['branding_logo_id']); ?>" />
-		<p class="description"><?php esc_html_e('Optional attachment ID from the Media Library.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Optional attachment ID from the Media Library.', 'signoffflow-client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -431,7 +431,7 @@ class Settings
 			name="<?php echo esc_attr(self::OPTION_KEY); ?>[branding_logo_url]"
 			value="<?php echo esc_attr((string) $settings['branding_logo_url']); ?>"
 			placeholder="https://example.com/logo.png" />
-		<p class="description"><?php esc_html_e('Optional direct URL fallback for the portal logo.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Optional direct URL fallback for the portal logo.', 'signoffflow-client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -448,7 +448,7 @@ class Settings
 			type="color"
 			name="<?php echo esc_attr(self::OPTION_KEY); ?>[primary_color]"
 			value="<?php echo esc_attr((string) $settings['primary_color']); ?>" />
-		<p class="description"><?php esc_html_e('Used for portal accents and notification branding.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Used for portal accents and notification branding.', 'signoffflow-client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -468,7 +468,7 @@ class Settings
 				name="<?php echo esc_attr(self::OPTION_KEY); ?>[notify_updates]"
 				value="1"
 				<?php checked(! empty($settings['notify_updates'])); ?> />
-			<?php esc_html_e('Send email notifications when a new update is posted.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Send email notifications when a new update is posted.', 'signoffflow-client-approval-workflow'); ?>
 		</label>
 	<?php
 	}
@@ -489,7 +489,7 @@ class Settings
 				name="<?php echo esc_attr(self::OPTION_KEY); ?>[notify_files]"
 				value="1"
 				<?php checked(! empty($settings['notify_files'])); ?> />
-			<?php esc_html_e('Send email notifications when a new file is uploaded.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Send email notifications when a new file is uploaded.', 'signoffflow-client-approval-workflow'); ?>
 		</label>
 	<?php
 	}
@@ -510,7 +510,7 @@ class Settings
 				name="<?php echo esc_attr(self::OPTION_KEY); ?>[notify_requests]"
 				value="1"
 				<?php checked(! empty($settings['notify_requests'])); ?> />
-			<?php esc_html_e('Send email notifications when a new request is created.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Send email notifications when a new request is created.', 'signoffflow-client-approval-workflow'); ?>
 		</label>
 	<?php
 	}
@@ -524,23 +524,23 @@ class Settings
 	{
 	?>
 		<p class="description">
-			<?php esc_html_e('SignoffFlow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('SignoffFlow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 		<p class="description">
-			<?php esc_html_e('Local and staging environments often do not send real email unless SMTP or a mail testing tool is configured.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Local and staging environments often do not send real email unless SMTP or a mail testing tool is configured.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 		<p class="description">
-			<?php esc_html_e('Recommended local testing tools: Mailpit or MailHog. Recommended delivery testing options: SMTP, Postmark, or Mailtrap.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Recommended local testing tools: Mailpit or MailHog. Recommended delivery testing options: SMTP, Postmark, or Mailtrap.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 		<p class="description">
-			<strong><?php esc_html_e('Simple test flow', 'client-approval-workflow'); ?></strong>
+			<strong><?php esc_html_e('Simple test flow', 'signoffflow-client-approval-workflow'); ?></strong>
 		</p>
 		<ol class="description" style="margin-top:0;">
-			<li><?php esc_html_e('Make sure a portal page is configured and at least one client has assigned WordPress users with valid email addresses.', 'client-approval-workflow'); ?></li>
-			<li><?php esc_html_e('Confirm your site mail transport works first by sending a WordPress test email through your SMTP plugin or mail testing tool.', 'client-approval-workflow'); ?></li>
-			<li><?php esc_html_e('Publish a new request, update, or file for that client.', 'client-approval-workflow'); ?></li>
-			<li><?php esc_html_e('Check SignoffFlow > Event Log for the event entry and the related Email attempt entry.', 'client-approval-workflow'); ?></li>
-			<li><?php esc_html_e('If delivery is configured, confirm the assigned client users received the email.', 'client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Make sure a portal page is configured and at least one client has assigned WordPress users with valid email addresses.', 'signoffflow-client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Confirm your site mail transport works first by sending a WordPress test email through your SMTP plugin or mail testing tool.', 'signoffflow-client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Publish a new request, update, or file for that client.', 'signoffflow-client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('Check SignoffFlow > Event Log for the event entry and the related Email attempt entry.', 'signoffflow-client-approval-workflow'); ?></li>
+			<li><?php esc_html_e('If delivery is configured, confirm the assigned client users received the email.', 'signoffflow-client-approval-workflow'); ?></li>
 		</ol>
 <?php
 	}
@@ -561,9 +561,9 @@ class Settings
 				name="<?php echo esc_attr(self::OPTION_KEY); ?>[delete_data_on_uninstall]"
 				value="1"
 				<?php checked(! empty($settings['delete_data_on_uninstall'])); ?> />
-			<?php esc_html_e('Delete SignoffFlow data when the plugin is uninstalled.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Delete SignoffFlow data when the plugin is uninstalled.', 'signoffflow-client-approval-workflow'); ?>
 		</label>
-		<p class="description"><?php esc_html_e('This removes SignoffFlow settings, client accounts, updates, files, requests, event log entries, and protected uploaded files when the plugin is deleted.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('This removes SignoffFlow settings, client accounts, updates, files, requests, event log entries, and protected uploaded files when the plugin is deleted.', 'signoffflow-client-approval-workflow'); ?></p>
 	<?php
 	}
 
@@ -576,13 +576,13 @@ class Settings
 	{
 		?>
 		<p class="description">
-			<?php esc_html_e('Developers can customize the portal styling from a theme or site-specific plugin without editing SignoffFlow directly.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Developers can customize the portal styling from a theme or site-specific plugin without editing SignoffFlow directly.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 		<p class="description">
 			<?php
 			printf(
 				/* translators: 1: root wrapper class, 2: CSS variable name, 3: CSS variable name, 4: CSS variable name */
-				esc_html__('Use the root wrapper %1$s and CSS variables such as %2$s, %3$s, and %4$s for targeted overrides.', 'client-approval-workflow'),
+				esc_html__('Use the root wrapper %1$s and CSS variables such as %2$s, %3$s, and %4$s for targeted overrides.', 'signoffflow-client-approval-workflow'),
 				'.cliapwo-portal',
 				'--cliapwo-primary',
 				'--cliapwo-max-width',
@@ -594,7 +594,7 @@ class Settings
 			<?php
 			printf(
 				/* translators: 1: filter name, 2: filter name, 3: filter name */
-				esc_html__('Advanced integrations can also use the filters %1$s, %2$s, and %3$s to adjust wrapper classes, CSS variables, and section classes.', 'client-approval-workflow'),
+				esc_html__('Advanced integrations can also use the filters %1$s, %2$s, and %3$s to adjust wrapper classes, CSS variables, and section classes.', 'signoffflow-client-approval-workflow'),
 				'cliapwo_portal_wrapper_classes',
 				'cliapwo_portal_style_vars',
 				'cliapwo_portal_section_classes'

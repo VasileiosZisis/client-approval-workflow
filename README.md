@@ -32,9 +32,9 @@ This repository contains the plugin source code.
 
 Repository/package details:
 
-- plugin folder: `client-approval-workflow`
+- plugin folder: `signoffflow-client-approval-workflow`
 - main plugin file: `client-approval-workflow.php`
-- text domain: `client-approval-workflow`
+- text domain: `signoffflow-client-approval-workflow`
 - namespace: `Vzisis\\ClientApprovalWorkflow\\`
 - code prefix: `cliapwo`
 
@@ -45,7 +45,7 @@ Repository/package details:
 
 ## Local Development
 
-1. Place this repository in `wp-content/plugins/client-approval-workflow`.
+1. Place this repository in `wp-content/plugins/signoffflow-client-approval-workflow`.
 2. Run `composer install`.
 3. Activate the plugin in WordPress.
 4. Configure the portal page in `SignoffFlow > Settings`.

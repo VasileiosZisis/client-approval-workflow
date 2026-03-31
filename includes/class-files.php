@@ -136,15 +136,15 @@ class Files
 			self::POST_TYPE,
 			array(
 				'labels'              => array(
-					'name'          => __('Files', 'client-approval-workflow'),
-					'singular_name' => __('File', 'client-approval-workflow'),
-					'menu_name'     => __('Files', 'client-approval-workflow'),
-					'add_new_item'  => __('Add File', 'client-approval-workflow'),
-					'edit_item'     => __('Edit File', 'client-approval-workflow'),
-					'new_item'      => __('New File', 'client-approval-workflow'),
-					'view_item'     => __('View File', 'client-approval-workflow'),
-					'search_items'  => __('Search Files', 'client-approval-workflow'),
-					'not_found'     => __('No files found.', 'client-approval-workflow'),
+					'name'          => __('Files', 'signoffflow-client-approval-workflow'),
+					'singular_name' => __('File', 'signoffflow-client-approval-workflow'),
+					'menu_name'     => __('Files', 'signoffflow-client-approval-workflow'),
+					'add_new_item'  => __('Add File', 'signoffflow-client-approval-workflow'),
+					'edit_item'     => __('Edit File', 'signoffflow-client-approval-workflow'),
+					'new_item'      => __('New File', 'signoffflow-client-approval-workflow'),
+					'view_item'     => __('View File', 'signoffflow-client-approval-workflow'),
+					'search_items'  => __('Search Files', 'signoffflow-client-approval-workflow'),
+					'not_found'     => __('No files found.', 'signoffflow-client-approval-workflow'),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -185,7 +185,7 @@ class Files
 	{
 		add_meta_box(
 			'cliapwo_file_details',
-			__('File Details', 'client-approval-workflow'),
+			__('File Details', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_file_details_meta_box'),
 			self::POST_TYPE,
 			'normal',
@@ -225,12 +225,12 @@ class Files
 		);
 		?>
 		<p>
-			<label for="cliapwo_file_client_id"><strong><?php esc_html_e('Client', 'client-approval-workflow'); ?></strong></label><br />
+			<label for="cliapwo_file_client_id"><strong><?php esc_html_e('Client', 'signoffflow-client-approval-workflow'); ?></strong></label><br />
 			<select
 				class="widefat"
 				id="cliapwo_file_client_id"
 				name="cliapwo_file_client_id">
-				<option value="0"><?php esc_html_e('Select a client', 'client-approval-workflow'); ?></option>
+				<option value="0"><?php esc_html_e('Select a client', 'signoffflow-client-approval-workflow'); ?></option>
 				<?php foreach ($clients as $client) : ?>
 					<?php if (! $client instanceof \WP_Post) : ?>
 						<?php continue; ?>
@@ -245,7 +245,7 @@ class Files
 		</p>
 
 		<p>
-			<label for="cliapwo_file_upload"><strong><?php esc_html_e('Upload file', 'client-approval-workflow'); ?></strong></label><br />
+			<label for="cliapwo_file_upload"><strong><?php esc_html_e('Upload file', 'signoffflow-client-approval-workflow'); ?></strong></label><br />
 			<input
 				type="file"
 				id="cliapwo_file_upload"
@@ -254,20 +254,20 @@ class Files
 
 		<?php if ($has_stored_file) : ?>
 			<p>
-				<strong><?php esc_html_e('Current file', 'client-approval-workflow'); ?>:</strong>
+				<strong><?php esc_html_e('Current file', 'signoffflow-client-approval-workflow'); ?>:</strong>
 				<?php echo esc_html('' !== $original_file_name ? $original_file_name : basename($stored_file_path)); ?>
 			</p>
 		<?php elseif ('' !== $stored_relative) : ?>
-			<p class="description"><?php esc_html_e('A protected file is referenced for this record, but it is missing from storage.', 'client-approval-workflow'); ?></p>
+			<p class="description"><?php esc_html_e('A protected file is referenced for this record, but it is missing from storage.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php else : ?>
-			<p class="description"><?php esc_html_e('No file uploaded yet.', 'client-approval-workflow'); ?></p>
+			<p class="description"><?php esc_html_e('No file uploaded yet.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php endif; ?>
 
 		<p class="description">
-			<?php esc_html_e('Allowed file types follow your WordPress upload settings. Uploading a new file replaces the current file for this record.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Allowed file types follow your WordPress upload settings. Uploading a new file replaces the current file for this record.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 		<p class="description">
-			<?php esc_html_e('Client downloads always go through client-approval-workflow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory.', 'client-approval-workflow'); ?>
+			<?php esc_html_e('Client downloads always go through client-approval-workflow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory.', 'signoffflow-client-approval-workflow'); ?>
 		</p>
 		<?php
 	}
@@ -381,8 +381,8 @@ class Files
 	 */
 	public function filter_file_columns($columns)
 	{
-		$columns['cliapwo_file_client'] = __('Client', 'client-approval-workflow');
-		$columns['cliapwo_file_name']   = __('Stored file', 'client-approval-workflow');
+		$columns['cliapwo_file_client'] = __('Client', 'signoffflow-client-approval-workflow');
+		$columns['cliapwo_file_name']   = __('Stored file', 'signoffflow-client-approval-workflow');
 
 		return $columns;
 	}
@@ -398,7 +398,7 @@ class Files
 	{
 		if ('cliapwo_file_client' === $column) {
 			$client = get_post(self::get_client_id_for_file($post_id));
-			echo $client instanceof \WP_Post ? esc_html($client->post_title) : esc_html__('Unassigned', 'client-approval-workflow');
+			echo $client instanceof \WP_Post ? esc_html($client->post_title) : esc_html__('Unassigned', 'signoffflow-client-approval-workflow');
 			return;
 		}
 
@@ -407,7 +407,7 @@ class Files
 		}
 
 		$file_name = get_post_meta($post_id, self::ORIGINAL_FILENAME_META_KEY, true);
-		echo '' !== (string) $file_name ? esc_html((string) $file_name) : esc_html__('No file uploaded', 'client-approval-workflow');
+		echo '' !== (string) $file_name ? esc_html((string) $file_name) : esc_html__('No file uploaded', 'signoffflow-client-approval-workflow');
 	}
 
 	/**
@@ -425,8 +425,8 @@ class Files
 
 		if (! wp_verify_nonce($nonce, self::DOWNLOAD_ACTION)) {
 			wp_die(
-				esc_html__('Invalid download request.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('Invalid download request.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -435,8 +435,8 @@ class Files
 
 		if (! is_user_logged_in()) {
 			wp_die(
-				esc_html__('You must be logged in to download files.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('You must be logged in to download files.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -445,8 +445,8 @@ class Files
 
 		if (! current_user_can('cliapwo_manage_portal') && ! current_user_can('cliapwo_view_portal')) {
 			wp_die(
-				esc_html__('You are not allowed to download files.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('You are not allowed to download files.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -463,8 +463,8 @@ class Files
 
 		if (! $file_post instanceof \WP_Post || self::POST_TYPE !== $file_post->post_type || 'publish' !== $file_post->post_status) {
 			wp_die(
-				esc_html__('The requested file could not be found.', 'client-approval-workflow'),
-				esc_html__('Not Found', 'client-approval-workflow'),
+				esc_html__('The requested file could not be found.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Not Found', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 404,
 				)
@@ -475,8 +475,8 @@ class Files
 
 		if (! Clients::user_can_view_client($client_id, get_current_user_id())) {
 			wp_die(
-				esc_html__('You do not have access to this file.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('You do not have access to this file.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -489,8 +489,8 @@ class Files
 
 		if ('' === $file_path || ! file_exists($file_path)) {
 			wp_die(
-				esc_html__('The requested file is missing from protected storage.', 'client-approval-workflow'),
-				esc_html__('Not Found', 'client-approval-workflow'),
+				esc_html__('The requested file is missing from protected storage.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Not Found', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 404,
 				)
@@ -527,8 +527,8 @@ class Files
 	public function handle_unauthorized_download()
 	{
 		wp_die(
-			esc_html__('You must be logged in to download files.', 'client-approval-workflow'),
-			esc_html__('Forbidden', 'client-approval-workflow'),
+			esc_html__('You must be logged in to download files.', 'signoffflow-client-approval-workflow'),
+			esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 			array(
 				'response' => 403,
 			)
@@ -761,7 +761,7 @@ class Files
 		if (UPLOAD_ERR_OK !== (int) $file_data['error']) {
 			return new \WP_Error(
 				'cliapwo_upload_failed',
-				__('The file upload failed. Please try again.', 'client-approval-workflow')
+				__('The file upload failed. Please try again.', 'signoffflow-client-approval-workflow')
 			);
 		}
 
@@ -771,14 +771,14 @@ class Files
 		if ('' === $original_name || '' === $tmp_name) {
 			return new \WP_Error(
 				'cliapwo_upload_incomplete',
-				__('The uploaded file data is incomplete.', 'client-approval-workflow')
+				__('The uploaded file data is incomplete.', 'signoffflow-client-approval-workflow')
 			);
 		}
 
 		if (! is_uploaded_file($tmp_name)) {
 			return new \WP_Error(
 				'cliapwo_upload_invalid',
-				__('The uploaded file could not be validated.', 'client-approval-workflow')
+				__('The uploaded file could not be validated.', 'signoffflow-client-approval-workflow')
 			);
 		}
 
@@ -790,7 +790,7 @@ class Files
 		if ('' === $extension || '' === $mime_type || ! in_array($mime_type, $allowed_mimes, true)) {
 			return new \WP_Error(
 				'cliapwo_upload_mime_not_allowed',
-				__('That file type is not allowed.', 'client-approval-workflow')
+				__('That file type is not allowed.', 'signoffflow-client-approval-workflow')
 			);
 		}
 
@@ -809,7 +809,7 @@ class Files
 		if (! $move_succeeded || ! file_exists($destination_path)) {
 			return new \WP_Error(
 				'cliapwo_upload_move_failed',
-				__('The uploaded file could not be moved into protected storage.', 'client-approval-workflow')
+				__('The uploaded file could not be moved into protected storage.', 'signoffflow-client-approval-workflow')
 			);
 		}
 
@@ -840,7 +840,7 @@ class Files
 		if (! is_dir($storage_directory) && ! wp_mkdir_p($storage_directory)) {
 			return new \WP_Error(
 				'cliapwo_storage_directory_creation_failed',
-				__('The protected storage directory could not be created.', 'client-approval-workflow')
+				__('The protected storage directory could not be created.', 'signoffflow-client-approval-workflow')
 			);
 		}
 
@@ -893,7 +893,7 @@ class Files
 		if (! is_array($uploads) || ! empty($uploads['error']) || empty($uploads['basedir']) || ! is_string($uploads['basedir'])) {
 			return new \WP_Error(
 				'cliapwo_storage_directory_unavailable',
-				__('The uploads directory is not available for protected files.', 'client-approval-workflow')
+				__('The uploads directory is not available for protected files.', 'signoffflow-client-approval-workflow')
 			);
 		}
 
@@ -929,7 +929,7 @@ class Files
 			if (false === $bytes_written) {
 				return new \WP_Error(
 					'cliapwo_storage_hardening_failed',
-					__('The protected storage directory could not be hardened.', 'client-approval-workflow')
+					__('The protected storage directory could not be hardened.', 'signoffflow-client-approval-workflow')
 				);
 			}
 		}

@@ -102,7 +102,7 @@ class Portal
 					'<p class="cliapwo-empty">%s</p>',
 					sprintf(
 						/* translators: %s: login URL */
-						esc_html__('Please log in to view your client portal: %s', 'client-approval-workflow'),
+						esc_html__('Please log in to view your client portal: %s', 'signoffflow-client-approval-workflow'),
 						esc_url($login_url)
 					)
 				),
@@ -123,14 +123,14 @@ class Portal
 
 		if (! $client instanceof \WP_Post) {
 			return $this->wrap_empty_state(
-				'<p class="cliapwo-empty">' . esc_html__('No portal assigned.', 'client-approval-workflow') . '</p>',
+				'<p class="cliapwo-empty">' . esc_html__('No portal assigned.', 'signoffflow-client-approval-workflow') . '</p>',
 				$settings
 			);
 		}
 
 		if (! Clients::user_can_view_client($client->ID, $current_user_id)) {
 			return $this->wrap_empty_state(
-				'<p class="cliapwo-empty">' . esc_html__('You do not have access to this portal.', 'client-approval-workflow') . '</p>',
+				'<p class="cliapwo-empty">' . esc_html__('You do not have access to this portal.', 'signoffflow-client-approval-workflow') . '</p>',
 				$settings
 			);
 		}
@@ -162,30 +162,30 @@ class Portal
 			<?php do_action('cliapwo_before_render_portal', $client->ID, $current_user_id); ?>
 
 			<header class="<?php echo esc_attr($this->get_section_classes('header', array('cliapwo-portal__header', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
-				<div class="cliapwo-portal__eyebrow"><?php esc_html_e('Portal overview', 'client-approval-workflow'); ?></div>
+				<div class="cliapwo-portal__eyebrow"><?php esc_html_e('Portal overview', 'signoffflow-client-approval-workflow'); ?></div>
 				<?php if ('' !== $logo_url) : ?>
 					<p class="cliapwo-portal__brand">
 						<img
 							src="<?php echo esc_url($logo_url); ?>"
-							alt="<?php echo esc_attr__('client-approval-workflow logo', 'client-approval-workflow'); ?>"
+							alt="<?php echo esc_attr__('client-approval-workflow logo', 'signoffflow-client-approval-workflow'); ?>"
 							class="cliapwo-portal__logo" />
 					</p>
 				<?php endif; ?>
 				<div class="cliapwo-portal__header-copy">
 					<h2 class="cliapwo-portal__title"><?php echo esc_html($client->post_title); ?></h2>
-					<p class="cliapwo-portal__intro"><?php esc_html_e('Welcome to your SignoffFlow portal.', 'client-approval-workflow'); ?></p>
+					<p class="cliapwo-portal__intro"><?php esc_html_e('Welcome to your SignoffFlow portal.', 'signoffflow-client-approval-workflow'); ?></p>
 				</div>
 				<div class="cliapwo-portal__stats">
 					<?php /* translators: %d: total number of updates. */ ?>
-					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d update', '%d updates', $updates_count, 'client-approval-workflow'), $updates_count)); ?></span>
+					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d update', '%d updates', $updates_count, 'signoffflow-client-approval-workflow'), $updates_count)); ?></span>
 					<?php /* translators: %d: total number of requests. */ ?>
-					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d request', '%d requests', $requests_count, 'client-approval-workflow'), $requests_count)); ?></span>
+					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d request', '%d requests', $requests_count, 'signoffflow-client-approval-workflow'), $requests_count)); ?></span>
 					<?php /* translators: %d: total number of files. */ ?>
-					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d file', '%d files', $files_count, 'client-approval-workflow'), $files_count)); ?></span>
+					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d file', '%d files', $files_count, 'signoffflow-client-approval-workflow'), $files_count)); ?></span>
 				</div>
 				<?php if ($is_staff_preview) : ?>
 					<p class="cliapwo-portal__preview-note cliapwo-status cliapwo-status--preview">
-						<?php esc_html_e('You are previewing this portal as staff.', 'client-approval-workflow'); ?>
+						<?php esc_html_e('You are previewing this portal as staff.', 'signoffflow-client-approval-workflow'); ?>
 					</p>
 				<?php endif; ?>
 			</header>
@@ -193,7 +193,7 @@ class Portal
 			<section class="<?php echo esc_attr($this->get_section_classes('summary', array('cliapwo-portal__section', 'cliapwo-portal__summary', 'cliapwo-card', 'cliapwo-card--accent'), $client->ID, $current_user_id)); ?>">
 				<div class="cliapwo-portal__section-header">
 					<div>
-						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Action required', 'client-approval-workflow'); ?></h3>
+						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Action required', 'signoffflow-client-approval-workflow'); ?></h3>
 					</div>
 				</div>
 				<?php if ($open_requests > 0) : ?>
@@ -201,13 +201,13 @@ class Portal
 						<?php
 						printf(
 							/* translators: %d: number of open requests */
-							esc_html(_n('%d request needs your attention.', '%d requests need your attention.', $open_requests, 'client-approval-workflow')),
+							esc_html(_n('%d request needs your attention.', '%d requests need your attention.', $open_requests, 'signoffflow-client-approval-workflow')),
 							esc_html($open_requests)
 						);
 						?>
 					</p>
 				<?php else : ?>
-					<p class="cliapwo-portal__summary-copy"><?php esc_html_e('Nothing is waiting on you right now.', 'client-approval-workflow'); ?></p>
+					<p class="cliapwo-portal__summary-copy"><?php esc_html_e('Nothing is waiting on you right now.', 'signoffflow-client-approval-workflow'); ?></p>
 				<?php endif; ?>
 			</section>
 
@@ -215,8 +215,8 @@ class Portal
 				<section class="<?php echo esc_attr($this->get_section_classes('updates', array('cliapwo-portal__section', 'cliapwo-portal__updates', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
 					<div class="cliapwo-portal__section-header">
 						<div>
-							<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Updates', 'client-approval-workflow'); ?></h3>
-							<p class="cliapwo-portal__section-intro"><?php esc_html_e('Latest progress and delivery notes from your team.', 'client-approval-workflow'); ?></p>
+							<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Updates', 'signoffflow-client-approval-workflow'); ?></h3>
+							<p class="cliapwo-portal__section-intro"><?php esc_html_e('Latest progress and delivery notes from your team.', 'signoffflow-client-approval-workflow'); ?></p>
 						</div>
 					</div>
 
@@ -235,9 +235,9 @@ class Portal
 										<?php
 										printf(
 											/* translators: 1: date, 2: author name */
-											esc_html__('Posted on %1$s by %2$s', 'client-approval-workflow'),
+											esc_html__('Posted on %1$s by %2$s', 'signoffflow-client-approval-workflow'),
 											esc_html(get_the_date('', $update_id)),
-											esc_html($author_name ? $author_name : __('SignoffFlow', 'client-approval-workflow'))
+											esc_html($author_name ? $author_name : __('SignoffFlow', 'signoffflow-client-approval-workflow'))
 										);
 										?>
 									</p>
@@ -268,8 +268,8 @@ class Portal
 							<?php
 							echo esc_html(
 								$is_staff_preview
-									? __('No updates yet. Publish a client update from client-approval-workflow > Updates.', 'client-approval-workflow')
-									: __('No updates yet. New project updates will appear here.', 'client-approval-workflow')
+									? __('No updates yet. Publish a client update from client-approval-workflow > Updates.', 'signoffflow-client-approval-workflow')
+									: __('No updates yet. New project updates will appear here.', 'signoffflow-client-approval-workflow')
 							);
 							?>
 						</p>
@@ -280,8 +280,8 @@ class Portal
 					<section class="<?php echo esc_attr($this->get_section_classes('requests', array('cliapwo-portal__section', 'cliapwo-portal__requests', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
 						<div class="cliapwo-portal__section-header">
 							<div>
-								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Requests', 'client-approval-workflow'); ?></h3>
-								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Outstanding actions and confirmations for this client account.', 'client-approval-workflow'); ?></p>
+								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Requests', 'signoffflow-client-approval-workflow'); ?></h3>
+								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Outstanding actions and confirmations for this client account.', 'signoffflow-client-approval-workflow'); ?></p>
 							</div>
 						</div>
 						<?php if ($requests_query->have_posts()) : ?>
@@ -321,13 +321,13 @@ class Portal
 
 												<?php if ($can_complete) : ?>
 													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
-													<button type="submit" class="cliapwo-button"><?php esc_html_e('Mark complete', 'client-approval-workflow'); ?></button>
+													<button type="submit" class="cliapwo-button"><?php esc_html_e('Mark complete', 'signoffflow-client-approval-workflow'); ?></button>
 												<?php elseif ($can_reopen) : ?>
 													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_OPEN); ?>" />
-													<button type="submit" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Reopen', 'client-approval-workflow'); ?></button>
+													<button type="submit" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Reopen', 'signoffflow-client-approval-workflow'); ?></button>
 												<?php elseif ($can_force_close) : ?>
 													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
-													<button type="submit" class="cliapwo-button"><?php esc_html_e('Complete for client', 'client-approval-workflow'); ?></button>
+													<button type="submit" class="cliapwo-button"><?php esc_html_e('Complete for client', 'signoffflow-client-approval-workflow'); ?></button>
 												<?php endif; ?>
 											</form>
 										<?php endif; ?>
@@ -339,8 +339,8 @@ class Portal
 								<?php
 								echo esc_html(
 									$is_staff_preview
-										? __('No requests yet. Add one from client-approval-workflow > Requests.', 'client-approval-workflow')
-										: __('No requests yet. Your team will add anything they still need from you here.', 'client-approval-workflow')
+										? __('No requests yet. Add one from client-approval-workflow > Requests.', 'signoffflow-client-approval-workflow')
+										: __('No requests yet. Your team will add anything they still need from you here.', 'signoffflow-client-approval-workflow')
 								);
 								?>
 							</p>
@@ -350,8 +350,8 @@ class Portal
 					<section class="<?php echo esc_attr($this->get_section_classes('files', array('cliapwo-portal__section', 'cliapwo-portal__files', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
 						<div class="cliapwo-portal__section-header">
 							<div>
-								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Files', 'client-approval-workflow'); ?></h3>
-								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Shared deliverables and protected downloads for this client account.', 'client-approval-workflow'); ?></p>
+								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Files', 'signoffflow-client-approval-workflow'); ?></h3>
+								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Shared deliverables and protected downloads for this client account.', 'signoffflow-client-approval-workflow'); ?></p>
 							</div>
 						</div>
 
@@ -395,8 +395,8 @@ class Portal
 								<?php
 								echo esc_html(
 									$is_staff_preview
-										? __('No files yet. Upload one from client-approval-workflow > Files.', 'client-approval-workflow')
-										: __('No files yet. Shared deliverables and downloads will appear here.', 'client-approval-workflow')
+										? __('No files yet. Upload one from client-approval-workflow > Files.', 'signoffflow-client-approval-workflow')
+										: __('No files yet. Shared deliverables and downloads will appear here.', 'signoffflow-client-approval-workflow')
 								);
 								?>
 							</p>

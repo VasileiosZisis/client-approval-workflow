@@ -92,15 +92,15 @@ class Requests
 			self::POST_TYPE,
 			array(
 				'labels'              => array(
-					'name'          => __('Requests', 'client-approval-workflow'),
-					'singular_name' => __('Request', 'client-approval-workflow'),
-					'menu_name'     => __('Requests', 'client-approval-workflow'),
-					'add_new_item'  => __('Add Request', 'client-approval-workflow'),
-					'edit_item'     => __('Edit Request', 'client-approval-workflow'),
-					'new_item'      => __('New Request', 'client-approval-workflow'),
-					'view_item'     => __('View Request', 'client-approval-workflow'),
-					'search_items'  => __('Search Requests', 'client-approval-workflow'),
-					'not_found'     => __('No requests found.', 'client-approval-workflow'),
+					'name'          => __('Requests', 'signoffflow-client-approval-workflow'),
+					'singular_name' => __('Request', 'signoffflow-client-approval-workflow'),
+					'menu_name'     => __('Requests', 'signoffflow-client-approval-workflow'),
+					'add_new_item'  => __('Add Request', 'signoffflow-client-approval-workflow'),
+					'edit_item'     => __('Edit Request', 'signoffflow-client-approval-workflow'),
+					'new_item'      => __('New Request', 'signoffflow-client-approval-workflow'),
+					'view_item'     => __('View Request', 'signoffflow-client-approval-workflow'),
+					'search_items'  => __('Search Requests', 'signoffflow-client-approval-workflow'),
+					'not_found'     => __('No requests found.', 'signoffflow-client-approval-workflow'),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -141,7 +141,7 @@ class Requests
 	{
 		add_meta_box(
 			'cliapwo_request_details',
-			__('Request Details', 'client-approval-workflow'),
+			__('Request Details', 'signoffflow-client-approval-workflow'),
 			array($this, 'render_request_details_meta_box'),
 			self::POST_TYPE,
 			'side',
@@ -178,12 +178,12 @@ class Requests
 		);
 		?>
 		<p>
-			<label for="cliapwo_request_client_id"><strong><?php esc_html_e('Client', 'client-approval-workflow'); ?></strong></label><br />
+			<label for="cliapwo_request_client_id"><strong><?php esc_html_e('Client', 'signoffflow-client-approval-workflow'); ?></strong></label><br />
 			<select
 				class="widefat"
 				id="cliapwo_request_client_id"
 				name="cliapwo_request_client_id">
-				<option value="0"><?php esc_html_e('Select a client', 'client-approval-workflow'); ?></option>
+				<option value="0"><?php esc_html_e('Select a client', 'signoffflow-client-approval-workflow'); ?></option>
 				<?php foreach ($clients as $client) : ?>
 					<?php if (! $client instanceof \WP_Post) : ?>
 						<?php continue; ?>
@@ -198,7 +198,7 @@ class Requests
 		</p>
 
 		<p>
-			<label for="cliapwo_request_status"><strong><?php esc_html_e('Status', 'client-approval-workflow'); ?></strong></label><br />
+			<label for="cliapwo_request_status"><strong><?php esc_html_e('Status', 'signoffflow-client-approval-workflow'); ?></strong></label><br />
 			<select
 				class="widefat"
 				id="cliapwo_request_status"
@@ -206,16 +206,16 @@ class Requests
 				<option
 					value="<?php echo esc_attr(self::STATUS_OPEN); ?>"
 					<?php selected($status, self::STATUS_OPEN); ?>>
-					<?php esc_html_e('Open', 'client-approval-workflow'); ?>
+					<?php esc_html_e('Open', 'signoffflow-client-approval-workflow'); ?>
 				</option>
 				<option
 					value="<?php echo esc_attr(self::STATUS_COMPLETE); ?>"
 					<?php selected($status, self::STATUS_COMPLETE); ?>>
-					<?php esc_html_e('Complete', 'client-approval-workflow'); ?>
+					<?php esc_html_e('Complete', 'signoffflow-client-approval-workflow'); ?>
 				</option>
 			</select>
 		</p>
-		<p class="description"><?php esc_html_e('Assigned portal users can mark requests complete from the portal. Staff can reopen or override status here or from the portal preview.', 'client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Assigned portal users can mark requests complete from the portal. Staff can reopen or override status here or from the portal preview.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php
 	}
 
@@ -296,8 +296,8 @@ class Requests
 	 */
 	public function filter_request_columns($columns)
 	{
-		$columns['cliapwo_request_client'] = __('Client', 'client-approval-workflow');
-		$columns['cliapwo_request_status'] = __('Status', 'client-approval-workflow');
+		$columns['cliapwo_request_client'] = __('Client', 'signoffflow-client-approval-workflow');
+		$columns['cliapwo_request_status'] = __('Status', 'signoffflow-client-approval-workflow');
 
 		return $columns;
 	}
@@ -313,7 +313,7 @@ class Requests
 	{
 		if ('cliapwo_request_client' === $column) {
 			$client = get_post(self::get_client_id_for_request($post_id));
-			echo $client instanceof \WP_Post ? esc_html($client->post_title) : esc_html__('Unassigned', 'client-approval-workflow');
+			echo $client instanceof \WP_Post ? esc_html($client->post_title) : esc_html__('Unassigned', 'signoffflow-client-approval-workflow');
 			return;
 		}
 
@@ -339,8 +339,8 @@ class Requests
 
 		if (! wp_verify_nonce($nonce, self::STATUS_UPDATE_ACTION)) {
 			wp_die(
-				esc_html__('Invalid request update.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('Invalid request update.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -349,8 +349,8 @@ class Requests
 
 		if (! is_user_logged_in()) {
 			wp_die(
-				esc_html__('You must be logged in to update requests.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('You must be logged in to update requests.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -362,8 +362,8 @@ class Requests
 
 		if (! $is_manager && ! $is_client_user) {
 			wp_die(
-				esc_html__('You are not allowed to update requests.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('You are not allowed to update requests.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -383,8 +383,8 @@ class Requests
 
 		if (! in_array($status, self::get_allowed_statuses(), true)) {
 			wp_die(
-				esc_html__('Invalid request status.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('Invalid request status.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -395,8 +395,8 @@ class Requests
 
 		if (! $request instanceof \WP_Post || self::POST_TYPE !== $request->post_type || 'publish' !== $request->post_status) {
 			wp_die(
-				esc_html__('The requested task could not be found.', 'client-approval-workflow'),
-				esc_html__('Not Found', 'client-approval-workflow'),
+				esc_html__('The requested task could not be found.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Not Found', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 404,
 				)
@@ -413,8 +413,8 @@ class Requests
 
 		if (! Clients::user_can_view_client($client_id, $current_user_id) || self::STATUS_COMPLETE !== $status) {
 			wp_die(
-				esc_html__('You are not allowed to update this request.', 'client-approval-workflow'),
-				esc_html__('Forbidden', 'client-approval-workflow'),
+				esc_html__('You are not allowed to update this request.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 				array(
 					'response' => 403,
 				)
@@ -433,8 +433,8 @@ class Requests
 	public function handle_unauthorized_status_update()
 	{
 		wp_die(
-			esc_html__('You must be logged in to update requests.', 'client-approval-workflow'),
-			esc_html__('Forbidden', 'client-approval-workflow'),
+			esc_html__('You must be logged in to update requests.', 'signoffflow-client-approval-workflow'),
+			esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
 			array(
 				'response' => 403,
 			)
@@ -546,8 +546,8 @@ class Requests
 	public static function get_status_label($status)
 	{
 		return self::STATUS_COMPLETE === $status
-			? __('Complete', 'client-approval-workflow')
-			: __('Open', 'client-approval-workflow');
+			? __('Complete', 'signoffflow-client-approval-workflow')
+			: __('Open', 'signoffflow-client-approval-workflow');
 	}
 
 	/**

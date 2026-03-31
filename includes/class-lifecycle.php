@@ -73,7 +73,7 @@ class Lifecycle
 		if (! $client_role instanceof \WP_Role) {
 			$client_role = add_role(
 				'cliapwo_client',
-				__('Client', 'client-approval-workflow'),
+				__('Client', 'signoffflow-client-approval-workflow'),
 				array(
 					'read'                => true,
 					'cliapwo_view_portal' => true,
