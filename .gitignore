@@ -9,6 +9,7 @@ Thumbs.db
 # Dependency directories
 vendor/
 node_modules/
+docs/
 
 # Tool caches
 .phpcs-cache

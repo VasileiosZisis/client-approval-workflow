@@ -2,9 +2,9 @@
 Contributors: vzisis
 Tags: client-portal, approvals, workflow, agency, file-sharing
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ SignoffFlow is a client portal and approval workflow plugin for agencies, freela
 Create a private portal workspace per client account where you can:
 * Share project updates (timeline)
 * Share files with protected downloads
-* Send client requests/tasks and track completion
+* Send client requests/tasks and track approval outcomes
 
 Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
 
@@ -35,7 +35,7 @@ This plugin only outputs front-end content on the portal page via the `[cliapwo_
 3. Confirm that page is selected as the portal page in SignoffFlow settings.
 4. Create a client account in `SignoffFlow > Clients` and assign one or more WordPress portal users.
 5. Add updates, files, and requests for that client account.
-6. Log in as an assigned portal user to view the portal and complete requests.
+6. Log in as an assigned portal user to view the portal and respond to requests.
 
 == Installation ==
 
@@ -76,16 +76,24 @@ For installed sites, see the Portal styling help note in `SignoffFlow > Settings
 1. Client portal dashboard with Action required
 2. Updates timeline inside the client portal
 3. Files area with protected client downloads
-4. Requests checklist with client completion actions
+4. Requests checklist with client approval outcomes
 5. SignoffFlow settings and notification toggles
 6. Event Log showing audit and email-attempt entries
 
 == Changelog ==
 
+= 1.1.0 =
+* Added richer approval outcomes for requests: Approved, Changes requested, Rejected, and Blocked.
+* Existing completed requests remain compatible and are shown as Approved for clearer approval workflow language.
+* Tested with WordPress 7.0.
+
 = 1.0.0 =
 Initial release.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Requests now support richer approval outcomes. Existing completed requests remain compatible and are shown as Approved.
 
 = 1.0.0 =
 Initial release.

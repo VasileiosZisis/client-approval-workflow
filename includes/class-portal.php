@@ -292,9 +292,8 @@ class Portal
 									$request_id      = get_the_ID();
 									$request_status  = Requests::get_status_for_request($request_id);
 									$can_manage      = current_user_can('cliapwo_manage_portal');
-									$can_complete    = ! $can_manage && Requests::STATUS_OPEN === $request_status;
-									$can_reopen      = $can_manage && Requests::STATUS_COMPLETE === $request_status;
-									$can_force_close = $can_manage && Requests::STATUS_OPEN === $request_status;
+									$can_choose_outcome = ! $can_manage && Requests::STATUS_OPEN === $request_status;
+									$can_reopen      = $can_manage && Requests::is_resolved_status($request_status);
 									?>
 									<li class="cliapwo-portal__request">
 										<div class="cliapwo-portal__request-header">
@@ -310,7 +309,7 @@ class Portal
 											</div>
 										<?php endif; ?>
 
-										<?php if ($can_complete || $can_reopen || $can_force_close) : ?>
+										<?php if ($can_choose_outcome || $can_reopen) : ?>
 											<form
 												method="post"
 												action="<?php echo esc_url(admin_url('admin-post.php')); ?>"
@@ -319,15 +318,14 @@ class Portal
 												<input type="hidden" name="cliapwo_request_id" value="<?php echo esc_attr((string) $request_id); ?>" />
 												<?php wp_nonce_field(Requests::STATUS_UPDATE_ACTION, Requests::STATUS_UPDATE_NONCE_NAME); ?>
 
-												<?php if ($can_complete) : ?>
-													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
-													<button type="submit" class="cliapwo-button"><?php esc_html_e('Mark complete', 'signoffflow-client-approval-workflow'); ?></button>
+												<?php if ($can_choose_outcome) : ?>
+													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_APPROVED); ?>" class="cliapwo-button"><?php esc_html_e('Approve', 'signoffflow-client-approval-workflow'); ?></button>
+													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_CHANGES_REQUESTED); ?>" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Request changes', 'signoffflow-client-approval-workflow'); ?></button>
+													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_REJECTED); ?>" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Reject', 'signoffflow-client-approval-workflow'); ?></button>
+													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_BLOCKED); ?>" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Block', 'signoffflow-client-approval-workflow'); ?></button>
 												<?php elseif ($can_reopen) : ?>
 													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_OPEN); ?>" />
 													<button type="submit" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Reopen', 'signoffflow-client-approval-workflow'); ?></button>
-												<?php elseif ($can_force_close) : ?>
-													<input type="hidden" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_COMPLETE); ?>" />
-													<button type="submit" class="cliapwo-button"><?php esc_html_e('Complete for client', 'signoffflow-client-approval-workflow'); ?></button>
 												<?php endif; ?>
 											</form>
 										<?php endif; ?>

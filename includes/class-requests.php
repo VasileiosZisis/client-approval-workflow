@@ -37,8 +37,30 @@ class Requests
 
 	/**
 	 * Complete status value.
+	 *
+	 * @deprecated 1.1.0 Use STATUS_APPROVED for new writes.
 	 */
 	public const STATUS_COMPLETE = 'complete';
+
+	/**
+	 * Approved status value.
+	 */
+	public const STATUS_APPROVED = 'approved';
+
+	/**
+	 * Changes requested status value.
+	 */
+	public const STATUS_CHANGES_REQUESTED = 'changes_requested';
+
+	/**
+	 * Rejected status value.
+	 */
+	public const STATUS_REJECTED = 'rejected';
+
+	/**
+	 * Blocked status value.
+	 */
+	public const STATUS_BLOCKED = 'blocked';
 
 	/**
 	 * Save nonce action.
@@ -165,6 +187,7 @@ class Requests
 
 		$client_id = self::get_client_id_for_request($post->ID);
 		$status    = self::get_status_for_request($post->ID);
+		$selected_status = self::normalize_status_for_ui($status);
 		$clients   = get_posts(
 			array(
 				'post_type'              => Clients::POST_TYPE,
@@ -203,19 +226,16 @@ class Requests
 				class="widefat"
 				id="cliapwo_request_status"
 				name="cliapwo_request_status">
-				<option
-					value="<?php echo esc_attr(self::STATUS_OPEN); ?>"
-					<?php selected($status, self::STATUS_OPEN); ?>>
-					<?php esc_html_e('Open', 'signoffflow-client-approval-workflow'); ?>
-				</option>
-				<option
-					value="<?php echo esc_attr(self::STATUS_COMPLETE); ?>"
-					<?php selected($status, self::STATUS_COMPLETE); ?>>
-					<?php esc_html_e('Complete', 'signoffflow-client-approval-workflow'); ?>
-				</option>
+				<?php foreach (self::get_status_options() as $status_value => $status_label) : ?>
+					<option
+						value="<?php echo esc_attr($status_value); ?>"
+						<?php selected($selected_status, $status_value); ?>>
+						<?php echo esc_html($status_label); ?>
+					</option>
+				<?php endforeach; ?>
 			</select>
 		</p>
-		<p class="description"><?php esc_html_e('Assigned portal users can mark requests complete from the portal. Staff can reopen or override status here or from the portal preview.', 'signoffflow-client-approval-workflow'); ?></p>
+		<p class="description"><?php esc_html_e('Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php
 	}
 
@@ -283,6 +303,8 @@ class Requests
 		if (! in_array($status, self::get_allowed_statuses(), true)) {
 			$status = self::STATUS_OPEN;
 		}
+
+		$status = self::normalize_status_for_storage($status);
 
 		update_post_meta($post_id, self::STATUS_META_KEY, $status);
 		$this->maybe_dispatch_created_event($post_id, $post, $client_id);
@@ -407,11 +429,17 @@ class Requests
 		$client_id       = self::get_client_id_for_request($request_id);
 
 		if ($is_manager) {
-			update_post_meta($request_id, self::STATUS_META_KEY, $status);
+			update_post_meta($request_id, self::STATUS_META_KEY, self::normalize_status_for_storage($status));
 			$this->redirect_back();
 		}
 
-		if (! Clients::user_can_view_client($client_id, $current_user_id) || self::STATUS_COMPLETE !== $status) {
+		$current_status = self::get_status_for_request($request_id);
+
+		if (
+			! Clients::user_can_view_client($client_id, $current_user_id)
+			|| self::STATUS_OPEN !== $current_status
+			|| ! in_array($status, self::get_client_outcome_statuses(), true)
+		) {
 			wp_die(
 				esc_html__('You are not allowed to update this request.', 'signoffflow-client-approval-workflow'),
 				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
@@ -421,7 +449,7 @@ class Requests
 			);
 		}
 
-		update_post_meta($request_id, self::STATUS_META_KEY, self::STATUS_COMPLETE);
+		update_post_meta($request_id, self::STATUS_META_KEY, self::normalize_status_for_storage($status));
 		$this->redirect_back();
 	}
 
@@ -545,9 +573,46 @@ class Requests
 	 */
 	public static function get_status_label($status)
 	{
-		return self::STATUS_COMPLETE === $status
-			? __('Complete', 'signoffflow-client-approval-workflow')
-			: __('Open', 'signoffflow-client-approval-workflow');
+		$status = self::normalize_status_for_ui((string) $status);
+
+		if (self::STATUS_APPROVED === $status) {
+			return __('Approved', 'signoffflow-client-approval-workflow');
+		}
+
+		if (self::STATUS_CHANGES_REQUESTED === $status) {
+			return __('Changes requested', 'signoffflow-client-approval-workflow');
+		}
+
+		if (self::STATUS_REJECTED === $status) {
+			return __('Rejected', 'signoffflow-client-approval-workflow');
+		}
+
+		if (self::STATUS_BLOCKED === $status) {
+			return __('Blocked', 'signoffflow-client-approval-workflow');
+		}
+
+		return __('Open', 'signoffflow-client-approval-workflow');
+	}
+
+	/**
+	 * Determine whether a status is resolved.
+	 *
+	 * @param string $status Request status.
+	 * @return bool
+	 */
+	public static function is_resolved_status($status)
+	{
+		return in_array(
+			(string) $status,
+			array(
+				self::STATUS_COMPLETE,
+				self::STATUS_APPROVED,
+				self::STATUS_CHANGES_REQUESTED,
+				self::STATUS_REJECTED,
+				self::STATUS_BLOCKED,
+			),
+			true
+		);
 	}
 
 	/**
@@ -560,7 +625,64 @@ class Requests
 		return array(
 			self::STATUS_OPEN,
 			self::STATUS_COMPLETE,
+			self::STATUS_APPROVED,
+			self::STATUS_CHANGES_REQUESTED,
+			self::STATUS_REJECTED,
+			self::STATUS_BLOCKED,
 		);
+	}
+
+	/**
+	 * Get status options shown in new user-facing controls.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function get_status_options()
+	{
+		return array(
+			self::STATUS_OPEN              => __('Open', 'signoffflow-client-approval-workflow'),
+			self::STATUS_APPROVED          => __('Approved', 'signoffflow-client-approval-workflow'),
+			self::STATUS_CHANGES_REQUESTED => __('Changes requested', 'signoffflow-client-approval-workflow'),
+			self::STATUS_REJECTED          => __('Rejected', 'signoffflow-client-approval-workflow'),
+			self::STATUS_BLOCKED           => __('Blocked', 'signoffflow-client-approval-workflow'),
+		);
+	}
+
+	/**
+	 * Get statuses that assigned client users can submit.
+	 *
+	 * @return array<int, string>
+	 */
+	private static function get_client_outcome_statuses()
+	{
+		return array(
+			self::STATUS_APPROVED,
+			self::STATUS_CHANGES_REQUESTED,
+			self::STATUS_REJECTED,
+			self::STATUS_BLOCKED,
+		);
+	}
+
+	/**
+	 * Normalize legacy statuses for new writes.
+	 *
+	 * @param string $status Request status.
+	 * @return string
+	 */
+	private static function normalize_status_for_storage($status)
+	{
+		return self::STATUS_COMPLETE === $status ? self::STATUS_APPROVED : $status;
+	}
+
+	/**
+	 * Normalize legacy statuses for new controls and labels.
+	 *
+	 * @param string $status Request status.
+	 * @return string
+	 */
+	private static function normalize_status_for_ui($status)
+	{
+		return self::STATUS_COMPLETE === $status ? self::STATUS_APPROVED : $status;
 	}
 
 	/**

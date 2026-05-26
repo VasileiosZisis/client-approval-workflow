@@ -12,7 +12,7 @@ The plugin includes:
 - client account management inside WordPress admin
 - updates timeline for client-facing progress posts
 - protected file sharing with access-checked downloads
-- requests/tasks that clients can complete from the portal
+- requests/tasks that clients can approve, reject, block, or request changes for from the portal
 - event logging for key actions
 - email notifications for requests, updates, and files
 - branding options for the portal experience
@@ -52,8 +52,8 @@ Repository/package details:
 
 Useful commands:
 
-- `composer lint`
-- `composer lint:fix`
+- `composer run lint`
+- `composer run lint:fix`
 
 ## Notes
 

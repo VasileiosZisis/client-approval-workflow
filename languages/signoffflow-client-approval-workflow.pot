@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: signoffflow-client-approval-workflow 1.0.0\n"
+"Project-Id-Version: signoffflow-client-approval-workflow 1.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-14 19:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -62,6 +62,14 @@ msgstr ""
 msgid "Branding"
 msgstr ""
 
+#: includes/class-portal.php:325
+msgid "Approve"
+msgstr ""
+
+#: includes/class-requests.php:576 includes/class-requests.php:633
+msgid "Approved"
+msgstr ""
+
 #: includes/class-settings.php:507
 msgid "Check client-approval-workflow > Event Log for the event entry and the related Email attempt entry."
 msgstr ""
@@ -109,16 +117,20 @@ msgstr ""
 msgid "Clients"
 msgstr ""
 
-#: includes/class-requests.php:218
-msgid "Clients can mark requests complete from the portal. Staff can reopen or override status here or from the portal preview."
+#: includes/class-requests.php:239
+msgid "Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here."
 msgstr ""
 
-#: includes/class-requests.php:214 includes/class-requests.php:546
-msgid "Complete"
+#: includes/class-portal.php:328
+msgid "Block"
 msgstr ""
 
-#: includes/class-portal.php:182
-msgid "Complete for client"
+#: includes/class-requests.php:591 includes/class-requests.php:636
+msgid "Blocked"
+msgstr ""
+
+#: includes/class-requests.php:581 includes/class-requests.php:634
+msgid "Changes requested"
 msgstr ""
 
 #: includes/class-settings.php:505
@@ -261,10 +273,6 @@ msgstr ""
 msgid "Make sure a portal page is configured and at least one client has assigned WordPress users with valid email addresses."
 msgstr ""
 
-#: includes/class-portal.php:176
-msgid "Mark complete"
-msgstr ""
-
 #: includes/class-clients.php:76
 msgid "New Client"
 msgstr ""
@@ -405,8 +413,20 @@ msgstr ""
 msgid "Reopen"
 msgstr ""
 
+#: includes/class-portal.php:327
+msgid "Reject"
+msgstr ""
+
+#: includes/class-requests.php:586 includes/class-requests.php:635
+msgid "Rejected"
+msgstr ""
+
 #: includes/class-requests.php:96
 msgid "Request"
+msgstr ""
+
+#: includes/class-portal.php:326
+msgid "Request changes"
 msgstr ""
 
 #: includes/class-requests.php:144
