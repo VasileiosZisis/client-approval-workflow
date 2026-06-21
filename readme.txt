@@ -4,7 +4,7 @@ Tags: client-portal, approvals, workflow, agency, file-sharing
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,11 +17,11 @@ SignoffFlow is a client portal and approval workflow plugin for agencies, freela
 Create a private portal workspace per client account where you can:
 * Share project updates (timeline)
 * Share files with protected downloads
-* Send client requests/tasks and track approval outcomes
+* Send client requests/tasks, track approval outcomes, and collect short response notes
 
 Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
 
-This plugin only outputs front-end content on the portal page via the `[cliapwo_portal]` shortcode.
+The page selected in SignoffFlow settings uses a focused, responsive portal canvas without the active theme's public header and footer. Shortcodes placed on other pages remain embedded in the theme as normal.
 
 = Use cases =
 * Collect client confirmations on deliverables and tasks
@@ -71,16 +71,28 @@ Yes. The portal uses a stable root wrapper (`.cliapwo-portal`), documented CSS v
 
 For installed sites, see the Portal styling help note in `SignoffFlow > Settings`. Customizations should be added from a theme or site-specific plugin rather than by editing SignoffFlow directly.
 
+= How do client response notes work? =
+Clients can add a response note of up to 500 characters when choosing an approval outcome. A note is optional for Approved and required for Changes requested, Rejected, and Blocked.
+
+The latest response, responder, and response time are shown in the client portal and request admin screen. Reopening a request preserves the previous response until the client submits a new one.
+
 == Screenshots ==
 
 1. Client portal dashboard with Action required
 2. Updates timeline inside the client portal
 3. Files area with protected client downloads
-4. Requests checklist with client approval outcomes
+4. Requests checklist with client approval outcomes and response notes
 5. SignoffFlow settings and notification toggles
 6. Event Log showing audit and email-attempt entries
 
 == Changelog ==
+
+= 1.2.0 =
+* Revised the client portal page with a focused, responsive workspace, section navigation, account controls, and accessible motion.
+* Added short client response notes to approval requests.
+* Required an explanatory note for Changes requested, Rejected, and Blocked outcomes while keeping notes optional for Approved.
+* Added the latest response outcome, note, responder, and timestamp to the client portal and request admin screen.
+* Preserved the previous client response when staff reopen a request.
 
 = 1.1.0 =
 * Added richer approval outcomes for requests: Approved, Changes requested, Rejected, and Blocked.
@@ -91,6 +103,9 @@ For installed sites, see the Portal styling help note in `SignoffFlow > Settings
 Initial release.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Clients can now include short response notes with approval outcomes. Existing requests remain compatible and require no migration.
 
 = 1.1.0 =
 Requests now support richer approval outcomes. Existing completed requests remain compatible and are shown as Approved.

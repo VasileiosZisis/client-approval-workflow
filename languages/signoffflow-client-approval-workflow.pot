@@ -1,738 +1,1094 @@
+# Copyright (C) 2026 Vasileios Zisis
+# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: signoffflow-client-approval-workflow 1.1.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-14 19:23+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: SignoffFlow - Client Approval Workflow & Client Portal 1.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/signoffflow-client-approval-workflow\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: 2026-06-21T16:30:36+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: signoffflow-client-approval-workflow\n"
 
-#: includes/class-portal.php:126
-msgid "%d request needs your attention."
-msgid_plural "%d requests need your attention."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/class-events.php:338
-msgid "A new file has been uploaded to your client-approval-workflow portal."
-msgstr ""
-
-#: includes/class-events.php:243
-msgid "A new request has been added to your client-approval-workflow portal."
-msgstr ""
-
-#: includes/class-events.php:160
-msgid "A new update has been posted in your client-approval-workflow portal."
-msgstr ""
-
-#: includes/class-files.php:261
-msgid "A protected file is referenced for this record, but it is missing from storage."
-msgstr ""
-
-#: includes/class-clients.php:74
-msgid "Add Client"
-msgstr ""
-
-#: includes/class-files.php:142
-msgid "Add File"
-msgstr ""
-
-#: includes/class-requests.php:98
-msgid "Add Request"
-msgstr ""
-
-#: includes/class-updates.php:81
-msgid "Add Update"
-msgstr ""
-
-#: includes/class-files.php:267
-msgid "Allowed file types follow your WordPress upload settings. Uploading a new file replaces the current file for this record."
-msgstr ""
-
-#: includes/class-clients.php:174
-msgid "Assigned portal users"
-msgstr ""
-
-#: includes/class-settings.php:88
-msgid "Branding"
-msgstr ""
-
-#: includes/class-portal.php:325
-msgid "Approve"
-msgstr ""
-
-#: includes/class-requests.php:576 includes/class-requests.php:633
-msgid "Approved"
-msgstr ""
-
-#: includes/class-settings.php:507
-msgid "Check client-approval-workflow > Event Log for the event entry and the related Email attempt entry."
-msgstr ""
-
-#: includes/class-settings.php:215
-msgid "Choose a valid WordPress page for the portal base page."
-msgstr ""
-
-#: includes/class-settings.php:320
-msgid "Choose the WordPress page that hosts the client portal shortcode."
-msgstr ""
-
-#: includes/class-clients.php:72 includes/class-events.php:379 includes/class-files.php:228 includes/class-files.php:384 includes/class-lifecycle.php:64 includes/class-requests.php:181 includes/class-requests.php:299 includes/class-updates.php:163 includes/class-updates.php:253
-msgid "Client"
-msgstr ""
-
-#: includes/class-clients.php:122
-msgid "Client Details"
-msgstr ""
-
-#: includes/class-files.php:270
-msgid "Client downloads always go through client-approval-workflow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory."
-msgstr ""
-
-#: includes/class-events.php:317
-msgid "Client: %1\\$s\n"
-"File: %2\\$s"
-msgstr ""
-
-#: includes/class-events.php:222
-msgid "Client: %1\\$s\n"
-"Request: %2\\$s"
-msgstr ""
-
-#: includes/class-events.php:139
-msgid "Client: %1\\$s\n"
-"Update: %2\\$s"
-msgstr ""
-
-#: includes/class-events.php:163 includes/class-events.php:246 includes/class-events.php:341
-msgid "Client: %s"
-msgstr ""
-
-#: includes/class-clients.php:71 includes/class-clients.php:73
-msgid "Clients"
-msgstr ""
-
-#: includes/class-requests.php:239
-msgid "Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here."
-msgstr ""
-
-#: includes/class-portal.php:328
-msgid "Block"
-msgstr ""
-
-#: includes/class-requests.php:591 includes/class-requests.php:636
-msgid "Blocked"
-msgstr ""
-
-#: includes/class-requests.php:581 includes/class-requests.php:634
-msgid "Changes requested"
-msgstr ""
-
-#: includes/class-settings.php:505
-msgid "Confirm your site mail transport works first by sending a WordPress test email through your SMTP plugin or mail testing tool."
-msgstr ""
-
-#: includes/class-clients.php:156
-msgid "Contact email"
-msgstr ""
-
-#: includes/class-events.php:636
-msgid "Context: %s"
-msgstr ""
-
-#: includes/class-files.php:257
-msgid "Current file"
-msgstr ""
-
-#: includes/class-clients.php:75
-msgid "Edit Client"
-msgstr ""
-
-#: includes/class-files.php:143
-msgid "Edit File"
-msgstr ""
-
-#: includes/class-requests.php:99
-msgid "Edit Request"
-msgstr ""
-
-#: includes/class-updates.php:82
-msgid "Edit Update"
-msgstr ""
-
-#: includes/class-events.php:592
-msgid "Email attempt"
-msgstr ""
-
-#: includes/class-events.php:628
-msgid "Email attempt: %s"
-msgstr ""
-
-#: includes/class-settings.php:150
-msgid "Email delivery help"
-msgstr ""
-
-#: includes/class-settings.php:340
-msgid "Enable or disable the client emails sent for new requests, updates, and uploaded files. client-approval-workflow relies on your WordPress/site mail transport to deliver them."
-msgstr ""
-
-#: includes/class-settings.php:287
-msgid "Enter a valid URL for the portal logo."
-msgstr ""
-
-#: includes/class-settings.php:245
-msgid "Enter a valid hex color for the primary color setting."
-msgstr ""
-
-#: includes/class-settings.php:231
-msgid "Enter a valid media attachment ID for the portal logo."
-msgstr ""
-
-#: includes/class-events.php:607 includes/class-events.php:73
-msgid "Event"
-msgstr ""
-
-#: includes/class-events.php:72 includes/class-events.php:74
-msgid "Event Log"
-msgstr ""
-
-#: includes/class-files.php:140
-msgid "File"
-msgstr ""
-
-#: includes/class-files.php:188
-msgid "File Details"
-msgstr ""
-
-#: includes/class-settings.php:134
-msgid "File emails"
-msgstr ""
-
-#: includes/class-events.php:600
-msgid "File uploaded"
-msgstr ""
-
-#: includes/class-events.php:311
-msgid "File uploaded: %s"
-msgstr ""
-
-#: includes/class-events.php:346
-msgid "File: %s"
-msgstr ""
-
-#: includes/class-files.php:139 includes/class-files.php:141 includes/class-portal.php:260
-msgid "Files"
-msgstr ""
-
-#: includes/class-admin.php:82 includes/class-files.php:429 includes/class-files.php:439 includes/class-files.php:449 includes/class-files.php:479 includes/class-files.php:531 includes/class-requests.php:343 includes/class-requests.php:353 includes/class-requests.php:366 includes/class-requests.php:387 includes/class-requests.php:417 includes/class-requests.php:437
-msgid "Forbidden"
-msgstr ""
-
-#: includes/class-settings.php:73
-msgid "General"
-msgstr ""
-
-#: includes/class-settings.php:508
-msgid "If delivery is configured, confirm the assigned client users received the email."
-msgstr ""
-
-#: includes/class-clients.php:166
-msgid "Internal notes"
-msgstr ""
-
-#: includes/class-files.php:428
-msgid "Invalid download request."
-msgstr ""
-
-#: includes/class-requests.php:386
-msgid "Invalid request status."
-msgstr ""
-
-#: includes/class-requests.php:342
-msgid "Invalid request update."
-msgstr ""
-
-#: includes/class-settings.php:495
-msgid "Local and staging environments often do not send real email unless SMTP or a mail testing tool is configured."
-msgstr ""
-
-#: includes/class-settings.php:103
-msgid "Logo URL"
-msgstr ""
-
-#: includes/class-settings.php:95
-msgid "Logo media ID"
-msgstr ""
-
-#: includes/class-settings.php:504
-msgid "Make sure a portal page is configured and at least one client has assigned WordPress users with valid email addresses."
-msgstr ""
-
-#: includes/class-clients.php:76
-msgid "New Client"
-msgstr ""
-
-#: includes/class-files.php:144
-msgid "New File"
-msgstr ""
-
-#: includes/class-requests.php:100
-msgid "New Request"
-msgstr ""
-
-#: includes/class-updates.php:83
-msgid "New Update"
-msgstr ""
-
-#: includes/class-clients.php:179
-msgid "No WordPress users are available to assign."
-msgstr ""
-
-#: includes/class-clients.php:79
-msgid "No clients found."
-msgstr ""
-
-#: includes/class-events.php:77
-msgid "No events found."
-msgstr ""
-
-#: includes/class-files.php:410
-msgid "No file uploaded"
-msgstr ""
-
-#: includes/class-files.php:263
-msgid "No file uploaded yet."
-msgstr ""
-
-#: includes/class-files.php:147
-msgid "No files found."
-msgstr ""
-
-#: includes/class-portal.php:303
-msgid "No files yet. Shared deliverables and downloads will appear here."
-msgstr ""
-
-#: includes/class-portal.php:302
-msgid "No files yet. Upload one from client-approval-workflow > Files."
-msgstr ""
-
-#: includes/class-portal.php:70
-msgid "No portal assigned."
-msgstr ""
-
-#: includes/class-requests.php:103
-msgid "No requests found."
-msgstr ""
-
-#: includes/class-portal.php:194
-msgid "No requests yet. Add one from client-approval-workflow > Requests."
-msgstr ""
-
-#: includes/class-portal.php:195
-msgid "No requests yet. Your team will add anything they still need from you here."
-msgstr ""
-
-#: includes/class-updates.php:86
-msgid "No updates found."
-msgstr ""
-
-#: includes/class-portal.php:252
-msgid "No updates yet. New project updates will appear here."
-msgstr ""
-
-#: includes/class-portal.php:251
-msgid "No updates yet. Publish a client update from client-approval-workflow > Updates."
-msgstr ""
-
-#: includes/class-files.php:467 includes/class-files.php:493 includes/class-requests.php:399
-msgid "Not Found"
-msgstr ""
-
-#: includes/class-portal.php:132
-msgid "Nothing is waiting on you right now."
-msgstr ""
-
-#: includes/class-settings.php:119
-msgid "Notifications"
-msgstr ""
-
-#: includes/class-requests.php:209 includes/class-requests.php:547
-msgid "Open"
-msgstr ""
-
-#: includes/class-settings.php:380
-msgid "Optional attachment ID from the Media Library."
-msgstr ""
-
-#: includes/class-settings.php:399
-msgid "Optional direct URL fallback for the portal logo."
-msgstr ""
-
-#: includes/class-portal.php:52
-msgid "Please log in to view your client portal: %s"
-msgstr ""
-
-#: includes/class-settings.php:80
-msgid "Portal base page"
-msgstr ""
-
-#: includes/class-events.php:173 includes/class-events.php:256 includes/class-events.php:351
-msgid "Portal link: %s"
-msgstr ""
-
-#: includes/class-portal.php:220
-msgid "Posted on %1$s by %2$s"
-msgstr ""
-
-#: includes/class-settings.php:111
-msgid "Primary color"
-msgstr ""
-
-#: includes/class-settings.php:506
-msgid "Publish a new request, update, or file for that client."
-msgstr ""
-
-#: includes/class-events.php:646
-msgid "Recipients: %s"
-msgstr ""
-
-#: includes/class-settings.php:498
-msgid "Recommended local testing tools: Mailpit or MailHog. Recommended delivery testing options: SMTP, Postmark, or Mailtrap."
-msgstr ""
-
-#: includes/class-events.php:380
-msgid "Related item"
-msgstr ""
-
-#: includes/class-portal.php:179
-msgid "Reopen"
-msgstr ""
-
-#: includes/class-portal.php:327
-msgid "Reject"
-msgstr ""
-
-#: includes/class-requests.php:586 includes/class-requests.php:635
-msgid "Rejected"
-msgstr ""
-
-#: includes/class-requests.php:96
-msgid "Request"
-msgstr ""
-
-#: includes/class-portal.php:326
-msgid "Request changes"
-msgstr ""
-
-#: includes/class-requests.php:144
-msgid "Request Details"
-msgstr ""
-
-#: includes/class-events.php:596
-msgid "Request created"
-msgstr ""
-
-#: includes/class-events.php:216
-msgid "Request created: %s"
-msgstr ""
-
-#: includes/class-settings.php:142
-msgid "Request emails"
-msgstr ""
-
-#: includes/class-events.php:251
-msgid "Request: %s"
-msgstr ""
-
-#: includes/class-portal.php:137 includes/class-requests.php:95 includes/class-requests.php:97
-msgid "Requests"
-msgstr ""
-
-#: includes/class-events.php:641
-msgid "Result: %s"
-msgstr ""
-
-#: includes/class-admin.php:98
-msgid "Save Settings"
-msgstr ""
-
-#: includes/class-clients.php:78
-msgid "Search Clients"
-msgstr ""
-
-#: includes/class-events.php:76
-msgid "Search Events"
-msgstr ""
-
-#: includes/class-files.php:146
-msgid "Search Files"
-msgstr ""
-
-#: includes/class-requests.php:102
-msgid "Search Requests"
-msgstr ""
-
-#: includes/class-updates.php:85
-msgid "Search Updates"
-msgstr ""
-
-#: includes/class-files.php:233 includes/class-requests.php:186 includes/class-updates.php:169
-msgid "Select a client"
-msgstr ""
-
-#: includes/class-settings.php:352
-msgid "Select a page"
-msgstr ""
-
-#: includes/class-clients.php:176
-msgid "Select the WordPress user accounts that can log in and view this client portal."
+#. Plugin Name of the plugin
+#: client-approval-workflow.php
+msgid "SignoffFlow - Client Approval Workflow & Client Portal"
 msgstr ""
 
-#: includes/class-settings.php:457
-msgid "Send email notifications when a new file is uploaded."
+#. Description of the plugin
+#: client-approval-workflow.php
+msgid "Private client portal for service businesses with updates, files, and client requests."
 msgstr ""
 
-#: includes/class-settings.php:478
-msgid "Send email notifications when a new request is created."
+#. Author of the plugin
+#: client-approval-workflow.php
+msgid "Vasileios Zisis"
 msgstr ""
 
-#: includes/class-settings.php:436
-msgid "Send email notifications when a new update is posted."
+#. Author URI of the plugin
+#: client-approval-workflow.php
+msgid "https://profiles.wordpress.org/vzisis/"
 msgstr ""
 
-#: includes/class-settings.php:330
-msgid "Set the logo and primary color used across the client-approval-workflow portal experience."
+#: includes/class-admin.php:54
+#: includes/class-admin.php:55
+#: includes/class-portal.php:298
+msgid "SignoffFlow"
 msgstr ""
 
-#: includes/class-admin.php:64 includes/class-admin.php:65
+#: includes/class-admin.php:65
+#: includes/class-admin.php:66
 msgid "Settings"
 msgstr ""
 
-#: includes/class-admin.php:53 includes/class-admin.php:54 includes/class-portal.php:222
-msgid "client-approval-workflow"
+#: includes/class-admin.php:82
+msgid "You are not allowed to manage SignoffFlow settings."
 msgstr ""
 
-#: includes/class-admin.php:90
-msgid "client-approval-workflow Settings"
+#: includes/class-admin.php:83
+#: includes/class-admin.php:117
+#: includes/class-files.php:429
+#: includes/class-files.php:439
+#: includes/class-files.php:449
+#: includes/class-files.php:479
+#: includes/class-files.php:531
+#: includes/class-requests.php:441
+#: includes/class-requests.php:451
+#: includes/class-requests.php:464
+#: includes/class-requests.php:490
+#: includes/class-requests.php:526
+#: includes/class-requests.php:575
+msgid "Forbidden"
 msgstr ""
 
-#: includes/class-events.php:673
-msgid "Email delivery could not be confirmed. Check SignoffFlow > Event Log and verify your WordPress mail transport or SMTP configuration."
+#: includes/class-admin.php:91
+msgid "SignoffFlow Settings"
 msgstr ""
 
-#: includes/class-portal.php:106
-msgid "client-approval-workflow logo"
+#: includes/class-admin.php:100
+msgid "Save Settings"
 msgstr ""
 
-#: includes/class-settings.php:492
-msgid "client-approval-workflow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site."
+#: includes/class-admin.php:116
+msgid "You are not allowed to create the portal page."
 msgstr ""
 
-#: includes/class-settings.php:501
-msgid "Simple test flow"
+#: includes/class-admin.php:144
+msgid "Client Portal"
 msgstr ""
 
-#: includes/class-requests.php:201 includes/class-requests.php:300
-msgid "Status"
+#: includes/class-admin.php:196
+msgid "Quick setup"
 msgstr ""
 
-#: includes/class-files.php:385
-msgid "Stored file"
+#: includes/class-admin.php:197
+msgid "Create a sample portal page, then start adding clients, updates, files, and requests."
 msgstr ""
 
-#: includes/class-files.php:792
-msgid "That file type is not allowed."
+#: includes/class-admin.php:200
+msgid "Portal page created and saved to SignoffFlow settings."
 msgstr ""
 
-#: includes/class-files.php:763
-msgid "The file upload failed. Please try again."
+#: includes/class-admin.php:202
+msgid "A portal page is already configured in SignoffFlow settings."
 msgstr ""
 
-#: includes/class-files.php:843
-msgid "The protected storage directory could not be created."
+#: includes/class-admin.php:204
+msgid "The sample portal page could not be created automatically. You can still create a page manually and add the [cliapwo_portal] shortcode."
 msgstr ""
 
-#: includes/class-files.php:904
-msgid "The protected storage directory could not be hardened."
+#: includes/class-admin.php:208
+msgid "Create or confirm your portal page."
 msgstr ""
 
-#: includes/class-files.php:466
-msgid "The requested file could not be found."
+#: includes/class-admin.php:209
+msgid "Create a client account and assign at least one WordPress portal user."
 msgstr ""
 
-#: includes/class-files.php:492
-msgid "The requested file is missing from protected storage."
+#: includes/class-admin.php:210
+msgid "Add updates, files, or requests and review the portal as one of the assigned portal users."
 msgstr ""
 
-#: includes/class-requests.php:398
-msgid "The requested task could not be found."
+#: includes/class-admin.php:215
+msgid "View portal page"
 msgstr ""
 
-#: includes/class-files.php:812
-msgid "The uploaded file could not be moved into protected storage."
+#: includes/class-admin.php:216
+msgid "Edit portal page"
 msgstr ""
 
-#: includes/class-files.php:780
-msgid "The uploaded file could not be validated."
+#: includes/class-admin.php:217
+msgid "Create first client"
 msgstr ""
 
-#: includes/class-files.php:773
-msgid "The uploaded file data is incomplete."
+#: includes/class-admin.php:223
+msgid "Create sample portal page"
 msgstr ""
 
-#: includes/class-files.php:868
-msgid "The uploads directory is not available for protected files."
+#: includes/class-admin.php:225
+msgid "The generated page will be published with the [cliapwo_portal] shortcode and saved as the portal base page."
 msgstr ""
 
-#: includes/class-events.php:378
-msgid "Type"
+#: includes/class-clients.php:68
+#: includes/class-clients.php:70
+msgid "Clients"
 msgstr ""
 
-#: includes/class-files.php:401 includes/class-requests.php:316 includes/class-updates.php:275
-msgid "Unassigned"
+#: includes/class-clients.php:69
+#: includes/class-events.php:379
+#: includes/class-files.php:228
+#: includes/class-files.php:384
+#: includes/class-lifecycle.php:76
+#: includes/class-requests.php:229
+#: includes/class-requests.php:397
+#: includes/class-updates.php:163
+#: includes/class-updates.php:253
+msgid "Client"
 msgstr ""
 
-#: includes/class-events.php:402 includes/class-events.php:411
-msgid "Unknown"
+#: includes/class-clients.php:71
+msgid "Add Client"
 msgstr ""
 
-#: includes/class-updates.php:79
-msgid "Update"
+#: includes/class-clients.php:72
+msgid "Edit Client"
 msgstr ""
 
-#: includes/class-updates.php:127
-msgid "Update Details"
+#: includes/class-clients.php:73
+msgid "New Client"
 msgstr ""
 
-#: includes/class-events.php:604
-msgid "Update created"
-msgstr ""
-
-#: includes/class-settings.php:126
-msgid "Update emails"
-msgstr ""
-
-#: includes/class-events.php:133
-msgid "Update posted: %s"
-msgstr ""
-
-#: includes/class-events.php:168
-msgid "Update: %s"
-msgstr ""
-
-#: includes/class-portal.php:203 includes/class-updates.php:78 includes/class-updates.php:80
-msgid "Updates"
-msgstr ""
-
-#: includes/class-updates.php:181
-msgid "Updates are shown only in the assigned client portal."
-msgstr ""
-
-#: includes/class-files.php:248
-msgid "Upload file"
-msgstr ""
-
-#: includes/class-settings.php:416
-msgid "Used for portal accents and notification branding."
-msgstr ""
-
-#: includes/class-clients.php:77
+#: includes/class-clients.php:74
 msgid "View Client"
+msgstr ""
+
+#: includes/class-clients.php:75
+msgid "Search Clients"
+msgstr ""
+
+#: includes/class-clients.php:76
+msgid "No clients found."
+msgstr ""
+
+#: includes/class-clients.php:119
+msgid "Client Details"
+msgstr ""
+
+#: includes/class-clients.php:152
+msgid "Use the title field above for the client or account name. Portal contact details come from the WordPress users assigned below."
+msgstr ""
+
+#: includes/class-clients.php:156
+msgid "Internal notes"
+msgstr ""
+
+#: includes/class-clients.php:164
+msgid "Current portal user details"
+msgstr ""
+
+#: includes/class-clients.php:166
+msgid "No WordPress users are assigned yet."
+msgstr ""
+
+#: includes/class-clients.php:178
+msgid " - no email set"
+msgstr ""
+
+#: includes/class-clients.php:185
+msgid "Assigned portal users"
+msgstr ""
+
+#: includes/class-clients.php:187
+msgid "Select the WordPress user accounts that can log in and view this client portal. Usernames and email addresses come from the WordPress Users screen."
+msgstr ""
+
+#: includes/class-clients.php:190
+msgid "No WordPress users are available to assign."
+msgstr ""
+
+#: includes/class-clients.php:310
+msgid "Client / Account"
+msgstr ""
+
+#: includes/class-clients.php:311
+msgid "Portal users"
+msgstr ""
+
+#: includes/class-clients.php:337
+msgid "No assigned users"
+msgstr ""
+
+#: includes/class-events.php:72
+#: includes/class-events.php:74
+msgid "Event Log"
+msgstr ""
+
+#: includes/class-events.php:73
+#: includes/class-events.php:607
+msgid "Event"
 msgstr ""
 
 #: includes/class-events.php:75
 msgid "View Event"
 msgstr ""
 
-#: includes/class-files.php:145
-msgid "View File"
+#: includes/class-events.php:76
+msgid "Search Events"
 msgstr ""
 
-#: includes/class-requests.php:101
-msgid "View Request"
+#: includes/class-events.php:77
+msgid "No events found."
 msgstr ""
 
-#: includes/class-updates.php:84
-msgid "View Update"
+#. translators: %s: update title
+#: includes/class-events.php:133
+#, php-format
+msgid "Update posted: %s"
 msgstr ""
 
-#: includes/class-portal.php:120
-msgid "Waiting on you"
+#. translators: 1: client name, 2: update title
+#: includes/class-events.php:139
+#, php-format
+msgid ""
+"Client: %1$s\n"
+"Update: %2$s"
 msgstr ""
 
-#: includes/class-portal.php:111
-msgid "Welcome to your client-approval-workflow portal."
-msgstr ""
-
-#: includes/class-files.php:448
-msgid "You are not allowed to download files."
-msgstr ""
-
-#: includes/class-admin.php:81
-msgid "You are not allowed to manage client-approval-workflow settings."
-msgstr ""
-
-#: includes/class-requests.php:365
-msgid "You are not allowed to update requests."
-msgstr ""
-
-#: includes/class-requests.php:416
-msgid "You are not allowed to update this request."
-msgstr ""
-
-#: includes/class-portal.php:114
-msgid "You are previewing this portal as staff."
-msgstr ""
-
-#: includes/class-files.php:478
-msgid "You do not have access to this file."
-msgstr ""
-
-#: includes/class-portal.php:74
-msgid "You do not have access to this portal."
-msgstr ""
-
-#: includes/class-files.php:438 includes/class-files.php:530
-msgid "You must be logged in to download files."
-msgstr ""
-
-#: includes/class-requests.php:352 includes/class-requests.php:436
-msgid "You must be logged in to update requests."
-msgstr ""
-
-#: includes/class-events.php:331
-msgid "[%1$s] New file available for %2$s"
-msgstr ""
-
+#. translators: 1: site name, 2: client name
 #: includes/class-events.php:153
+#, php-format
 msgid "[%1$s] New portal update for %2$s"
 msgstr ""
 
+#: includes/class-events.php:160
+msgid "A new update has been posted in your client-approval-workflow portal."
+msgstr ""
+
+#. translators: %s: client name
+#: includes/class-events.php:163
+#: includes/class-events.php:246
+#: includes/class-events.php:341
+#, php-format
+msgid "Client: %s"
+msgstr ""
+
+#. translators: %s: update title
+#: includes/class-events.php:168
+#, php-format
+msgid "Update: %s"
+msgstr ""
+
+#. translators: %s: portal URL
+#: includes/class-events.php:173
+#: includes/class-events.php:256
+#: includes/class-events.php:351
+#, php-format
+msgid "Portal link: %s"
+msgstr ""
+
+#. translators: %s: update title
+#: includes/class-events.php:186
+#, php-format
+msgid "update \"%s\""
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php:216
+#, php-format
+msgid "Request created: %s"
+msgstr ""
+
+#. translators: 1: client name, 2: request title
+#: includes/class-events.php:222
+#, php-format
+msgid ""
+"Client: %1$s\n"
+"Request: %2$s"
+msgstr ""
+
+#. translators: 1: site name, 2: client name
 #: includes/class-events.php:236
+#, php-format
 msgid "[%1$s] New request for %2$s"
+msgstr ""
+
+#: includes/class-events.php:243
+msgid "A new request has been added to your client-approval-workflow portal."
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php:251
+#, php-format
+msgid "Request: %s"
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php:269
+#, php-format
+msgid "request \"%s\""
+msgstr ""
+
+#. translators: %s: file name
+#: includes/class-events.php:311
+#, php-format
+msgid "File uploaded: %s"
+msgstr ""
+
+#. translators: 1: client name, 2: file name
+#: includes/class-events.php:317
+#, php-format
+msgid ""
+"Client: %1$s\n"
+"File: %2$s"
+msgstr ""
+
+#. translators: 1: site name, 2: client name
+#: includes/class-events.php:331
+#, php-format
+msgid "[%1$s] New file available for %2$s"
+msgstr ""
+
+#: includes/class-events.php:338
+msgid "A new file has been uploaded to your client-approval-workflow portal."
+msgstr ""
+
+#. translators: %s: file name
+#: includes/class-events.php:346
+#, php-format
+msgid "File: %s"
+msgstr ""
+
+#. translators: %s: file name
+#: includes/class-events.php:364
+#, php-format
+msgid "file \"%s\""
+msgstr ""
+
+#: includes/class-events.php:378
+msgid "Type"
+msgstr ""
+
+#: includes/class-events.php:380
+msgid "Related item"
+msgstr ""
+
+#: includes/class-events.php:402
+#: includes/class-events.php:411
+msgid "Unknown"
+msgstr ""
+
+#: includes/class-events.php:592
+msgid "Email attempt"
+msgstr ""
+
+#: includes/class-events.php:596
+msgid "Request created"
+msgstr ""
+
+#: includes/class-events.php:600
+msgid "File uploaded"
+msgstr ""
+
+#: includes/class-events.php:604
+msgid "Update created"
 msgstr ""
 
 #: includes/class-events.php:623
 msgid "accepted by wp_mail()"
 msgstr ""
 
-#: includes/class-events.php:364
-msgid "file \"%s\""
-msgstr ""
-
-#: includes/class-events.php:269
-msgid "request \"%s\""
-msgstr ""
-
-#: includes/class-events.php:186
-msgid "update \"%s\""
-msgstr ""
-
 #: includes/class-events.php:624
 msgid "wp_mail() returned false"
+msgstr ""
+
+#. translators: %s: object label
+#: includes/class-events.php:628
+#, php-format
+msgid "Email attempt: %s"
+msgstr ""
+
+#. translators: %s: object label
+#: includes/class-events.php:636
+#, php-format
+msgid "Context: %s"
+msgstr ""
+
+#. translators: %s: mail result
+#: includes/class-events.php:641
+#, php-format
+msgid "Result: %s"
+msgstr ""
+
+#. translators: %s: recipient list
+#: includes/class-events.php:646
+#, php-format
+msgid "Recipients: %s"
+msgstr ""
+
+#: includes/class-events.php:672
+msgid "Email delivery could not be confirmed. Check SignoffFlow > Event Log and verify your WordPress mail transport or SMTP configuration."
+msgstr ""
+
+#: includes/class-files.php:139
+#: includes/class-files.php:141
+#: includes/class-portal.php:232
+#: includes/class-portal.php:240
+#: includes/class-portal.php:427
+msgid "Files"
+msgstr ""
+
+#: includes/class-files.php:140
+msgid "File"
+msgstr ""
+
+#: includes/class-files.php:142
+msgid "Add File"
+msgstr ""
+
+#: includes/class-files.php:143
+msgid "Edit File"
+msgstr ""
+
+#: includes/class-files.php:144
+msgid "New File"
+msgstr ""
+
+#: includes/class-files.php:145
+msgid "View File"
+msgstr ""
+
+#: includes/class-files.php:146
+msgid "Search Files"
+msgstr ""
+
+#: includes/class-files.php:147
+msgid "No files found."
+msgstr ""
+
+#: includes/class-files.php:188
+msgid "File Details"
+msgstr ""
+
+#: includes/class-files.php:233
+#: includes/class-requests.php:234
+#: includes/class-updates.php:169
+msgid "Select a client"
+msgstr ""
+
+#: includes/class-files.php:248
+msgid "Upload file"
+msgstr ""
+
+#: includes/class-files.php:257
+msgid "Current file"
+msgstr ""
+
+#: includes/class-files.php:261
+msgid "A protected file is referenced for this record, but it is missing from storage."
+msgstr ""
+
+#: includes/class-files.php:263
+msgid "No file uploaded yet."
+msgstr ""
+
+#: includes/class-files.php:267
+msgid "Allowed file types follow your WordPress upload settings. Uploading a new file replaces the current file for this record."
+msgstr ""
+
+#: includes/class-files.php:270
+msgid "Client downloads always go through client-approval-workflow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory."
+msgstr ""
+
+#: includes/class-files.php:385
+msgid "Stored file"
+msgstr ""
+
+#: includes/class-files.php:401
+#: includes/class-requests.php:414
+#: includes/class-updates.php:275
+msgid "Unassigned"
+msgstr ""
+
+#: includes/class-files.php:410
+msgid "No file uploaded"
+msgstr ""
+
+#: includes/class-files.php:428
+msgid "Invalid download request."
+msgstr ""
+
+#: includes/class-files.php:438
+#: includes/class-files.php:530
+msgid "You must be logged in to download files."
+msgstr ""
+
+#: includes/class-files.php:448
+msgid "You are not allowed to download files."
+msgstr ""
+
+#: includes/class-files.php:466
+msgid "The requested file could not be found."
+msgstr ""
+
+#: includes/class-files.php:467
+#: includes/class-files.php:493
+#: includes/class-requests.php:502
+msgid "Not Found"
+msgstr ""
+
+#: includes/class-files.php:478
+msgid "You do not have access to this file."
+msgstr ""
+
+#: includes/class-files.php:492
+msgid "The requested file is missing from protected storage."
+msgstr ""
+
+#: includes/class-files.php:764
+msgid "The file upload failed. Please try again."
+msgstr ""
+
+#: includes/class-files.php:774
+msgid "The uploaded file data is incomplete."
+msgstr ""
+
+#: includes/class-files.php:781
+msgid "The uploaded file could not be validated."
+msgstr ""
+
+#: includes/class-files.php:793
+msgid "That file type is not allowed."
+msgstr ""
+
+#: includes/class-files.php:812
+msgid "The uploaded file could not be moved into protected storage."
+msgstr ""
+
+#: includes/class-files.php:843
+msgid "The protected storage directory could not be created."
+msgstr ""
+
+#: includes/class-files.php:896
+msgid "The uploads directory is not available for protected files."
+msgstr ""
+
+#: includes/class-files.php:932
+msgid "The protected storage directory could not be hardened."
+msgstr ""
+
+#. translators: %s: login URL
+#: includes/class-portal.php:139
+#, php-format
+msgid "Please log in to view your client portal: %s"
+msgstr ""
+
+#: includes/class-portal.php:160
+msgid "No portal assigned."
+msgstr ""
+
+#: includes/class-portal.php:167
+msgid "You do not have access to this portal."
+msgstr ""
+
+#: includes/class-portal.php:207
+msgid "SignoffFlow logo"
+msgstr ""
+
+#: includes/class-portal.php:216
+msgid "Signed in as"
+msgstr ""
+
+#: includes/class-portal.php:219
+msgid "Sign out"
+msgstr ""
+
+#: includes/class-portal.php:225
+msgid "Client workspace"
+msgstr ""
+
+#: includes/class-portal.php:227
+msgid "Updates, decisions, and shared deliverables in one secure place."
+msgstr ""
+
+#: includes/class-portal.php:229
+msgid "Workspace totals"
+msgstr ""
+
+#: includes/class-portal.php:230
+#: includes/class-portal.php:238
+#: includes/class-portal.php:276
+#: includes/class-updates.php:78
+#: includes/class-updates.php:80
+msgid "Updates"
+msgstr ""
+
+#: includes/class-portal.php:231
+#: includes/class-portal.php:239
+#: includes/class-portal.php:341
+#: includes/class-requests.php:142
+#: includes/class-requests.php:144
+msgid "Requests"
+msgstr ""
+
+#: includes/class-portal.php:236
+msgid "Portal sections"
+msgstr ""
+
+#: includes/class-portal.php:237
+msgid "Overview"
+msgstr ""
+
+#: includes/class-portal.php:245
+msgid "Staff preview"
+msgstr ""
+
+#: includes/class-portal.php:252
+msgid "Action required"
+msgstr ""
+
+#. translators: %d: number of open requests
+#: includes/class-portal.php:258
+#, php-format
+msgid "%d request needs your attention."
+msgid_plural "%d requests need your attention."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-portal.php:264
+msgid "You are all caught up."
+msgstr ""
+
+#: includes/class-portal.php:268
+msgid "Review requests"
+msgstr ""
+
+#: includes/class-portal.php:277
+msgid "Latest progress and delivery notes from your team."
+msgstr ""
+
+#. translators: 1: date, 2: author name
+#: includes/class-portal.php:296
+#, php-format
+msgid "Posted on %1$s by %2$s"
+msgstr ""
+
+#: includes/class-portal.php:329
+msgid "No updates yet. Publish a client update from client-approval-workflow > Updates."
+msgstr ""
+
+#: includes/class-portal.php:330
+msgid "No updates yet. New project updates will appear here."
+msgstr ""
+
+#: includes/class-portal.php:342
+msgid "Outstanding actions and confirmations for this client account."
+msgstr ""
+
+#: includes/class-portal.php:384
+msgid "Response note"
+msgstr ""
+
+#: includes/class-portal.php:395
+msgid "Required when requesting changes, rejecting, or blocking. Optional when approving. Maximum 500 characters."
+msgstr ""
+
+#: includes/class-portal.php:398
+msgid "Approve"
+msgstr ""
+
+#: includes/class-portal.php:399
+msgid "Request changes"
+msgstr ""
+
+#: includes/class-portal.php:400
+msgid "Reject"
+msgstr ""
+
+#: includes/class-portal.php:401
+msgid "Block"
+msgstr ""
+
+#: includes/class-portal.php:404
+msgid "Reopen"
+msgstr ""
+
+#: includes/class-portal.php:416
+msgid "No requests yet. Add one from client-approval-workflow > Requests."
+msgstr ""
+
+#: includes/class-portal.php:417
+msgid "No requests yet. Your team will add anything they still need from you here."
+msgstr ""
+
+#: includes/class-portal.php:428
+msgid "Shared deliverables and protected downloads for this client account."
+msgstr ""
+
+#: includes/class-portal.php:472
+msgid "No files yet. Upload one from client-approval-workflow > Files."
+msgstr ""
+
+#: includes/class-portal.php:473
+msgid "No files yet. Shared deliverables and downloads will appear here."
+msgstr ""
+
+#: includes/class-portal.php:483
+msgid "Secure client workspace"
+msgstr ""
+
+#: includes/class-portal.php:485
+msgid "Private to your account"
+msgstr ""
+
+#: includes/class-portal.php:516
+#: includes/class-requests.php:288
+msgid "Previous client response"
+msgstr ""
+
+#: includes/class-portal.php:517
+#: includes/class-requests.php:289
+msgid "Latest client response"
+msgstr ""
+
+#: includes/class-portal.php:523
+#: includes/class-requests.php:294
+msgid "Outcome:"
+msgstr ""
+
+#. translators: 1: client user display name, 2: response date and time
+#: includes/class-portal.php:536
+#: includes/class-requests.php:308
+#, php-format
+msgid "Responded by %1$s on %2$s"
+msgstr ""
+
+#: includes/class-requests.php:143
+msgid "Request"
+msgstr ""
+
+#: includes/class-requests.php:145
+msgid "Add Request"
+msgstr ""
+
+#: includes/class-requests.php:146
+msgid "Edit Request"
+msgstr ""
+
+#: includes/class-requests.php:147
+msgid "New Request"
+msgstr ""
+
+#: includes/class-requests.php:148
+msgid "View Request"
+msgstr ""
+
+#: includes/class-requests.php:149
+msgid "Search Requests"
+msgstr ""
+
+#: includes/class-requests.php:150
+msgid "No requests found."
+msgstr ""
+
+#: includes/class-requests.php:191
+msgid "Request Details"
+msgstr ""
+
+#: includes/class-requests.php:249
+#: includes/class-requests.php:398
+msgid "Status"
+msgstr ""
+
+#: includes/class-requests.php:263
+msgid "Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here."
+msgstr ""
+
+#: includes/class-requests.php:299
+msgid "Note:"
+msgstr ""
+
+#: includes/class-requests.php:440
+msgid "Invalid request update."
+msgstr ""
+
+#: includes/class-requests.php:450
+#: includes/class-requests.php:574
+msgid "You must be logged in to update requests."
+msgstr ""
+
+#: includes/class-requests.php:463
+msgid "You are not allowed to update requests."
+msgstr ""
+
+#: includes/class-requests.php:489
+msgid "Invalid request status."
+msgstr ""
+
+#: includes/class-requests.php:501
+msgid "The requested task could not be found."
+msgstr ""
+
+#: includes/class-requests.php:525
+msgid "You are not allowed to update this request."
+msgstr ""
+
+#: includes/class-requests.php:535
+msgid "Response notes must be 500 characters or fewer."
+msgstr ""
+
+#: includes/class-requests.php:536
+msgid "Invalid response note"
+msgstr ""
+
+#: includes/class-requests.php:545
+msgid "Add a response note when requesting changes, rejecting, or blocking a request."
+msgstr ""
+
+#: includes/class-requests.php:546
+msgid "Response note required"
+msgstr ""
+
+#: includes/class-requests.php:735
+#: includes/class-requests.php:800
+msgid "Approved"
+msgstr ""
+
+#: includes/class-requests.php:739
+#: includes/class-requests.php:801
+msgid "Changes requested"
+msgstr ""
+
+#: includes/class-requests.php:743
+#: includes/class-requests.php:802
+msgid "Rejected"
+msgstr ""
+
+#: includes/class-requests.php:747
+#: includes/class-requests.php:803
+msgid "Blocked"
+msgstr ""
+
+#: includes/class-requests.php:750
+#: includes/class-requests.php:799
+msgid "Open"
+msgstr ""
+
+#: includes/class-settings.php:73
+msgid "General"
+msgstr ""
+
+#: includes/class-settings.php:80
+msgid "Portal base page"
+msgstr ""
+
+#: includes/class-settings.php:88
+msgid "Branding"
+msgstr ""
+
+#: includes/class-settings.php:95
+msgid "Logo media ID"
+msgstr ""
+
+#: includes/class-settings.php:103
+msgid "Logo URL"
+msgstr ""
+
+#: includes/class-settings.php:111
+msgid "Primary color"
+msgstr ""
+
+#: includes/class-settings.php:119
+msgid "Notifications"
+msgstr ""
+
+#: includes/class-settings.php:126
+msgid "Update emails"
+msgstr ""
+
+#: includes/class-settings.php:134
+msgid "File emails"
+msgstr ""
+
+#: includes/class-settings.php:142
+msgid "Request emails"
+msgstr ""
+
+#: includes/class-settings.php:150
+msgid "Email delivery help"
+msgstr ""
+
+#: includes/class-settings.php:158
+msgid "Advanced"
+msgstr ""
+
+#: includes/class-settings.php:165
+msgid "Delete data on uninstall"
+msgstr ""
+
+#: includes/class-settings.php:173
+msgid "Portal styling help"
+msgstr ""
+
+#: includes/class-settings.php:239
+msgid "Choose a valid WordPress page for the portal base page."
+msgstr ""
+
+#: includes/class-settings.php:255
+msgid "Enter a valid media attachment ID for the portal logo."
+msgstr ""
+
+#: includes/class-settings.php:269
+msgid "Enter a valid hex color for the primary color setting."
+msgstr ""
+
+#: includes/class-settings.php:312
+msgid "Enter a valid URL for the portal logo."
+msgstr ""
+
+#: includes/class-settings.php:345
+msgid "Choose the WordPress page that hosts the client portal shortcode."
+msgstr ""
+
+#: includes/class-settings.php:355
+msgid "Set the logo and primary color used across the SignoffFlow portal experience."
+msgstr ""
+
+#: includes/class-settings.php:365
+msgid "Enable or disable the client emails sent for new requests, updates, and uploaded files. SignoffFlow relies on your WordPress/site mail transport to deliver them."
+msgstr ""
+
+#: includes/class-settings.php:375
+msgid "Use these settings carefully. Uninstall cleanup is optional and disabled by default."
+msgstr ""
+
+#: includes/class-settings.php:387
+msgid "Select a page"
+msgstr ""
+
+#: includes/class-settings.php:415
+msgid "Optional attachment ID from the Media Library."
+msgstr ""
+
+#: includes/class-settings.php:434
+msgid "Optional direct URL fallback for the portal logo."
+msgstr ""
+
+#: includes/class-settings.php:451
+msgid "Used for portal accents and notification branding."
+msgstr ""
+
+#: includes/class-settings.php:471
+msgid "Send email notifications when a new update is posted."
+msgstr ""
+
+#: includes/class-settings.php:492
+msgid "Send email notifications when a new file is uploaded."
+msgstr ""
+
+#: includes/class-settings.php:513
+msgid "Send email notifications when a new request is created."
+msgstr ""
+
+#: includes/class-settings.php:527
+msgid "SignoffFlow sends notifications with WordPress wp_mail(), so delivery depends on how mail is configured on this site."
+msgstr ""
+
+#: includes/class-settings.php:530
+msgid "Local and staging environments often do not send real email unless SMTP or a mail testing tool is configured."
+msgstr ""
+
+#: includes/class-settings.php:533
+msgid "Recommended local testing tools: Mailpit or MailHog. Recommended delivery testing options: SMTP, Postmark, or Mailtrap."
+msgstr ""
+
+#: includes/class-settings.php:536
+msgid "Simple test flow"
+msgstr ""
+
+#: includes/class-settings.php:539
+msgid "Make sure a portal page is configured and at least one client has assigned WordPress users with valid email addresses."
+msgstr ""
+
+#: includes/class-settings.php:540
+msgid "Confirm your site mail transport works first by sending a WordPress test email through your SMTP plugin or mail testing tool."
+msgstr ""
+
+#: includes/class-settings.php:541
+msgid "Publish a new request, update, or file for that client."
+msgstr ""
+
+#: includes/class-settings.php:542
+msgid "Check SignoffFlow > Event Log for the event entry and the related Email attempt entry."
+msgstr ""
+
+#: includes/class-settings.php:543
+msgid "If delivery is configured, confirm the assigned client users received the email."
+msgstr ""
+
+#: includes/class-settings.php:564
+msgid "Delete SignoffFlow data when the plugin is uninstalled."
+msgstr ""
+
+#: includes/class-settings.php:566
+msgid "This removes SignoffFlow settings, client accounts, updates, files, requests, event log entries, and protected uploaded files when the plugin is deleted."
+msgstr ""
+
+#: includes/class-settings.php:579
+msgid "Developers can customize the portal styling from a theme or site-specific plugin without editing SignoffFlow directly."
+msgstr ""
+
+#. translators: 1: root wrapper class, 2: CSS variable name, 3: CSS variable name, 4: CSS variable name
+#: includes/class-settings.php:585
+#, php-format
+msgid "Use the root wrapper %1$s and CSS variables such as %2$s, %3$s, and %4$s for targeted overrides."
+msgstr ""
+
+#. translators: 1: filter name, 2: filter name, 3: filter name
+#: includes/class-settings.php:597
+#, php-format
+msgid "Advanced integrations can also use the filters %1$s, %2$s, and %3$s to adjust wrapper classes, CSS variables, and section classes."
+msgstr ""
+
+#: includes/class-updates.php:79
+msgid "Update"
+msgstr ""
+
+#: includes/class-updates.php:81
+msgid "Add Update"
+msgstr ""
+
+#: includes/class-updates.php:82
+msgid "Edit Update"
+msgstr ""
+
+#: includes/class-updates.php:83
+msgid "New Update"
+msgstr ""
+
+#: includes/class-updates.php:84
+msgid "View Update"
+msgstr ""
+
+#: includes/class-updates.php:85
+msgid "Search Updates"
+msgstr ""
+
+#: includes/class-updates.php:86
+msgid "No updates found."
+msgstr ""
+
+#: includes/class-updates.php:127
+msgid "Update Details"
+msgstr ""
+
+#: includes/class-updates.php:181
+msgid "Updates are shown only in the assigned client account portal."
+msgstr ""
+
+#: templates/portal.php:21
+msgid "Skip to client workspace"
 msgstr ""

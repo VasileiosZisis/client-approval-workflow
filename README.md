@@ -12,7 +12,9 @@ The plugin includes:
 - client account management inside WordPress admin
 - updates timeline for client-facing progress posts
 - protected file sharing with access-checked downloads
-- requests/tasks that clients can approve, reject, block, or request changes for from the portal
+- requests/tasks that clients can approve, reject, block, or request changes for with a short response note
+- latest client response details in the portal and WordPress admin, including the responder and timestamp
+- focused, responsive portal workspace with section navigation and accessible motion
 - event logging for key actions
 - email notifications for requests, updates, and files
 - branding options for the portal experience
@@ -25,6 +27,8 @@ The plugin includes:
 4. Assign one or more WordPress users as portal users for that client account.
 5. Add updates, files, and requests for that client account.
 6. Assigned users log in with normal WordPress authentication and access only their portal experience.
+
+The page selected in SignoffFlow settings uses the plugin's focused portal canvas, without the active theme's public header and footer. Shortcodes placed on other pages remain embedded in the theme as normal.
 
 ## Repository Notes
 

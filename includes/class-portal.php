@@ -29,6 +29,8 @@ class Portal
 	{
 		add_action('wp_enqueue_scripts', array($this, 'register_assets'));
 		add_action('wp_enqueue_scripts', array($this, 'maybe_enqueue_assets'));
+		add_action('template_redirect', array($this, 'redirect_guests_from_portal_page'), 1);
+		add_filter('template_include', array($this, 'filter_portal_template'), 99);
 		add_shortcode('cliapwo_portal', array($this, 'render_shortcode'));
 	}
 
@@ -71,6 +73,38 @@ class Portal
 		if ( ( $portal_page_id > 0 && $post->ID === $portal_page_id ) || has_shortcode( $post_content, 'cliapwo_portal' ) ) {
 			wp_enqueue_style(self::STYLE_HANDLE);
 		}
+	}
+
+	/**
+	 * Redirect signed-out visitors before the dedicated portal template outputs.
+	 *
+	 * @return void
+	 */
+	public function redirect_guests_from_portal_page()
+	{
+		if (! $this->is_configured_portal_page() || is_user_logged_in()) {
+			return;
+		}
+
+		wp_safe_redirect(wp_login_url($this->get_portal_url()));
+		exit;
+	}
+
+	/**
+	 * Use the focused app template for the configured portal page.
+	 *
+	 * @param string $template Resolved theme template path.
+	 * @return string
+	 */
+	public function filter_portal_template($template)
+	{
+		if (! $this->is_configured_portal_page()) {
+			return $template;
+		}
+
+		$portal_template = CLIAPWO_PLUGIN_DIR . 'templates/portal.php';
+
+		return file_exists($portal_template) ? $portal_template : $template;
 	}
 
 	/**
@@ -151,6 +185,9 @@ class Portal
 		$requests_count   = $this->get_query_count($requests_query);
 		$files_count      = $this->get_query_count($files_query);
 		$is_staff_preview = current_user_can('cliapwo_manage_portal') && ! in_array($current_user_id, Clients::get_assigned_user_ids($client->ID), true);
+		$current_user     = wp_get_current_user();
+		$account_name     = $current_user instanceof \WP_User ? $current_user->display_name : '';
+		$logout_url       = wp_logout_url($this->get_portal_url());
 		$wrapper_classes  = $this->get_wrapper_classes($client->ID, $current_user_id, $is_staff_preview);
 		$root_style       = $this->get_root_style_attribute($primary_color, $settings, $client->ID, $current_user_id, $is_staff_preview);
 
@@ -161,61 +198,89 @@ class Portal
 			style="<?php echo esc_attr($root_style); ?>">
 			<?php do_action('cliapwo_before_render_portal', $client->ID, $current_user_id); ?>
 
-			<header class="<?php echo esc_attr($this->get_section_classes('header', array('cliapwo-portal__header', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
-				<div class="cliapwo-portal__eyebrow"><?php esc_html_e('Portal overview', 'signoffflow-client-approval-workflow'); ?></div>
-				<?php if ('' !== $logo_url) : ?>
-					<p class="cliapwo-portal__brand">
-						<img
-							src="<?php echo esc_url($logo_url); ?>"
-							alt="<?php echo esc_attr__('client-approval-workflow logo', 'signoffflow-client-approval-workflow'); ?>"
-							class="cliapwo-portal__logo" />
-					</p>
-				<?php endif; ?>
-				<div class="cliapwo-portal__header-copy">
-					<h2 class="cliapwo-portal__title"><?php echo esc_html($client->post_title); ?></h2>
-					<p class="cliapwo-portal__intro"><?php esc_html_e('Welcome to your SignoffFlow portal.', 'signoffflow-client-approval-workflow'); ?></p>
-				</div>
-				<div class="cliapwo-portal__stats">
-					<?php /* translators: %d: total number of updates. */ ?>
-					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d update', '%d updates', $updates_count, 'signoffflow-client-approval-workflow'), $updates_count)); ?></span>
-					<?php /* translators: %d: total number of requests. */ ?>
-					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d request', '%d requests', $requests_count, 'signoffflow-client-approval-workflow'), $requests_count)); ?></span>
-					<?php /* translators: %d: total number of files. */ ?>
-					<span class="cliapwo-status"><?php echo esc_html(sprintf(_n('%d file', '%d files', $files_count, 'signoffflow-client-approval-workflow'), $files_count)); ?></span>
-				</div>
-				<?php if ($is_staff_preview) : ?>
-					<p class="cliapwo-portal__preview-note cliapwo-status cliapwo-status--preview">
-						<?php esc_html_e('You are previewing this portal as staff.', 'signoffflow-client-approval-workflow'); ?>
-					</p>
-				<?php endif; ?>
-			</header>
+			<header class="<?php echo esc_attr($this->get_section_classes('header', array('cliapwo-portal__header'), $client->ID, $current_user_id)); ?>">
+				<div class="cliapwo-portal__topbar">
+					<div class="cliapwo-portal__topbar-context">
+						<div class="cliapwo-portal__brand">
+							<?php if ('' !== $logo_url) : ?>
+								<img
+									src="<?php echo esc_url($logo_url); ?>"
+									alt="<?php echo esc_attr__('SignoffFlow logo', 'signoffflow-client-approval-workflow'); ?>"
+									class="cliapwo-portal__logo" />
+							<?php else : ?>
+								<span class="cliapwo-portal__brand-mark" aria-hidden="true">
+									<svg viewBox="0 0 40 40" focusable="false">
+										<path d="M33 19a14 14 0 1 1-6.4-11.7" />
+										<path d="m12.5 19.2 5 5.1L32 7.8" />
+									</svg>
+								</span>
+								<span class="cliapwo-portal__brand-name"><span>Signoff</span><span class="cliapwo-portal__brand-name-accent">Flow</span></span>
+							<?php endif; ?>
+						</div>
 
-			<section class="<?php echo esc_attr($this->get_section_classes('summary', array('cliapwo-portal__section', 'cliapwo-portal__summary', 'cliapwo-card', 'cliapwo-card--accent'), $client->ID, $current_user_id)); ?>">
-				<div class="cliapwo-portal__section-header">
-					<div>
-						<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Action required', 'signoffflow-client-approval-workflow'); ?></h3>
+						<?php if ($is_staff_preview) : ?>
+							<p class="cliapwo-portal__preview-note cliapwo-status cliapwo-status--preview">
+								<?php esc_html_e('Staff preview', 'signoffflow-client-approval-workflow'); ?>
+							</p>
+						<?php endif; ?>
+					</div>
+					<div class="cliapwo-portal__account">
+						<span class="cliapwo-portal__account-copy">
+							<span class="cliapwo-portal__account-label"><?php esc_html_e('Signed in as', 'signoffflow-client-approval-workflow'); ?></span>
+							<strong><?php echo esc_html($account_name); ?></strong>
+						</span>
+						<a class="cliapwo-portal__logout" href="<?php echo esc_url($logout_url); ?>"><?php esc_html_e('Sign out', 'signoffflow-client-approval-workflow'); ?></a>
 					</div>
 				</div>
+
+				<div class="cliapwo-portal__identity">
+					<div class="cliapwo-portal__header-copy">
+						<div class="cliapwo-portal__eyebrow"><?php esc_html_e('Client workspace', 'signoffflow-client-approval-workflow'); ?></div>
+						<h1 class="cliapwo-portal__title"><?php echo esc_html($client->post_title); ?></h1>
+						<p class="cliapwo-portal__intro"><?php esc_html_e('Updates, decisions, and shared deliverables in one secure place.', 'signoffflow-client-approval-workflow'); ?></p>
+					</div>
+					<div class="cliapwo-portal__stats" aria-label="<?php echo esc_attr__('Workspace totals', 'signoffflow-client-approval-workflow'); ?>">
+						<span><strong><?php echo esc_html((string) $updates_count); ?></strong><?php esc_html_e('Updates', 'signoffflow-client-approval-workflow'); ?></span>
+						<span><strong><?php echo esc_html((string) $requests_count); ?></strong><?php esc_html_e('Requests', 'signoffflow-client-approval-workflow'); ?></span>
+						<span><strong><?php echo esc_html((string) $files_count); ?></strong><?php esc_html_e('Files', 'signoffflow-client-approval-workflow'); ?></span>
+					</div>
+				</div>
+
+				<nav class="cliapwo-portal__nav" aria-label="<?php echo esc_attr__('Portal sections', 'signoffflow-client-approval-workflow'); ?>">
+					<a href="#cliapwo-overview"><?php esc_html_e('Overview', 'signoffflow-client-approval-workflow'); ?></a>
+					<a href="#cliapwo-updates"><?php esc_html_e('Updates', 'signoffflow-client-approval-workflow'); ?></a>
+					<a href="#cliapwo-requests"><?php esc_html_e('Requests', 'signoffflow-client-approval-workflow'); ?></a>
+					<a href="#cliapwo-files"><?php esc_html_e('Files', 'signoffflow-client-approval-workflow'); ?></a>
+				</nav>
+			</header>
+
+			<section id="cliapwo-overview" class="<?php echo esc_attr($this->get_section_classes('summary', array('cliapwo-portal__section', 'cliapwo-portal__summary'), $client->ID, $current_user_id)); ?>">
+				<div>
+					<p class="cliapwo-portal__summary-label"><?php esc_html_e('Action required', 'signoffflow-client-approval-workflow'); ?></p>
+					<?php if ($open_requests > 0) : ?>
+						<p class="cliapwo-portal__summary-copy">
+							<?php
+							printf(
+								/* translators: %d: number of open requests */
+								esc_html(_n('%d request needs your attention.', '%d requests need your attention.', $open_requests, 'signoffflow-client-approval-workflow')),
+								esc_html($open_requests)
+							);
+							?>
+						</p>
+					<?php else : ?>
+						<p class="cliapwo-portal__summary-copy"><?php esc_html_e('You are all caught up.', 'signoffflow-client-approval-workflow'); ?></p>
+					<?php endif; ?>
+				</div>
 				<?php if ($open_requests > 0) : ?>
-					<p class="cliapwo-portal__summary-copy">
-						<?php
-						printf(
-							/* translators: %d: number of open requests */
-							esc_html(_n('%d request needs your attention.', '%d requests need your attention.', $open_requests, 'signoffflow-client-approval-workflow')),
-							esc_html($open_requests)
-						);
-						?>
-					</p>
-				<?php else : ?>
-					<p class="cliapwo-portal__summary-copy"><?php esc_html_e('Nothing is waiting on you right now.', 'signoffflow-client-approval-workflow'); ?></p>
+					<a class="cliapwo-portal__summary-link" href="#cliapwo-requests"><?php esc_html_e('Review requests', 'signoffflow-client-approval-workflow'); ?></a>
 				<?php endif; ?>
 			</section>
 
 			<div class="cliapwo-portal__main">
-				<section class="<?php echo esc_attr($this->get_section_classes('updates', array('cliapwo-portal__section', 'cliapwo-portal__updates', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
+				<section id="cliapwo-updates" class="<?php echo esc_attr($this->get_section_classes('updates', array('cliapwo-portal__section', 'cliapwo-portal__updates'), $client->ID, $current_user_id)); ?>">
 					<div class="cliapwo-portal__section-header">
 						<div>
-							<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Updates', 'signoffflow-client-approval-workflow'); ?></h3>
+							<h2 class="cliapwo-portal__section-title"><?php esc_html_e('Updates', 'signoffflow-client-approval-workflow'); ?></h2>
 							<p class="cliapwo-portal__section-intro"><?php esc_html_e('Latest progress and delivery notes from your team.', 'signoffflow-client-approval-workflow'); ?></p>
 						</div>
 					</div>
@@ -230,7 +295,7 @@ class Portal
 								$update_title = get_the_title($update_id);
 								?>
 								<article class="cliapwo-portal__update">
-									<h4><?php echo esc_html($update_title); ?></h4>
+									<h3><?php echo esc_html($update_title); ?></h3>
 									<p class="cliapwo-portal__meta">
 										<?php
 										printf(
@@ -277,10 +342,10 @@ class Portal
 				</section>
 
 				<div class="cliapwo-portal__grid">
-					<section class="<?php echo esc_attr($this->get_section_classes('requests', array('cliapwo-portal__section', 'cliapwo-portal__requests', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
+					<section id="cliapwo-requests" class="<?php echo esc_attr($this->get_section_classes('requests', array('cliapwo-portal__section', 'cliapwo-portal__requests'), $client->ID, $current_user_id)); ?>">
 						<div class="cliapwo-portal__section-header">
 							<div>
-								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Requests', 'signoffflow-client-approval-workflow'); ?></h3>
+								<h2 class="cliapwo-portal__section-title"><?php esc_html_e('Requests', 'signoffflow-client-approval-workflow'); ?></h2>
 								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Outstanding actions and confirmations for this client account.', 'signoffflow-client-approval-workflow'); ?></p>
 							</div>
 						</div>
@@ -309,6 +374,8 @@ class Portal
 											</div>
 										<?php endif; ?>
 
+										<?php $this->render_request_response_summary($request_id, $request_status); ?>
+
 										<?php if ($can_choose_outcome || $can_reopen) : ?>
 											<form
 												method="post"
@@ -319,7 +386,23 @@ class Portal
 												<?php wp_nonce_field(Requests::STATUS_UPDATE_ACTION, Requests::STATUS_UPDATE_NONCE_NAME); ?>
 
 												<?php if ($can_choose_outcome) : ?>
-													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_APPROVED); ?>" class="cliapwo-button"><?php esc_html_e('Approve', 'signoffflow-client-approval-workflow'); ?></button>
+													<div class="cliapwo-portal__request-note-field">
+														<label for="cliapwo_request_response_note_<?php echo esc_attr((string) $request_id); ?>">
+															<strong><?php esc_html_e('Response note', 'signoffflow-client-approval-workflow'); ?></strong>
+														</label>
+														<textarea
+															id="cliapwo_request_response_note_<?php echo esc_attr((string) $request_id); ?>"
+															name="cliapwo_request_response_note"
+															class="cliapwo-portal__request-note"
+															rows="4"
+															maxlength="<?php echo esc_attr((string) Requests::RESPONSE_NOTE_MAX_LENGTH); ?>"
+															required
+															aria-describedby="cliapwo_request_response_note_help_<?php echo esc_attr((string) $request_id); ?>"></textarea>
+														<p id="cliapwo_request_response_note_help_<?php echo esc_attr((string) $request_id); ?>" class="cliapwo-portal__request-note-help">
+															<?php esc_html_e('Required when requesting changes, rejecting, or blocking. Optional when approving. Maximum 500 characters.', 'signoffflow-client-approval-workflow'); ?>
+														</p>
+													</div>
+													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_APPROVED); ?>" class="cliapwo-button" formnovalidate><?php esc_html_e('Approve', 'signoffflow-client-approval-workflow'); ?></button>
 													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_CHANGES_REQUESTED); ?>" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Request changes', 'signoffflow-client-approval-workflow'); ?></button>
 													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_REJECTED); ?>" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Reject', 'signoffflow-client-approval-workflow'); ?></button>
 													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_BLOCKED); ?>" class="cliapwo-button cliapwo-button--secondary"><?php esc_html_e('Block', 'signoffflow-client-approval-workflow'); ?></button>
@@ -345,10 +428,10 @@ class Portal
 						<?php endif; ?>
 					</section>
 
-					<section class="<?php echo esc_attr($this->get_section_classes('files', array('cliapwo-portal__section', 'cliapwo-portal__files', 'cliapwo-card'), $client->ID, $current_user_id)); ?>">
+					<section id="cliapwo-files" class="<?php echo esc_attr($this->get_section_classes('files', array('cliapwo-portal__section', 'cliapwo-portal__files'), $client->ID, $current_user_id)); ?>">
 						<div class="cliapwo-portal__section-header">
 							<div>
-								<h3 class="cliapwo-portal__section-title"><?php esc_html_e('Files', 'signoffflow-client-approval-workflow'); ?></h3>
+								<h2 class="cliapwo-portal__section-title"><?php esc_html_e('Files', 'signoffflow-client-approval-workflow'); ?></h2>
 								<p class="cliapwo-portal__section-intro"><?php esc_html_e('Shared deliverables and protected downloads for this client account.', 'signoffflow-client-approval-workflow'); ?></p>
 							</div>
 						</div>
@@ -403,12 +486,69 @@ class Portal
 				</div>
 			</div>
 
+			<footer class="cliapwo-portal__footer">
+				<span><?php esc_html_e('Secure client workspace', 'signoffflow-client-approval-workflow'); ?></span>
+				<span aria-hidden="true">&middot;</span>
+				<span><?php esc_html_e('Private to your account', 'signoffflow-client-approval-workflow'); ?></span>
+			</footer>
+
 			<?php do_action('cliapwo_after_render_portal', $client->ID, $current_user_id); ?>
 		</div>
 <?php
 		wp_reset_postdata();
 
 		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Render the latest client response for a request.
+	 *
+	 * @param int    $request_id     Request post ID.
+	 * @param string $request_status Current request status.
+	 * @return void
+	 */
+	private function render_request_response_summary($request_id, $request_status)
+	{
+		$response_status = Requests::get_response_status_for_request($request_id);
+
+		if ('' === $response_status) {
+			return;
+		}
+
+		$response_note = Requests::get_response_note_for_request($request_id);
+		$responder_id  = Requests::get_responder_id_for_request($request_id);
+		$responded_at  = Requests::get_response_timestamp_for_request($request_id);
+		$responder     = $responder_id > 0 ? get_userdata($responder_id) : false;
+		$heading       = Requests::STATUS_OPEN === $request_status
+			? __('Previous client response', 'signoffflow-client-approval-workflow')
+			: __('Latest client response', 'signoffflow-client-approval-workflow');
+		$date_format   = trim((string) get_option('date_format') . ' ' . (string) get_option('time_format'));
+		?>
+		<div class="cliapwo-portal__request-response">
+			<p class="cliapwo-portal__request-response-title"><strong><?php echo esc_html($heading); ?></strong></p>
+			<p class="cliapwo-portal__request-response-outcome">
+				<span><?php esc_html_e('Outcome:', 'signoffflow-client-approval-workflow'); ?></span>
+				<span class="cliapwo-status cliapwo-status--<?php echo esc_attr(sanitize_html_class($response_status)); ?>">
+					<?php echo esc_html(Requests::get_status_label($response_status)); ?>
+				</span>
+			</p>
+			<?php if ('' !== $response_note) : ?>
+				<div class="cliapwo-portal__request-response-note"><?php echo nl2br(esc_html($response_note)); ?></div>
+			<?php endif; ?>
+			<?php if ($responder instanceof \WP_User && $responded_at > 0) : ?>
+				<p class="cliapwo-portal__request-response-meta">
+					<?php
+					printf(
+						/* translators: 1: client user display name, 2: response date and time */
+						esc_html__('Responded by %1$s on %2$s', 'signoffflow-client-approval-workflow'),
+						esc_html($responder->display_name),
+						esc_html(wp_date($date_format, $responded_at))
+					);
+					?>
+				</p>
+			<?php endif; ?>
+		</div>
+		<?php
 	}
 
 	/**
@@ -458,6 +598,23 @@ class Portal
 		$page = absint(get_query_var('page'));
 
 		return $page > 0 ? $page : 1;
+	}
+
+	/**
+	 * Determine whether the current request is for the configured portal page.
+	 *
+	 * @return bool
+	 */
+	private function is_configured_portal_page()
+	{
+		if (! is_singular('page')) {
+			return false;
+		}
+
+		$settings       = Settings::get_settings();
+		$portal_page_id = isset($settings['portal_page_id']) ? absint($settings['portal_page_id']) : 0;
+
+		return $portal_page_id > 0 && is_page($portal_page_id);
 	}
 
 	/**
@@ -547,18 +704,18 @@ class Portal
 			'--cliapwo-primary'        => $primary_color,
 			'--cliapwo-primary-soft'   => $this->hex_to_rgba($primary_color, 0.12),
 			'--cliapwo-primary-border' => $this->hex_to_rgba($primary_color, 0.2),
-			'--cliapwo-text'           => '#0f172a',
-			'--cliapwo-text-soft'      => '#475569',
-			'--cliapwo-text-muted'     => '#64748b',
-			'--cliapwo-bg'             => '#f8fafc',
+			'--cliapwo-text'           => '#101828',
+			'--cliapwo-text-soft'      => '#475467',
+			'--cliapwo-text-muted'     => '#667085',
+			'--cliapwo-bg'             => '#f6f7fa',
 			'--cliapwo-card-bg'        => '#ffffff',
-			'--cliapwo-border'         => '#e2e8f0',
-			'--cliapwo-max-width'      => '1120px',
-			'--cliapwo-radius-xl'      => '28px',
-			'--cliapwo-radius-lg'      => '24px',
-			'--cliapwo-radius-md'      => '18px',
-			'--cliapwo-shadow-lg'      => '0 24px 60px rgba(15,23,42,0.08)',
-			'--cliapwo-shadow-md'      => '0 16px 40px rgba(15,23,42,0.06)',
+			'--cliapwo-border'         => '#e4e7ec',
+			'--cliapwo-max-width'      => '1240px',
+			'--cliapwo-radius-xl'      => '24px',
+			'--cliapwo-radius-lg'      => '18px',
+			'--cliapwo-radius-md'      => '14px',
+			'--cliapwo-shadow-lg'      => '0 24px 70px rgba(16,24,40,0.08)',
+			'--cliapwo-shadow-md'      => '0 12px 30px rgba(16,24,40,0.07)',
 		);
 
 		/**

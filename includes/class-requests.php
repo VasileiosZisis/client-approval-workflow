@@ -31,6 +31,31 @@ class Requests
 	public const STATUS_META_KEY = 'cliapwo_request_status';
 
 	/**
+	 * Latest client response note meta key.
+	 */
+	public const RESPONSE_NOTE_META_KEY = 'cliapwo_request_response_note';
+
+	/**
+	 * Latest client response outcome meta key.
+	 */
+	public const RESPONSE_STATUS_META_KEY = 'cliapwo_request_response_status';
+
+	/**
+	 * Latest client responder user ID meta key.
+	 */
+	public const RESPONDED_BY_META_KEY = 'cliapwo_request_responded_by';
+
+	/**
+	 * Latest client response UTC timestamp meta key.
+	 */
+	public const RESPONDED_AT_META_KEY = 'cliapwo_request_responded_at';
+
+	/**
+	 * Maximum client response note length.
+	 */
+	public const RESPONSE_NOTE_MAX_LENGTH = 500;
+
+	/**
 	 * Open status value.
 	 */
 	public const STATUS_OPEN = 'open';
@@ -236,6 +261,57 @@ class Requests
 			</select>
 		</p>
 		<p class="description"><?php esc_html_e('Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here.', 'signoffflow-client-approval-workflow'); ?></p>
+		<?php $this->render_client_response_summary($post->ID, $status); ?>
+		<?php
+	}
+
+	/**
+	 * Render the latest client response in the request meta box.
+	 *
+	 * @param int    $request_id    Request post ID.
+	 * @param string $request_status Current request status.
+	 * @return void
+	 */
+	private function render_client_response_summary($request_id, $request_status)
+	{
+		$response_status = self::get_response_status_for_request($request_id);
+
+		if ('' === $response_status) {
+			return;
+		}
+
+		$response_note = self::get_response_note_for_request($request_id);
+		$responder_id  = self::get_responder_id_for_request($request_id);
+		$responded_at  = self::get_response_timestamp_for_request($request_id);
+		$responder     = $responder_id > 0 ? get_userdata($responder_id) : false;
+		$heading       = self::STATUS_OPEN === $request_status
+			? __('Previous client response', 'signoffflow-client-approval-workflow')
+			: __('Latest client response', 'signoffflow-client-approval-workflow');
+		?>
+		<hr />
+		<h4><?php echo esc_html($heading); ?></h4>
+		<p>
+			<strong><?php esc_html_e('Outcome:', 'signoffflow-client-approval-workflow'); ?></strong>
+			<?php echo esc_html(self::get_status_label($response_status)); ?>
+		</p>
+		<?php if ('' !== $response_note) : ?>
+			<p>
+				<strong><?php esc_html_e('Note:', 'signoffflow-client-approval-workflow'); ?></strong><br />
+				<?php echo nl2br(esc_html($response_note)); ?>
+			</p>
+		<?php endif; ?>
+		<?php if ($responder instanceof \WP_User && $responded_at > 0) : ?>
+			<p class="description">
+				<?php
+				printf(
+					/* translators: 1: client user display name, 2: response date and time */
+					esc_html__('Responded by %1$s on %2$s', 'signoffflow-client-approval-workflow'),
+					esc_html($responder->display_name),
+					esc_html(self::format_response_timestamp($responded_at))
+				);
+				?>
+			</p>
+		<?php endif; ?>
 		<?php
 	}
 
@@ -392,8 +468,9 @@ class Requests
 			);
 		}
 
-		$request_id = 0;
-		$status     = '';
+		$request_id    = 0;
+		$status        = '';
+		$response_note = '';
 
 		if (isset($_POST['cliapwo_request_id'])) {
 			$request_id = absint(wp_unslash($_POST['cliapwo_request_id']));
@@ -401,6 +478,10 @@ class Requests
 
 		if (isset($_POST['cliapwo_request_status'])) {
 			$status = sanitize_key(wp_unslash($_POST['cliapwo_request_status']));
+		}
+
+		if (isset($_POST['cliapwo_request_response_note'])) {
+			$response_note = trim(sanitize_textarea_field(wp_unslash($_POST['cliapwo_request_response_note'])));
 		}
 
 		if (! in_array($status, self::get_allowed_statuses(), true)) {
@@ -449,6 +530,35 @@ class Requests
 			);
 		}
 
+		if (self::get_string_length($response_note) > self::RESPONSE_NOTE_MAX_LENGTH) {
+			wp_die(
+				esc_html__('Response notes must be 500 characters or fewer.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Invalid response note', 'signoffflow-client-approval-workflow'),
+				array(
+					'response' => 400,
+				)
+			);
+		}
+
+		if (self::response_note_is_required($status) && '' === $response_note) {
+			wp_die(
+				esc_html__('Add a response note when requesting changes, rejecting, or blocking a request.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Response note required', 'signoffflow-client-approval-workflow'),
+				array(
+					'response' => 400,
+				)
+			);
+		}
+
+		if ('' === $response_note) {
+			delete_post_meta($request_id, self::RESPONSE_NOTE_META_KEY);
+		} else {
+			update_post_meta($request_id, self::RESPONSE_NOTE_META_KEY, $response_note);
+		}
+
+		update_post_meta($request_id, self::RESPONSE_STATUS_META_KEY, self::normalize_status_for_storage($status));
+		update_post_meta($request_id, self::RESPONDED_BY_META_KEY, $current_user_id);
+		update_post_meta($request_id, self::RESPONDED_AT_META_KEY, time());
 		update_post_meta($request_id, self::STATUS_META_KEY, self::normalize_status_for_storage($status));
 		$this->redirect_back();
 	}
@@ -491,6 +601,52 @@ class Requests
 		$status = (string) get_post_meta($request_id, self::STATUS_META_KEY, true);
 
 		return in_array($status, self::get_allowed_statuses(), true) ? $status : self::STATUS_OPEN;
+	}
+
+	/**
+	 * Get the latest client response note for a request.
+	 *
+	 * @param int $request_id Request post ID.
+	 * @return string
+	 */
+	public static function get_response_note_for_request($request_id)
+	{
+		return (string) get_post_meta($request_id, self::RESPONSE_NOTE_META_KEY, true);
+	}
+
+	/**
+	 * Get the latest client response outcome for a request.
+	 *
+	 * @param int $request_id Request post ID.
+	 * @return string
+	 */
+	public static function get_response_status_for_request($request_id)
+	{
+		$status = self::normalize_status_for_ui((string) get_post_meta($request_id, self::RESPONSE_STATUS_META_KEY, true));
+
+		return in_array($status, self::get_client_outcome_statuses(), true) ? $status : '';
+	}
+
+	/**
+	 * Get the latest client responder user ID for a request.
+	 *
+	 * @param int $request_id Request post ID.
+	 * @return int
+	 */
+	public static function get_responder_id_for_request($request_id)
+	{
+		return absint(get_post_meta($request_id, self::RESPONDED_BY_META_KEY, true));
+	}
+
+	/**
+	 * Get the latest client response UTC timestamp for a request.
+	 *
+	 * @param int $request_id Request post ID.
+	 * @return int
+	 */
+	public static function get_response_timestamp_for_request($request_id)
+	{
+		return absint(get_post_meta($request_id, self::RESPONDED_AT_META_KEY, true));
 	}
 
 	/**
@@ -683,6 +839,49 @@ class Requests
 	private static function normalize_status_for_ui($status)
 	{
 		return self::STATUS_COMPLETE === $status ? self::STATUS_APPROVED : $status;
+	}
+
+	/**
+	 * Determine whether an outcome requires an explanatory note.
+	 *
+	 * @param string $status Request outcome status.
+	 * @return bool
+	 */
+	private static function response_note_is_required($status)
+	{
+		return in_array(
+			(string) $status,
+			array(
+				self::STATUS_CHANGES_REQUESTED,
+				self::STATUS_REJECTED,
+				self::STATUS_BLOCKED,
+			),
+			true
+		);
+	}
+
+	/**
+	 * Get the character length of a response note.
+	 *
+	 * @param string $value Response note.
+	 * @return int
+	 */
+	private static function get_string_length($value)
+	{
+		return function_exists('mb_strlen') ? mb_strlen($value, 'UTF-8') : strlen($value);
+	}
+
+	/**
+	 * Format a UTC response timestamp in the site's timezone.
+	 *
+	 * @param int $timestamp UTC timestamp.
+	 * @return string
+	 */
+	private static function format_response_timestamp($timestamp)
+	{
+		$format = trim((string) get_option('date_format') . ' ' . (string) get_option('time_format'));
+
+		return wp_date($format, absint($timestamp));
 	}
 
 	/**
