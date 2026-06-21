@@ -460,9 +460,19 @@ body.cliapwo-portal-page {
 .cliapwo-portal__grid {
 	display: grid;
 	grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+	min-width: 0;
 	gap: clamp(32px, 6vw, 76px);
 	padding-top: clamp(30px, 5vw, 52px);
 	border-top: 1px solid var(--cliapwo-border);
+}
+
+.cliapwo-portal__requests,
+.cliapwo-portal__request-list,
+.cliapwo-portal__request,
+.cliapwo-portal__request-response,
+.cliapwo-portal__request-form,
+.cliapwo-portal__request-note-field {
+	min-width: 0;
 }
 
 .cliapwo-list {
@@ -569,6 +579,8 @@ body.cliapwo-portal-page {
 .cliapwo-portal__request-response-note {
 	color: var(--cliapwo-text);
 	line-height: 1.6;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .cliapwo-portal__request-response-meta,
@@ -595,7 +607,9 @@ body.cliapwo-portal-page {
 }
 
 .cliapwo-portal__request-note {
+	min-width: 0;
 	width: 100%;
+	max-width: 100%;
 	min-height: 102px;
 	padding: 12px 14px;
 	border: 1px solid var(--cliapwo-border);
@@ -615,6 +629,11 @@ body.cliapwo-portal-page {
 
 .cliapwo-portal__request-note-help {
 	margin: 0;
+}
+
+.cliapwo-portal__request-form > .cliapwo-button {
+	min-width: 0;
+	max-width: 100%;
 }
 
 .cliapwo-button,
