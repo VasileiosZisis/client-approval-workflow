@@ -4,7 +4,7 @@ Tags: client-portal, approvals, workflow, agency, file-sharing
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,7 @@ Create a private portal workspace per client account where you can:
 * Share project updates (timeline)
 * Share files with protected downloads
 * Send client requests/tasks, track approval outcomes, and collect short response notes
+* Scan and filter approval requests by status in WordPress admin
 
 Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
 
@@ -76,16 +77,25 @@ Clients can add a response note of up to 500 characters when choosing an approva
 
 The latest response, responder, and response time are shown in the client portal and request admin screen. Reopening a request preserves the previous response until the client submits a new one.
 
+= Can I filter requests by approval status? =
+Yes. The Requests admin screen includes status badges and filters for Open, Approved, Changes requested, Rejected, and Blocked requests.
+
 == Screenshots ==
 
 1. Client portal dashboard with Action required
 2. Updates timeline inside the client portal
 3. Files area with protected client downloads
-4. Requests checklist with client approval outcomes and response notes
+4. Requests checklist with client approval outcomes, response notes, and clear status actions
 5. SignoffFlow settings and notification toggles
 6. Event Log showing audit and email-attempt entries
 
 == Changelog ==
+
+= 1.3.0 =
+* Added color-coded request status badges to the Requests list and request edit screen.
+* Added admin filtering for Open, Approved, Changes requested, Rejected, and Blocked requests.
+* Included legacy completed requests in the Approved filter and requests without stored status in the Open filter.
+* Improved portal action hierarchy, keyboard focus, translated-label wrapping, and mobile button layout.
 
 = 1.2.0 =
 * Revised the client portal page with a focused, responsive workspace, section navigation, account controls, and accessible motion.
@@ -103,6 +113,9 @@ The latest response, responder, and response time are shown in the client portal
 Initial release.
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Requests now include clearer status badges, admin status filtering, and improved portal action styling. Existing request data remains compatible.
 
 = 1.2.0 =
 Clients can now include short response notes with approval outcomes. Existing requests remain compatible and require no migration.

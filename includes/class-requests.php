@@ -56,6 +56,26 @@ class Requests
 	public const RESPONSE_NOTE_MAX_LENGTH = 500;
 
 	/**
+	 * Request admin stylesheet handle.
+	 */
+	private const ADMIN_STYLE_HANDLE = 'cliapwo-requests-admin';
+
+	/**
+	 * Request status filter query key.
+	 */
+	private const STATUS_FILTER_QUERY_KEY = 'cliapwo_request_status_filter';
+
+	/**
+	 * Request status filter nonce action.
+	 */
+	private const STATUS_FILTER_NONCE_ACTION = 'cliapwo_filter_requests';
+
+	/**
+	 * Request status filter nonce field.
+	 */
+	private const STATUS_FILTER_NONCE_NAME = 'cliapwo_request_filter_nonce';
+
+	/**
 	 * Open status value.
 	 */
 	public const STATUS_OPEN = 'open';
@@ -122,10 +142,34 @@ class Requests
 		add_action('init', array($this, 'register_post_type'));
 		add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
 		add_action('save_post_' . self::POST_TYPE, array($this, 'save_request_meta'), 10, 2);
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
 		add_filter('manage_' . self::POST_TYPE . '_posts_columns', array($this, 'filter_request_columns'));
 		add_action('manage_' . self::POST_TYPE . '_posts_custom_column', array($this, 'render_request_column'), 10, 2);
+		add_action('restrict_manage_posts', array($this, 'render_status_filter'), 10, 2);
+		add_action('pre_get_posts', array($this, 'filter_admin_requests_by_status'));
 		add_action('admin_post_' . self::STATUS_UPDATE_ACTION, array($this, 'handle_status_update'));
 		add_action('admin_post_nopriv_' . self::STATUS_UPDATE_ACTION, array($this, 'handle_unauthorized_status_update'));
+	}
+
+	/**
+	 * Enqueue request admin styles only on request list and edit screens.
+	 *
+	 * @return void
+	 */
+	public function enqueue_admin_assets()
+	{
+		$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+
+		if (! $screen instanceof \WP_Screen || self::POST_TYPE !== $screen->post_type || ! in_array($screen->base, array('edit', 'post'), true)) {
+			return;
+		}
+
+		wp_enqueue_style(
+			self::ADMIN_STYLE_HANDLE,
+			CLIAPWO_PLUGIN_URL . 'assets/css/cliapwo-requests-admin.css',
+			array(),
+			CLIAPWO_VERSION
+		);
 	}
 
 	/**
@@ -259,6 +303,10 @@ class Requests
 					</option>
 				<?php endforeach; ?>
 			</select>
+		</p>
+		<p class="cliapwo-request-saved-status">
+			<span class="cliapwo-request-saved-status__label"><?php esc_html_e('Saved status:', 'signoffflow-client-approval-workflow'); ?></span>
+			<?php self::render_admin_status_badge($status); ?>
 		</p>
 		<p class="description"><?php esc_html_e('Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php $this->render_client_response_summary($post->ID, $status); ?>
@@ -419,7 +467,98 @@ class Requests
 			return;
 		}
 
-		echo esc_html(self::get_status_label(self::get_status_for_request($post_id)));
+		self::render_admin_status_badge(self::get_status_for_request($post_id));
+	}
+
+	/**
+	 * Render the request status filter above the request list table.
+	 *
+	 * @param string $post_type Current post type.
+	 * @param string $which     List table position.
+	 * @return void
+	 */
+	public function render_status_filter($post_type, $which)
+	{
+		if (self::POST_TYPE !== $post_type || 'top' !== $which || ! current_user_can('cliapwo_manage_portal')) {
+			return;
+		}
+
+		$selected_status = self::get_requested_status_filter();
+
+		wp_nonce_field(self::STATUS_FILTER_NONCE_ACTION, self::STATUS_FILTER_NONCE_NAME, false);
+		?>
+		<label class="screen-reader-text" for="<?php echo esc_attr(self::STATUS_FILTER_QUERY_KEY); ?>">
+			<?php esc_html_e('Filter by request status', 'signoffflow-client-approval-workflow'); ?>
+		</label>
+		<select name="<?php echo esc_attr(self::STATUS_FILTER_QUERY_KEY); ?>" id="<?php echo esc_attr(self::STATUS_FILTER_QUERY_KEY); ?>">
+			<option value=""><?php esc_html_e('All statuses', 'signoffflow-client-approval-workflow'); ?></option>
+			<?php foreach (self::get_status_options() as $status_value => $status_label) : ?>
+				<option value="<?php echo esc_attr($status_value); ?>" <?php selected($selected_status, $status_value); ?>>
+					<?php echo esc_html($status_label); ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+		<?php
+	}
+
+	/**
+	 * Filter the request list table by a validated status.
+	 *
+	 * @param \WP_Query $query Current query.
+	 * @return void
+	 */
+	public function filter_admin_requests_by_status($query)
+	{
+		if (! is_admin() || ! $query instanceof \WP_Query || ! $query->is_main_query() || self::POST_TYPE !== (string) $query->get('post_type')) {
+			return;
+		}
+
+		$status = self::get_requested_status_filter();
+
+		if ('' === $status) {
+			return;
+		}
+
+		if (self::STATUS_OPEN === $status) {
+			$status_meta_query = array(
+				'relation' => 'OR',
+				array(
+					'key'   => self::STATUS_META_KEY,
+					'value' => self::STATUS_OPEN,
+				),
+				array(
+					'key'     => self::STATUS_META_KEY,
+					'compare' => 'NOT EXISTS',
+				),
+			);
+		} elseif (self::STATUS_APPROVED === $status) {
+			$status_meta_query = array(
+				'key'     => self::STATUS_META_KEY,
+				'value'   => array(self::STATUS_APPROVED, self::STATUS_COMPLETE),
+				'compare' => 'IN',
+			);
+		} else {
+			$status_meta_query = array(
+				'key'   => self::STATUS_META_KEY,
+				'value' => $status,
+			);
+		}
+
+		$existing_meta_query = $query->get('meta_query');
+
+		if (! is_array($existing_meta_query) || empty($existing_meta_query)) {
+			$query->set('meta_query', array($status_meta_query));
+			return;
+		}
+
+		$query->set(
+			'meta_query',
+			array(
+				'relation' => 'AND',
+				$existing_meta_query,
+				$status_meta_query,
+			)
+		);
 	}
 
 	/**
@@ -769,6 +908,53 @@ class Requests
 			),
 			true
 		);
+	}
+
+	/**
+	 * Render a status badge for request admin screens.
+	 *
+	 * @param string $status Request status.
+	 * @return void
+	 */
+	private static function render_admin_status_badge($status)
+	{
+		$status = self::normalize_status_for_ui((string) $status);
+
+		if (! array_key_exists($status, self::get_status_options())) {
+			$status = self::STATUS_OPEN;
+		}
+
+		printf(
+			'<span class="cliapwo-admin-status cliapwo-admin-status--%1$s">%2$s</span>',
+			esc_attr(sanitize_html_class($status)),
+			esc_html(self::get_status_label($status))
+		);
+	}
+
+	/**
+	 * Get the nonce-verified request status filter value.
+	 *
+	 * @return string
+	 */
+	private static function get_requested_status_filter()
+	{
+		if (! isset($_GET[self::STATUS_FILTER_QUERY_KEY])) {
+			return '';
+		}
+
+		$nonce = '';
+
+		if (isset($_GET[self::STATUS_FILTER_NONCE_NAME])) {
+			$nonce = sanitize_text_field(wp_unslash($_GET[self::STATUS_FILTER_NONCE_NAME]));
+		}
+
+		if (! wp_verify_nonce($nonce, self::STATUS_FILTER_NONCE_ACTION) || ! current_user_can('cliapwo_manage_portal')) {
+			return '';
+		}
+
+		$status = sanitize_key(wp_unslash($_GET[self::STATUS_FILTER_QUERY_KEY]));
+
+		return array_key_exists($status, self::get_status_options()) ? $status : '';
 	}
 
 	/**

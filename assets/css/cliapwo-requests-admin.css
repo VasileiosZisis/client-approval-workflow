@@ -1,0 +1,70 @@
+.column-cliapwo_request_status {
+	width: 160px;
+}
+
+.cliapwo-admin-status {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	max-width: 100%;
+	min-height: 24px;
+	padding: 3px 8px;
+	border: 1px solid #8c8f94;
+	border-radius: 999px;
+	background: #f6f7f7;
+	color: #2c3338;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.3;
+	text-align: center;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.cliapwo-admin-status--open {
+	border-color: #72aee6;
+	background: #f0f6fc;
+	color: #135e96;
+}
+
+.cliapwo-admin-status--approved {
+	border-color: #68de7c;
+	background: #edfaef;
+	color: #116329;
+}
+
+.cliapwo-admin-status--changes_requested {
+	border-color: #dba617;
+	background: #fcf9e8;
+	color: #6e4f00;
+}
+
+.cliapwo-admin-status--rejected {
+	border-color: #f86368;
+	background: #fcf0f1;
+	color: #8a2424;
+}
+
+.cliapwo-admin-status--blocked {
+	border-color: #8c8f94;
+	background: #f0f0f1;
+	color: #3c434a;
+}
+
+.cliapwo-request-saved-status {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+}
+
+.cliapwo-request-saved-status__label {
+	font-weight: 600;
+}
+
+@media screen and (max-width: 782px) {
+	.column-cliapwo_request_status {
+		width: auto;
+	}
+}
