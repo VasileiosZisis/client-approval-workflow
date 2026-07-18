@@ -590,6 +590,65 @@ body.cliapwo-portal-page {
 	line-height: 1.5;
 }
 
+.cliapwo-portal__request-history {
+	margin-top: 16px;
+	border: 1px solid var(--cliapwo-border);
+	border-radius: 12px;
+	background: var(--cliapwo-card-bg);
+}
+
+.cliapwo-portal__request-history-summary {
+	padding: 12px 14px;
+	color: var(--cliapwo-text-soft);
+	font-size: 0.86rem;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.cliapwo-portal__request-history-summary:focus-visible {
+	border-radius: 10px;
+	outline: 3px solid var(--cliapwo-primary-soft);
+	outline-offset: 2px;
+}
+
+.cliapwo-portal__request-history-list {
+	display: grid;
+	gap: 0;
+	margin: 0;
+	padding: 0 14px 14px 34px;
+}
+
+.cliapwo-portal__request-history-item {
+	padding: 12px 0 12px 6px;
+	border-top: 1px solid var(--cliapwo-border);
+}
+
+.cliapwo-portal__request-history-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.cliapwo-portal__request-history-meta,
+.cliapwo-portal__request-history-transition {
+	margin: 6px 0 0;
+	color: var(--cliapwo-text-muted);
+	font-size: 0.82rem;
+	line-height: 1.5;
+}
+
+.cliapwo-portal__request-history-note {
+	margin-top: 9px;
+	padding: 10px 12px;
+	border-radius: 9px;
+	background: var(--cliapwo-bg);
+	color: var(--cliapwo-text);
+	line-height: 1.55;
+	overflow-wrap: anywhere;
+}
+
 .cliapwo-portal__request-form {
 	display: flex;
 	flex-wrap: wrap;

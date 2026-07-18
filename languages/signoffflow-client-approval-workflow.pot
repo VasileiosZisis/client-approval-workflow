@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SignoffFlow - Client Approval Workflow & Client Portal 1.3.0\n"
+"Project-Id-Version: SignoffFlow - Client Approval Workflow & Client Portal 1.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/signoffflow-client-approval-workflow\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1103,4 +1103,116 @@ msgstr ""
 
 #: templates/portal.php:21
 msgid "Skip to client workspace"
+msgstr ""
+
+#: includes/class-requests.php
+msgid "Activity History"
+msgstr ""
+
+#: includes/class-requests.php
+msgid "No activity has been recorded for this request yet."
+msgstr ""
+
+#. translators: 1: actor display name, 2: event date and time
+#: includes/class-portal.php includes/class-requests.php
+#, php-format
+msgid "%1$s on %2$s"
+msgstr ""
+
+#. translators: 1: previous request status, 2: new request status
+#: includes/class-portal.php includes/class-requests.php
+#, php-format
+msgid "%1$s to %2$s"
+msgstr ""
+
+#: includes/class-requests.php
+msgid "Request update failed"
+msgstr ""
+
+#: includes/class-requests.php
+msgid "The request history could not be recorded. Please try again."
+msgstr ""
+
+#: includes/class-requests.php
+msgid "The request could not be updated safely. Refresh the portal and try again."
+msgstr ""
+
+#. translators: %d: number of request activity entries
+#: includes/class-portal.php
+#, php-format
+msgid "Activity history (%d item)"
+msgid_plural "Activity history (%d items)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-events.php
+msgid "Staff user"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Client user"
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php
+#, php-format
+msgid "Client response: %s"
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php
+#, php-format
+msgid "Request reopened: %s"
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php
+#, php-format
+msgid "Request status changed: %s"
+msgstr ""
+
+#. translators: 1: previous request status, 2: new request status
+#: includes/class-events.php
+#, php-format
+msgid "Status: %1$s to %2$s"
+msgstr ""
+
+#. translators: %s: actor display name
+#: includes/class-events.php
+#, php-format
+msgid "Actor: %s"
+msgstr ""
+
+#. translators: %s: client response note
+#: includes/class-events.php
+#, php-format
+msgid "Response note: %s"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Unknown user"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Your team"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Client responded"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Status changed"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Client response"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Request reopened"
+msgstr ""
+
+#: includes/class-events.php
+msgid "Request status changed"
 msgstr ""

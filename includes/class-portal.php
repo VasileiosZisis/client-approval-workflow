@@ -177,6 +177,15 @@ class Portal
 			)
 		);
 		$requests_query = Requests::get_requests_query_for_client($client->ID);
+		$request_ids   = array();
+
+		foreach ($requests_query->posts as $request_post) {
+			if ($request_post instanceof \WP_Post) {
+				$request_ids[] = $request_post->ID;
+			}
+		}
+
+		$request_histories = Events::get_request_histories($request_ids, $client->ID);
 		$files_query      = Files::get_files_query_for_client($client->ID);
 		$open_requests    = Requests::get_open_request_count_for_client($client->ID);
 		$logo_url         = $this->get_branding_logo_url($settings);
@@ -375,6 +384,7 @@ class Portal
 										<?php endif; ?>
 
 										<?php $this->render_request_response_summary($request_id, $request_status); ?>
+										<?php $this->render_request_history($request_id, isset($request_histories[$request_id]) ? $request_histories[$request_id] : array()); ?>
 
 										<?php if ($can_choose_outcome || $can_reopen) : ?>
 											<form
@@ -510,8 +520,11 @@ class Portal
 	private function render_request_response_summary($request_id, $request_status)
 	{
 		$response_status = Requests::get_response_status_for_request($request_id);
+		$response_client = absint(get_post_meta($request_id, Requests::RESPONSE_CLIENT_META_KEY, true));
+		$current_client  = Requests::get_client_id_for_request($request_id);
+		$response_client_is_set = metadata_exists('post', $request_id, Requests::RESPONSE_CLIENT_META_KEY);
 
-		if ('' === $response_status) {
+		if ('' === $response_status || ($response_client_is_set && $current_client !== $response_client)) {
 			return;
 		}
 
@@ -548,6 +561,81 @@ class Portal
 				</p>
 			<?php endif; ?>
 		</div>
+		<?php
+	}
+
+	/**
+	 * Render a collapsed, client-safe immutable history for a request.
+	 *
+	 * @param int                  $request_id Request post ID.
+	 * @param array<int, \WP_Post> $events     Request lifecycle events.
+	 * @return void
+	 */
+	private function render_request_history($request_id, array $events)
+	{
+		$request_id = absint($request_id);
+
+		if ($request_id <= 0 || empty($events)) {
+			return;
+		}
+
+		$event_count = count($events);
+		$date_format = trim((string) get_option('date_format') . ' ' . (string) get_option('time_format'));
+		?>
+		<details class="cliapwo-portal__request-history">
+			<summary class="cliapwo-portal__request-history-summary">
+				<?php
+				printf(
+					/* translators: %d: number of request activity entries */
+					esc_html(_n('Activity history (%d item)', 'Activity history (%d items)', $event_count, 'signoffflow-client-approval-workflow')),
+					esc_html($event_count)
+				);
+				?>
+			</summary>
+			<ol class="cliapwo-portal__request-history-list">
+				<?php foreach ($events as $event) : ?>
+					<?php $event_data = Events::get_request_event_view_data($event, true); ?>
+					<?php if (! is_array($event_data)) : ?>
+						<?php continue; ?>
+					<?php endif; ?>
+					<li class="cliapwo-portal__request-history-item">
+						<div class="cliapwo-portal__request-history-header">
+							<strong><?php echo esc_html((string) $event_data['label']); ?></strong>
+							<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+								<span class="cliapwo-status cliapwo-status--<?php echo esc_attr(sanitize_html_class((string) $event_data['new_status'])); ?>">
+									<?php echo esc_html(Requests::get_status_label((string) $event_data['new_status'])); ?>
+								</span>
+							<?php endif; ?>
+						</div>
+						<p class="cliapwo-portal__request-history-meta">
+							<?php
+							printf(
+								/* translators: 1: actor display name, 2: event date and time */
+								esc_html__('%1$s on %2$s', 'signoffflow-client-approval-workflow'),
+								esc_html((string) $event_data['actor_name']),
+								esc_html(wp_date($date_format, (int) $event_data['timestamp']))
+							);
+							?>
+						</p>
+						<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+							<p class="cliapwo-portal__request-history-transition">
+								<?php
+								printf(
+									/* translators: 1: previous request status, 2: new request status */
+									esc_html__('%1$s to %2$s', 'signoffflow-client-approval-workflow'),
+									esc_html(Requests::get_status_label((string) $event_data['previous_status'])),
+									esc_html(Requests::get_status_label((string) $event_data['new_status']))
+								);
+								?>
+							</p>
+						<?php endif; ?>
+						<?php if ('' !== (string) $event_data['response_note']) : ?>
+							<div class="cliapwo-portal__request-history-note"><?php echo nl2br(esc_html((string) $event_data['response_note'])); ?></div>
+						<?php endif; ?>
+					</li>
+				<?php endforeach; ?>
+			</ol>
+		</details>
 		<?php
 	}
 

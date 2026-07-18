@@ -51,6 +51,21 @@ class Requests
 	public const RESPONDED_AT_META_KEY = 'cliapwo_request_responded_at';
 
 	/**
+	 * Client linked to the latest response snapshot.
+	 */
+	public const RESPONSE_CLIENT_META_KEY = 'cliapwo_request_response_client_id';
+
+	/**
+	 * One-time legacy response-history migration marker.
+	 */
+	public const HISTORY_BACKFILL_META_KEY = 'cliapwo_request_history_backfilled';
+
+	/**
+	 * Short-lived lock used to serialize request status transitions.
+	 */
+	private const TRANSITION_LOCK_META_KEY = 'cliapwo_request_transition_lock';
+
+	/**
 	 * Maximum client response note length.
 	 */
 	public const RESPONSE_NOTE_MAX_LENGTH = 500;
@@ -238,6 +253,15 @@ class Requests
 			'side',
 			'default'
 		);
+
+		add_meta_box(
+			'cliapwo_request_history',
+			__('Activity History', 'signoffflow-client-approval-workflow'),
+			array($this, 'render_request_history_meta_box'),
+			self::POST_TYPE,
+			'normal',
+			'default'
+		);
 	}
 
 	/**
@@ -364,6 +388,70 @@ class Requests
 	}
 
 	/**
+	 * Render the complete immutable request history in admin.
+	 *
+	 * @param \WP_Post $post Current request post.
+	 * @return void
+	 */
+	public function render_request_history_meta_box($post)
+	{
+		if (! $post instanceof \WP_Post || ! current_user_can('cliapwo_manage_portal')) {
+			return;
+		}
+
+		$histories = Events::get_request_histories(array($post->ID));
+		$events    = isset($histories[$post->ID]) ? $histories[$post->ID] : array();
+
+		if (empty($events)) {
+			echo '<p class="cliapwo-admin-history__empty">' . esc_html__('No activity has been recorded for this request yet.', 'signoffflow-client-approval-workflow') . '</p>';
+			return;
+		}
+		?>
+		<ol class="cliapwo-admin-history">
+			<?php foreach ($events as $event) : ?>
+				<?php $event_data = Events::get_request_event_view_data($event, false); ?>
+				<?php if (! is_array($event_data)) : ?>
+					<?php continue; ?>
+				<?php endif; ?>
+				<li class="cliapwo-admin-history__item">
+					<div class="cliapwo-admin-history__header">
+						<strong><?php echo esc_html((string) $event_data['label']); ?></strong>
+						<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+							<?php self::render_admin_status_badge((string) $event_data['new_status']); ?>
+						<?php endif; ?>
+					</div>
+					<p class="cliapwo-admin-history__meta">
+						<?php
+						printf(
+							/* translators: 1: actor display name, 2: event date and time */
+							esc_html__('%1$s on %2$s', 'signoffflow-client-approval-workflow'),
+							esc_html((string) $event_data['actor_name']),
+							esc_html(self::format_response_timestamp((int) $event_data['timestamp']))
+						);
+						?>
+					</p>
+					<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+						<p class="cliapwo-admin-history__transition">
+							<?php
+							printf(
+								/* translators: 1: previous request status, 2: new request status */
+								esc_html__('%1$s to %2$s', 'signoffflow-client-approval-workflow'),
+								esc_html(self::get_status_label((string) $event_data['previous_status'])),
+								esc_html(self::get_status_label((string) $event_data['new_status']))
+							);
+							?>
+						</p>
+					<?php endif; ?>
+					<?php if ('' !== (string) $event_data['response_note']) : ?>
+						<div class="cliapwo-admin-history__note"><?php echo nl2br(esc_html((string) $event_data['response_note'])); ?></div>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ol>
+		<?php
+	}
+
+	/**
 	 * Save request metadata.
 	 *
 	 * @param int      $post_id Request post ID.
@@ -428,10 +516,15 @@ class Requests
 			$status = self::STATUS_OPEN;
 		}
 
-		$status = self::normalize_status_for_storage($status);
-
-		update_post_meta($post_id, self::STATUS_META_KEY, $status);
 		$this->maybe_dispatch_created_event($post_id, $post, $client_id);
+		$this->transition_status(
+			$post_id,
+			$status,
+			array(
+				'actor_id'   => get_current_user_id(),
+				'actor_type' => Events::ACTOR_TYPE_STAFF,
+			)
+		);
 	}
 
 	/**
@@ -649,7 +742,23 @@ class Requests
 		$client_id       = self::get_client_id_for_request($request_id);
 
 		if ($is_manager) {
-			update_post_meta($request_id, self::STATUS_META_KEY, self::normalize_status_for_storage($status));
+			if (! $this->transition_status(
+				$request_id,
+				$status,
+				array(
+					'actor_id'   => $current_user_id,
+					'actor_type' => Events::ACTOR_TYPE_STAFF,
+				)
+			)) {
+				wp_die(
+					esc_html__('The request history could not be recorded. Please try again.', 'signoffflow-client-approval-workflow'),
+					esc_html__('Request update failed', 'signoffflow-client-approval-workflow'),
+					array(
+						'response' => 500,
+					)
+				);
+			}
+
 			$this->redirect_back();
 		}
 
@@ -689,16 +798,25 @@ class Requests
 			);
 		}
 
-		if ('' === $response_note) {
-			delete_post_meta($request_id, self::RESPONSE_NOTE_META_KEY);
-		} else {
-			update_post_meta($request_id, self::RESPONSE_NOTE_META_KEY, $response_note);
+		if (! $this->transition_status(
+			$request_id,
+			$status,
+			array(
+				'actor_id'          => $current_user_id,
+				'actor_type'        => Events::ACTOR_TYPE_CLIENT,
+				'is_client_response' => true,
+				'response_note'      => $response_note,
+			)
+		)) {
+			wp_die(
+				esc_html__('The request could not be updated safely. Refresh the portal and try again.', 'signoffflow-client-approval-workflow'),
+				esc_html__('Request update failed', 'signoffflow-client-approval-workflow'),
+				array(
+					'response' => 500,
+				)
+			);
 		}
 
-		update_post_meta($request_id, self::RESPONSE_STATUS_META_KEY, self::normalize_status_for_storage($status));
-		update_post_meta($request_id, self::RESPONDED_BY_META_KEY, $current_user_id);
-		update_post_meta($request_id, self::RESPONDED_AT_META_KEY, time());
-		update_post_meta($request_id, self::STATUS_META_KEY, self::normalize_status_for_storage($status));
 		$this->redirect_back();
 	}
 
@@ -716,6 +834,225 @@ class Requests
 				'response' => 403,
 			)
 		);
+	}
+
+	/**
+	 * Apply one semantic status transition and record its immutable snapshot.
+	 *
+	 * @param int                  $request_id Request post ID.
+	 * @param string               $new_status Requested status.
+	 * @param array<string, mixed> $context    Actor and response context.
+	 * @return bool Whether the transition completed safely.
+	 */
+	private function transition_status($request_id, $new_status, array $context = array())
+	{
+		$request_id = absint($request_id);
+		$request    = get_post($request_id);
+
+		if (! $request instanceof \WP_Post || self::POST_TYPE !== $request->post_type) {
+			return false;
+		}
+
+		$new_status = self::normalize_status_for_storage(sanitize_key((string) $new_status));
+
+		if (! in_array($new_status, self::get_allowed_statuses(), true)) {
+			return false;
+		}
+
+		$transition_lock = self::acquire_transition_lock($request_id);
+
+		if ('' === $transition_lock) {
+			return false;
+		}
+
+		$stored_status   = (string) get_post_meta($request_id, self::STATUS_META_KEY, true);
+		$current_status  = self::normalize_status_for_ui(self::get_status_for_request($request_id));
+		$is_client_event = ! empty($context['is_client_response']);
+
+		if (self::normalize_status_for_ui($new_status) === $current_status) {
+			if (self::STATUS_COMPLETE === $stored_status) {
+				update_post_meta($request_id, self::STATUS_META_KEY, self::STATUS_APPROVED);
+			}
+
+			self::release_transition_lock($request_id, $transition_lock);
+			return true;
+		}
+
+		if ($is_client_event && self::STATUS_OPEN !== $current_status) {
+			self::release_transition_lock($request_id, $transition_lock);
+			return false;
+		}
+
+		if ($is_client_event && ! Events::backfill_request_history_if_needed($request_id)) {
+			self::release_transition_lock($request_id, $transition_lock);
+			return false;
+		}
+
+		$actor_id     = isset($context['actor_id']) ? absint($context['actor_id']) : get_current_user_id();
+		$actor_type   = isset($context['actor_type']) ? sanitize_key((string) $context['actor_type']) : Events::ACTOR_TYPE_STAFF;
+		$actor_type   = Events::ACTOR_TYPE_CLIENT === $actor_type ? Events::ACTOR_TYPE_CLIENT : Events::ACTOR_TYPE_STAFF;
+		$response_note = isset($context['response_note']) ? trim(sanitize_textarea_field((string) $context['response_note'])) : '';
+		$client_id     = self::get_client_id_for_request($request_id);
+		$occurred_at   = time();
+		$meta_snapshot = array(
+			self::STATUS_META_KEY => self::get_meta_snapshot($request_id, self::STATUS_META_KEY),
+		);
+
+		if ($is_client_event) {
+			$client_response_keys = array(
+				self::RESPONSE_NOTE_META_KEY,
+				self::RESPONSE_STATUS_META_KEY,
+				self::RESPONDED_BY_META_KEY,
+				self::RESPONDED_AT_META_KEY,
+				self::RESPONSE_CLIENT_META_KEY,
+			);
+
+			foreach ($client_response_keys as $meta_key) {
+				$meta_snapshot[$meta_key] = self::get_meta_snapshot($request_id, $meta_key);
+			}
+
+			if ('' === $response_note) {
+				delete_post_meta($request_id, self::RESPONSE_NOTE_META_KEY);
+			} else {
+				update_post_meta($request_id, self::RESPONSE_NOTE_META_KEY, $response_note);
+			}
+
+			update_post_meta($request_id, self::RESPONSE_STATUS_META_KEY, $new_status);
+			update_post_meta($request_id, self::RESPONDED_BY_META_KEY, $actor_id);
+			update_post_meta($request_id, self::RESPONDED_AT_META_KEY, $occurred_at);
+			update_post_meta($request_id, self::RESPONSE_CLIENT_META_KEY, $client_id);
+		}
+
+		update_post_meta($request_id, self::STATUS_META_KEY, $new_status);
+
+		if ($is_client_event) {
+			$event_type = Events::TYPE_REQUEST_RESPONSE;
+		} elseif (self::STATUS_OPEN === $new_status && self::is_resolved_status($current_status)) {
+			$event_type = Events::TYPE_REQUEST_REOPENED;
+		} else {
+			$event_type = Events::TYPE_REQUEST_STATUS_CHANGED;
+		}
+
+		$event_id = Events::record_request_transition(
+			$request_id,
+			array(
+				'client_id'       => $client_id,
+				'event_type'      => $event_type,
+				'actor_id'        => $actor_id,
+				'actor_type'      => $actor_type,
+				'previous_status' => $current_status,
+				'new_status'      => $new_status,
+				'response_note'   => $response_note,
+				'occurred_at'     => $occurred_at,
+				'is_backfill'     => false,
+			)
+		);
+
+		if ($event_id <= 0) {
+			foreach ($meta_snapshot as $meta_key => $snapshot) {
+				self::restore_meta_snapshot($request_id, $meta_key, $snapshot);
+			}
+
+			self::release_transition_lock($request_id, $transition_lock);
+			return false;
+		}
+
+		if ($is_client_event) {
+			update_post_meta($request_id, self::HISTORY_BACKFILL_META_KEY, 'complete');
+		}
+
+		self::release_transition_lock($request_id, $transition_lock);
+
+		$transition = array(
+			'client_id'       => $client_id,
+			'event_type'      => $event_type,
+			'actor_id'        => $actor_id,
+			'actor_name'      => (string) get_post_meta($event_id, Events::ACTOR_NAME_META_KEY, true),
+			'actor_type'      => $actor_type,
+			'previous_status' => $current_status,
+			'new_status'      => $new_status,
+			'response_note'   => $response_note,
+			'occurred_at'     => $occurred_at,
+			'is_backfill'     => false,
+		);
+
+		/**
+		 * Fires after an immutable live request transition event is recorded.
+		 *
+		 * @param int                  $request_id Request post ID.
+		 * @param array<string, mixed> $transition Complete transition snapshot.
+		 */
+		do_action('cliapwo_request_status_transitioned', $request_id, $transition);
+
+		return true;
+	}
+
+	/**
+	 * Acquire a short-lived unique lock for a request transition.
+	 *
+	 * @param int $request_id Request post ID.
+	 * @return string Lock value, or an empty string when another transition is active.
+	 */
+	private static function acquire_transition_lock($request_id)
+	{
+		$existing_lock = (string) get_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, true);
+
+		if (0 === strpos($existing_lock, 'processing:')) {
+			$lock_timestamp = absint(substr($existing_lock, strlen('processing:')));
+
+			if ($lock_timestamp > 0 && (time() - $lock_timestamp) >= MINUTE_IN_SECONDS) {
+				delete_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $existing_lock);
+			}
+		}
+
+		$lock_value = 'processing:' . time() . ':' . wp_generate_uuid4();
+
+		return add_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $lock_value, true) ? $lock_value : '';
+	}
+
+	/**
+	 * Release a request transition lock owned by the current operation.
+	 *
+	 * @param int    $request_id Request post ID.
+	 * @param string $lock_value Lock value.
+	 * @return void
+	 */
+	private static function release_transition_lock($request_id, $lock_value)
+	{
+		delete_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $lock_value);
+	}
+
+	/**
+	 * Capture whether a post meta value exists and its current value.
+	 *
+	 * @param int    $post_id  Post ID.
+	 * @param string $meta_key Meta key.
+	 * @return array{exists: bool, value: mixed}
+	 */
+	private static function get_meta_snapshot($post_id, $meta_key)
+	{
+		return array(
+			'exists' => metadata_exists('post', $post_id, $meta_key),
+			'value'  => get_post_meta($post_id, $meta_key, true),
+		);
+	}
+
+	/**
+	 * Restore one post meta value after a failed event insertion.
+	 *
+	 * @param int                        $post_id  Post ID.
+	 * @param string                     $meta_key Meta key.
+	 * @param array{exists: bool, value: mixed} $snapshot Previous value snapshot.
+	 * @return void
+	 */
+	private static function restore_meta_snapshot($post_id, $meta_key, array $snapshot)
+	{
+		if (! empty($snapshot['exists'])) {
+			update_post_meta($post_id, $meta_key, $snapshot['value']);
+			return;
+		}
+
+		delete_post_meta($post_id, $meta_key);
 	}
 
 	/**

@@ -63,6 +63,51 @@
 	font-weight: 600;
 }
 
+.cliapwo-admin-history {
+	display: grid;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cliapwo-admin-history__item {
+	padding: 14px 4px;
+	border-top: 1px solid #dcdcde;
+}
+
+.cliapwo-admin-history__item:first-child {
+	padding-top: 4px;
+	border-top: 0;
+}
+
+.cliapwo-admin-history__header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.cliapwo-admin-history__meta,
+.cliapwo-admin-history__transition {
+	margin: 6px 0 0;
+	color: #646970;
+}
+
+.cliapwo-admin-history__note {
+	margin-top: 10px;
+	padding: 10px 12px;
+	border-left: 3px solid #72aee6;
+	background: #f6f7f7;
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.cliapwo-admin-history__empty {
+	margin-bottom: 0;
+}
+
 @media screen and (max-width: 782px) {
 	.column-cliapwo_request_status {
 		width: auto;

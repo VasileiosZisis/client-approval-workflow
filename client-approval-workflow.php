@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       SignoffFlow - Client Approval Workflow & Client Portal
  * Description:       Private client portal for service businesses with updates, files, and client requests.
- * Version:           1.3.0
+ * Version:           1.4.0
  * Author:      Vasileios Zisis
  * Author URI:  https://profiles.wordpress.org/vzisis/
  * Text Domain:       signoffflow-client-approval-workflow
@@ -18,7 +18,7 @@
 
 defined('ABSPATH') || exit;
 
-define('CLIAPWO_VERSION', '1.3.0');
+define('CLIAPWO_VERSION', '1.4.0');
 define('CLIAPWO_PLUGIN_FILE', __FILE__);
 define('CLIAPWO_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CLIAPWO_PLUGIN_URL', plugin_dir_url(__FILE__));

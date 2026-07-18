@@ -87,6 +87,7 @@ foreach ($cliapwo_post_types as $cliapwo_post_type) {
 }
 
 delete_option('cliapwo_settings');
+delete_option('cliapwo_data_version');
 delete_transient('cliapwo_plugin_activated');
 
 $cliapwo_manager_user_ids = get_users(

@@ -14,6 +14,7 @@ The plugin includes:
 - protected file sharing with access-checked downloads
 - requests/tasks that clients can approve, reject, block, or request changes for with a short response note
 - latest client response details in the portal and WordPress admin, including the responder and timestamp
+- immutable per-request activity histories that preserve earlier approval outcomes and response notes
 - clear status badges and free admin filtering for approval requests
 - focused, responsive portal workspace with section navigation and accessible motion
 - event logging for key actions

@@ -4,7 +4,7 @@ Tags: client-portal, approvals, workflow, agency, file-sharing
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,7 @@ Create a private portal workspace per client account where you can:
 * Share project updates (timeline)
 * Share files with protected downloads
 * Send client requests/tasks, track approval outcomes, and collect short response notes
+* Review an immutable activity history for every approval request
 * Scan and filter approval requests by status in WordPress admin
 
 Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
@@ -75,7 +76,7 @@ For installed sites, see the Portal styling help note in `SignoffFlow > Settings
 = How do client response notes work? =
 Clients can add a response note of up to 500 characters when choosing an approval outcome. A note is optional for Approved and required for Changes requested, Rejected, and Blocked.
 
-The latest response, responder, and response time are shown in the client portal and request admin screen. Reopening a request preserves the previous response until the client submits a new one.
+The latest response, responder, and response time are shown in the client portal and request admin screen. Each real status transition is also preserved in an immutable per-request activity history, including response-note snapshots from earlier approval cycles.
 
 = Can I filter requests by approval status? =
 Yes. The Requests admin screen includes status badges and filters for Open, Approved, Changes requested, Rejected, and Blocked requests.
@@ -90,6 +91,12 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 6. Event Log showing audit and email-attempt entries
 
 == Changelog ==
+
+= 1.4.0 =
+* Added immutable per-request activity histories for request creation, client responses, staff reopen actions, and staff status changes.
+* Added a collapsed client-safe portal timeline and a complete request history in WordPress admin.
+* Added a bounded migration that preserves one reliable response from existing latest-response metadata without duplicating events.
+* Centralized and serialized status transitions so unchanged saves do not create history entries.
 
 = 1.3.0 =
 * Added color-coded request status badges to the Requests list and request edit screen.
@@ -113,6 +120,9 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 Initial release.
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Requests now preserve each approval cycle in an immutable activity history. One reliable existing latest response is migrated automatically in small batches.
 
 = 1.3.0 =
 Requests now include clearer status badges, admin status filtering, and improved portal action styling. Existing request data remains compatible.

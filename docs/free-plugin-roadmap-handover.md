@@ -6,8 +6,8 @@ This is the living product handover and note-keeping document for the recommende
 
 - Intended audience: product owner, maintainers, developers, QA, and release owners.
 - Source strategy: [SignoffFlow Free Version Strategy](./deep-research-report.md).
-- Last reviewed: 2026-06-27.
-- Repository snapshot: `main` branch, working version `1.3.0`.
+- Last reviewed: 2026-07-18.
+- Repository snapshot: `main` branch, working version `1.4.0`.
 - Compatibility snapshot: WordPress 6.0+, tested through WordPress 7.0, PHP 7.4+.
 
 The research report describes the product at an earlier point in time. When it conflicts with this document, verify the current repository and update this handover rather than relying on the report's old implementation snapshot.
@@ -36,9 +36,9 @@ The research report describes the product at an earlier point in time. When it c
 | # | Feature | Status | Release or target | User value | Next action |
 |---:|---|---|---|---|---|
 | 1 | Richer approval outcomes | **Released** | 1.1.0 | Turns requests into a real approval workflow. | Preserve compatibility and include in regression testing. |
-| 2 | Client response note | **Released** | 1.2.0 | Captures the reason behind a client's decision. | Preserve latest-response behavior until immutable history ships. |
-| 3 | Better request status UI | **Implemented, pending release** | 1.3.0 | Makes request state easier to scan, filter, and act on. | Complete WordPress 7.0 manual QA, commit, and release. |
-| 4 | Per-request activity/history | **Planned** | TBD | Provides a readable record of how each approval progressed. | Finalize event model, history UI, and existing-response backfill policy. |
+| 2 | Client response note | **Released** | 1.2.0 | Captures the reason behind a client's decision. | Keep the latest-response summary aligned with immutable history. |
+| 3 | Better request status UI | **Released** | 1.3.0 | Makes request state easier to scan, filter, and act on. | Preserve filtering, legacy-status compatibility, and responsive action styling in regression testing. |
+| 4 | Per-request activity/history | **Released** | 1.4.0 | Provides a readable record of how each approval progressed. | Preserve immutable-event, migration, privacy, and timeline behavior in regression testing. |
 | 5 | Improved first-run onboarding | **Partially implemented** | TBD | Gets a new user to the first successful approval faster. | Replace the static checklist with state-aware progress. |
 | 6 | Sample/demo content | **Planned** | TBD | Lets users understand the workflow before entering real client data. | Design opt-in creation, markers, and safe cleanup. |
 | 7 | Contextual upgrade prompts | **Deferred pending separate add-on** | After add-on launch | Introduces relevant paid capabilities without degrading free. | Wait for real add-on functionality, documentation, and destination URLs. |
@@ -127,7 +127,7 @@ Implemented in [Requests](../includes/class-requests.php), the [client portal](.
 
 ### Remaining Work And Dependencies
 
-This feature stores only the latest response. Per-request activity/history must preserve each response as an immutable event before multiple approval cycles can be audited reliably.
+The latest-response fields remain the quick summary. The released 1.4.0 activity history snapshots every new response note as an immutable event so multiple approval cycles can be reviewed reliably.
 
 ### Handover Notes
 
@@ -136,7 +136,7 @@ This feature stores only the latest response. Per-request activity/history must 
 
 ## 3. Better Request Status UI
 
-**Status:** Implemented, pending release in 1.3.0.
+**Status:** Released in 1.3.0.
 
 ### Goal And User Value
 
@@ -144,7 +144,7 @@ Make request status immediately scannable and let staff narrow the Requests scre
 
 ### Current State
 
-Implemented in the current uncommitted worktree through [Requests](../includes/class-requests.php), [portal actions](../includes/class-portal.php), [request admin styling](../assets/css/cliapwo-requests-admin.css), and [portal styling](../assets/css/portal.css). Version and changelog metadata currently identify the work as 1.3.0, but it must not be described as released until QA, commit, and release are complete.
+Released in 1.3.0 through [Requests](../includes/class-requests.php), [portal actions](../includes/class-portal.php), [request admin styling](../assets/css/cliapwo-requests-admin.css), and [portal styling](../assets/css/portal.css).
 
 ### Delivered Behavior
 
@@ -174,19 +174,17 @@ Implemented in the current uncommitted worktree through [Requests](../includes/c
 
 ### Remaining Work And Dependencies
 
-1. Complete manual testing on WordPress 7.0.
-2. Fix any visual or filtering regressions found during QA.
-3. Commit the work and prepare the 1.3.0 package.
-4. Release before changing this status to Released.
+No release-blocking work remains. Keep the manual test matrix in regression coverage, especially status filtering with search and pagination, legacy status values, translated labels, keyboard focus, and mobile action layouts.
 
 ### Handover Notes
 
 - 2026-06-27: Kept status filtering fully functional in free.
 - 2026-06-27: Reserved sorting for a separate paid add-on and intentionally added no free-plugin placeholder, hook, rank metadata, or upsell.
+- 2026-07-18: Marked the complete status UI as released in version 1.3.0.
 
 ## 4. Per-request Activity/History
 
-**Status:** Planned.
+**Status:** Released in 1.4.0.
 
 ### Goal And User Value
 
@@ -194,9 +192,9 @@ Provide a human-readable, immutable timeline showing how one request moved from 
 
 ### Current State
 
-The private [Event Log](../includes/class-events.php) already records request creation and links events to a related object. The latest-response metadata in [Requests](../includes/class-requests.php) provides outcome, note, responder, and timestamp for the most recent response. It does not preserve earlier approval cycles.
+Implemented through the private [Event Log](../includes/class-events.php), centralized transitions and admin history in [Requests](../includes/class-requests.php), and the client-safe timeline in the [portal](../includes/class-portal.php). Latest-response metadata remains available for quick scanning while immutable events preserve earlier approval cycles.
 
-### Recommended Behavior
+### Delivered Behavior
 
 - Record request creation, client response, staff reopen, and staff status-change events.
 - Store the actor, timestamp, previous status, new status, and response-note snapshot where applicable.
@@ -206,6 +204,10 @@ The private [Event Log](../includes/class-events.php) already records request cr
 - Exclude emails, user IDs, capabilities, and internal-only details from the client view.
 - Preserve each note in its event rather than reading the overwriteable latest-response meta.
 - Query histories efficiently rather than issuing one database query per request.
+- Display the full portal history inside a collapsed native disclosure while retaining the latest-response summary.
+- Identify staff as "Your team" in the client portal while retaining staff display-name snapshots in admin.
+- Backfill one reliable pre-1.4 response in bounded batches and immediately before a new response can overwrite legacy metadata.
+- Serialize transitions with a short-lived request lock so concurrent submissions cannot create duplicate lifecycle events.
 
 ### Acceptance Criteria And Manual QA
 
@@ -220,15 +222,15 @@ The private [Event Log](../includes/class-events.php) already records request cr
 
 ### Remaining Work And Dependencies
 
-- Decide the portal event limit and expansion behavior.
-- Decide whether to backfill one response event from reliable 1.2 response metadata.
-- Centralize status transitions so client, portal-staff, and admin changes cannot bypass event creation.
-- Complete this before evidence-pack or export work begins in the separate add-on.
+No release-blocking work remains. Keep repeated approval cycles, migration retries, deleted users, client reassignment, concurrent submissions, accessibility, and responsive layouts in regression coverage. Evidence-pack and export work remains in the separate add-on.
 
 ### Handover Notes
 
 - Use the existing private event post type unless performance measurements justify a different store.
 - Treat the timeline as audit context, not as a threaded conversation system.
+- 2026-07-18: Chose a collapsed full portal history, retained the latest-response summary, and used a generic staff label in the client view.
+- 2026-07-18: Chose a one-event backfill from reliable latest-response metadata rather than fabricating unavailable earlier cycles.
+- 2026-07-18: Marked the complete per-request activity history as released in version 1.4.0.
 
 ## 5. Improved First-run Onboarding
 
@@ -407,7 +409,7 @@ Repository-facing work includes updated [README](../README.md), [WordPress.org r
 
 ### Remaining Work And Dependencies
 
-Complete the 1.3.0 manual QA and release before capturing final status-UI screenshots. Refresh assets again after onboarding and sample content materially change first-use screens.
+Capture final status-UI screenshots from the released 1.3.0 experience. Refresh assets again after onboarding and sample content materially change first-use screens.
 
 ### Handover Notes
 
@@ -416,12 +418,10 @@ Complete the 1.3.0 manual QA and release before capturing final status-UI screen
 
 ## Recommended Dependency Order
 
-1. Complete manual QA, commit, package, and release the 1.3.0 status UI.
-2. Implement per-request activity/history so approval cycles become durable.
-3. Upgrade onboarding to a state-aware first-approval checklist.
-4. Add opt-in sample/demo content that integrates with onboarding safely.
-5. Refresh activation and trust materials after the first-use workflow is stable.
-6. Add contextual upgrade prompts only after the separate add-on exists and passes compliance review.
+1. Upgrade onboarding to a state-aware first-approval checklist.
+2. Add opt-in sample/demo content that integrates with onboarding safely.
+3. Refresh activation and trust materials after the first-use workflow is stable.
+4. Add contextual upgrade prompts only after the separate add-on exists and passes compliance review.
 
 ## Pro-only Boundary Appendix
 
@@ -447,13 +447,17 @@ The free plugin must remain fully functional as distributed through WordPress.or
 | 2026-06 | Add latest client response notes without building immutable history yet. | Released in 1.2.0. |
 | 2026-06-27 | Keep admin status filtering in free and reserve sorting for the separate add-on. | Implemented in the pending 1.3.0 worktree. |
 | 2026-06-27 | Use this file as the canonical free-roadmap handover. | Update after each material product or release decision. |
+| 2026-07-18 | Release the better request status UI. | Released in 1.3.0; filtering remains free and sorting remains reserved for a separate add-on. |
+| 2026-07-18 | Implement immutable per-request activity history. | Released in 1.4.0 with a collapsed full portal timeline and one reliable legacy-response backfill. |
 
 ## Next Review Checklist
 
-- [ ] Complete the 1.3.0 manual test matrix on WordPress 7.0.
-- [ ] Commit and release the status UI work.
-- [ ] Change feature 3 from pending release to Released only after release completion.
-- [ ] Decide activity-history event limits and backfill behavior.
+- [x] Complete the 1.3.0 manual test matrix on WordPress 7.0.
+- [x] Commit and release the status UI work.
+- [x] Change feature 3 from pending release to Released after release completion.
+- [x] Decide activity-history event limits and backfill behavior.
+- [x] Complete the 1.4.0 activity-history manual test matrix on WordPress 7.0.
+- [x] Package and release the 1.4.0 activity-history work.
 - [ ] Define onboarding completion and sample-content isolation rules.
 - [ ] Recheck external WordPress.org and GitHub trust assets.
 - [ ] Confirm no Pro-only code or locked controls have entered the free repository.
