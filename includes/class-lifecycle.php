@@ -22,13 +22,14 @@ class Lifecycle
 	 */
 	public static function activate()
 	{
+		$is_fresh_install = false === get_option(Settings::OPTION_KEY, false);
+
 		self::ensure_roles();
 
-		if (false === get_option(Settings::OPTION_KEY, false)) {
+		if ($is_fresh_install) {
 			add_option(Settings::OPTION_KEY, Settings::get_default_settings());
+			Onboarding::mark_fresh_install();
 		}
-
-		set_transient('cliapwo_plugin_activated', 1, MINUTE_IN_SECONDS);
 	}
 
 	/**

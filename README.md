@@ -16,6 +16,7 @@ The plugin includes:
 - latest client response details in the portal and WordPress admin, including the responder and timestamp
 - immutable per-request activity histories that preserve earlier approval outcomes and response notes
 - clear status badges and free admin filtering for approval requests
+- state-aware first-run setup that tracks progress through the first real client response
 - focused, responsive portal workspace with section navigation and accessible motion
 - event logging for key actions
 - email notifications for requests, updates, and files
@@ -24,11 +25,11 @@ The plugin includes:
 ## How It Works
 
 1. Install and activate the plugin in WordPress.
-2. Create or choose a portal page and place the `[cliapwo_portal]` shortcode on it.
-3. Create a client account in `SignoffFlow > Clients`.
-4. Assign one or more WordPress users as portal users for that client account.
-5. Add updates, files, and requests for that client account.
-6. Assigned users log in with normal WordPress authentication and access only their portal experience.
+2. Follow the state-aware setup progress in `SignoffFlow > Settings`.
+3. Create or choose a published portal page and place the `[cliapwo_portal]` shortcode on it.
+4. Create a client account in `SignoffFlow > Clients` and assign a portal user.
+5. Publish an approval request for that client account.
+6. The assigned user logs in with normal WordPress authentication and records a response from the portal.
 
 The page selected in SignoffFlow settings uses the plugin's focused portal canvas, without the active theme's public header and footer. Shortcodes placed on other pages remain embedded in the theme as normal.
 

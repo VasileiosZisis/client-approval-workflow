@@ -4,7 +4,7 @@ Tags: client-portal, approvals, workflow, agency, file-sharing
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,7 @@ Create a private portal workspace per client account where you can:
 * Send client requests/tasks, track approval outcomes, and collect short response notes
 * Review an immutable activity history for every approval request
 * Scan and filter approval requests by status in WordPress admin
+* Follow state-aware setup progress through the first real client response
 
 Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
 
@@ -33,7 +34,7 @@ The page selected in SignoffFlow settings uses a focused, responsive portal canv
 
 == Getting started ==
 1. Go to `SignoffFlow > Settings`.
-2. Use the `Quick setup` panel to create a sample portal page, or create a page manually and add `[cliapwo_portal]`.
+2. Use the state-aware setup panel to create a portal page, or create a page manually and add `[cliapwo_portal]`.
 3. Confirm that page is selected as the portal page in SignoffFlow settings.
 4. Create a client account in `SignoffFlow > Clients` and assign one or more WordPress portal users.
 5. Add updates, files, and requests for that client account.
@@ -44,7 +45,7 @@ The page selected in SignoffFlow settings uses a focused, responsive portal canv
 1. Upload the plugin folder to `/wp-content/plugins/` or install it as a zip in WordPress.
 2. Activate SignoffFlow through the WordPress Plugins screen.
 3. Go to `SignoffFlow > Settings`.
-4. Use the optional `Quick setup` panel to create a sample portal page automatically, or create your own page and add the `[cliapwo_portal]` shortcode.
+4. Use the state-aware setup panel to create a portal page automatically, or create your own page and add the `[cliapwo_portal]` shortcode.
 5. Confirm the portal page is selected in SignoffFlow settings.
 6. Create a client account in `SignoffFlow > Clients`.
 7. Assign one or more WordPress portal users to that client account.
@@ -92,6 +93,12 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 
 == Changelog ==
 
+= 1.5.0 =
+* Replaced the static quick-setup checklist with five automatically detected onboarding milestones.
+* Added direct next-step actions, accessible progress presentation, and a concise completion state after the first client response.
+* Added per-administrator dismissal and reopening without site-wide notices or external tracking.
+* Reserved a sample-content marker so future demo records cannot falsely complete real onboarding progress.
+
 = 1.4.0 =
 * Added immutable per-request activity histories for request creation, client responses, staff reopen actions, and staff status changes.
 * Added a collapsed client-safe portal timeline and a complete request history in WordPress admin.
@@ -120,6 +127,9 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 Initial release.
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+SignoffFlow Settings now shows state-aware progress from portal creation through the first real client response. Existing setup is detected automatically.
 
 = 1.4.0 =
 Requests now preserve each approval cycle in an immutable activity history. One reliable existing latest response is migrated automatically in small batches.

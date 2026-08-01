@@ -6,8 +6,8 @@ This is the living product handover and note-keeping document for the recommende
 
 - Intended audience: product owner, maintainers, developers, QA, and release owners.
 - Source strategy: [SignoffFlow Free Version Strategy](./deep-research-report.md).
-- Last reviewed: 2026-07-18.
-- Repository snapshot: `main` branch, working version `1.4.0`.
+- Last reviewed: 2026-08-01.
+- Repository snapshot: `main` branch, working version `1.5.0`.
 - Compatibility snapshot: WordPress 6.0+, tested through WordPress 7.0, PHP 7.4+.
 
 The research report describes the product at an earlier point in time. When it conflicts with this document, verify the current repository and update this handover rather than relying on the report's old implementation snapshot.
@@ -39,7 +39,7 @@ The research report describes the product at an earlier point in time. When it c
 | 2 | Client response note | **Released** | 1.2.0 | Captures the reason behind a client's decision. | Keep the latest-response summary aligned with immutable history. |
 | 3 | Better request status UI | **Released** | 1.3.0 | Makes request state easier to scan, filter, and act on. | Preserve filtering, legacy-status compatibility, and responsive action styling in regression testing. |
 | 4 | Per-request activity/history | **Released** | 1.4.0 | Provides a readable record of how each approval progressed. | Preserve immutable-event, migration, privacy, and timeline behavior in regression testing. |
-| 5 | Improved first-run onboarding | **Partially implemented** | TBD | Gets a new user to the first successful approval faster. | Replace the static checklist with state-aware progress. |
+| 5 | Improved first-run onboarding | **Implemented, pending release** | 1.5.0 | Gets a new user to the first successful approval faster. | Complete manual QA, packaging, commit, and release. |
 | 6 | Sample/demo content | **Planned** | TBD | Lets users understand the workflow before entering real client data. | Design opt-in creation, markers, and safe cleanup. |
 | 7 | Contextual upgrade prompts | **Deferred pending separate add-on** | After add-on launch | Introduces relevant paid capabilities without degrading free. | Wait for real add-on functionality, documentation, and destination URLs. |
 | 8 | Activation and trust materials | **Partially implemented** | Ongoing | Improves discovery, credibility, and activation. | Complete external listing assets, demo, GitHub metadata, and releases. |
@@ -234,7 +234,7 @@ No release-blocking work remains. Keep repeated approval cycles, migration retri
 
 ## 5. Improved First-run Onboarding
 
-**Status:** Partially implemented.
+**Status:** Implemented, pending release in 1.5.0.
 
 ### Goal And User Value
 
@@ -242,7 +242,7 @@ Guide a new administrator from activation to the first successful client approva
 
 ### Current State
 
-The [admin module](../includes/class-admin.php) provides a Quick setup panel, can create and save a portal page, and displays a static three-step checklist. It appears after activation or when no valid portal page exists. It does not track progress through client creation, user assignment, request creation, or a client response.
+The onboarding service and [admin module](../includes/class-admin.php) now detect five setup milestones from existing plugin data, present the next incomplete action, preserve per-administrator dismissal, and record historical completion after the first real client response. Fresh installations open the checklist automatically, while existing installations receive a compact progress prompt.
 
 ### Recommended Behavior
 
@@ -271,14 +271,16 @@ The [admin module](../includes/class-admin.php) provides a Quick setup panel, ca
 
 ### Remaining Work And Dependencies
 
-- Define the persisted dismissal/completion keys and cleanup behavior.
-- Decide whether first approval means any resolved outcome or Approved only. Recommended default: any valid client response proves workflow activation.
-- Coordinate with sample/demo content so demo records do not falsely mark a real onboarding journey complete.
+- Complete WordPress 7.0 manual QA and release packaging.
+- Require item 6 sample records to use the reserved `cliapwo_sample_content` marker.
 
 ### Handover Notes
 
 - The current portal-page action is a useful foundation and should be extended rather than replaced.
 - Onboarding quality is an activation feature, not an advertising surface.
+- 2026-08-01: Chose any valid client response as activation proof, per-administrator dismissal, and compact prompting for upgraded installations.
+- 2026-08-01: Made successful onboarding historically sticky while continuing to validate the configured portal page on every settings view.
+- 2026-08-01: Reserved `cliapwo_sample_content` so future sample records cannot complete real onboarding progress.
 
 ## 6. Sample/Demo Content
 

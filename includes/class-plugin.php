@@ -30,6 +30,13 @@ class Plugin
 	private $settings;
 
 	/**
+	 * Onboarding state service.
+	 *
+	 * @var Onboarding
+	 */
+	private $onboarding;
+
+	/**
 	 * Admin UI service.
 	 *
 	 * @var Admin
@@ -85,7 +92,8 @@ class Plugin
 	{
 		$this->client_access = new Client_Access();
 		$this->settings      = new Settings();
-		$this->admin         = new Admin($this->settings);
+		$this->onboarding    = new Onboarding();
+		$this->admin         = new Admin($this->settings, $this->onboarding);
 		$this->clients       = new Clients();
 		$this->updates       = new Updates();
 		$this->portal        = new Portal();
@@ -103,6 +111,7 @@ class Plugin
 	{
 		$this->client_access->register();
 		$this->settings->register();
+		$this->onboarding->register();
 		$this->admin->register();
 		$this->clients->register();
 		$this->updates->register();
