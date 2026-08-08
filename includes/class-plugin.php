@@ -37,6 +37,13 @@ class Plugin
 	private $onboarding;
 
 	/**
+	 * Opt-in sample content service.
+	 *
+	 * @var Sample_Content
+	 */
+	private $sample_content;
+
+	/**
 	 * Admin UI service.
 	 *
 	 * @var Admin
@@ -93,7 +100,8 @@ class Plugin
 		$this->client_access = new Client_Access();
 		$this->settings      = new Settings();
 		$this->onboarding    = new Onboarding();
-		$this->admin         = new Admin($this->settings, $this->onboarding);
+		$this->sample_content = new Sample_Content();
+		$this->admin         = new Admin($this->settings, $this->onboarding, $this->sample_content);
 		$this->clients       = new Clients();
 		$this->updates       = new Updates();
 		$this->portal        = new Portal();
@@ -112,6 +120,7 @@ class Plugin
 		$this->client_access->register();
 		$this->settings->register();
 		$this->onboarding->register();
+		$this->sample_content->register();
 		$this->admin->register();
 		$this->clients->register();
 		$this->updates->register();

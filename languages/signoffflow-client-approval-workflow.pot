@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SignoffFlow - Client Approval Workflow & Client Portal 1.5.0\n"
+"Project-Id-Version: SignoffFlow - Client Approval Workflow & Client Portal 1.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/signoffflow-client-approval-workflow\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-01T15:42:17+00:00\n"
+"POT-Creation-Date: 2026-08-08T16:27:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: signoffflow-client-approval-workflow\n"
@@ -34,23 +34,23 @@ msgstr ""
 msgid "https://profiles.wordpress.org/vzisis/"
 msgstr ""
 
-#: includes/class-admin.php:76
-#: includes/class-admin.php:77
-#: includes/class-portal.php:314
+#: includes/class-admin.php:85
+#: includes/class-admin.php:86
+#: includes/class-portal.php:327
 msgid "SignoffFlow"
 msgstr ""
 
-#: includes/class-admin.php:87
-#: includes/class-admin.php:88
+#: includes/class-admin.php:96
+#: includes/class-admin.php:97
 msgid "Settings"
 msgstr ""
 
-#: includes/class-admin.php:132
+#: includes/class-admin.php:141
 msgid "You are not allowed to manage SignoffFlow settings."
 msgstr ""
 
-#: includes/class-admin.php:133
-#: includes/class-admin.php:169
+#: includes/class-admin.php:142
+#: includes/class-admin.php:179
 #: includes/class-files.php:429
 #: includes/class-files.php:439
 #: includes/class-files.php:449
@@ -63,160 +63,261 @@ msgstr ""
 #: includes/class-requests.php:722
 #: includes/class-requests.php:774
 #: includes/class-requests.php:832
+#: includes/class-sample-content.php:82
 msgid "Forbidden"
 msgstr ""
 
-#: includes/class-admin.php:141
+#: includes/class-admin.php:150
 msgid "SignoffFlow Settings"
 msgstr ""
 
-#: includes/class-admin.php:150
+#: includes/class-admin.php:160
 msgid "Save Settings"
 msgstr ""
 
-#: includes/class-admin.php:168
+#: includes/class-admin.php:178
 msgid "You are not allowed to create the portal page."
 msgstr ""
 
-#: includes/class-admin.php:193
+#: includes/class-admin.php:203
 msgid "Client Portal"
 msgstr ""
 
-#: includes/class-admin.php:245
+#: includes/class-admin.php:255
 msgid "Set up SignoffFlow"
 msgstr ""
 
 #. translators: 1: completed onboarding step count, 2: total onboarding step count
-#: includes/class-admin.php:250
+#: includes/class-admin.php:260
 #, php-format
 msgid "%1$d of %2$d complete"
 msgstr ""
 
-#: includes/class-admin.php:258
+#: includes/class-admin.php:268
 msgid "Follow these steps to reach your first client response. Progress updates automatically from your SignoffFlow data."
 msgstr ""
 
-#: includes/class-admin.php:263
-#: includes/class-admin.php:424
+#: includes/class-admin.php:273
+#: includes/class-admin.php:434
 msgid "SignoffFlow setup progress"
 msgstr ""
 
-#: includes/class-admin.php:271
+#: includes/class-admin.php:281
 msgid "Dismiss setup"
 msgstr ""
 
-#: includes/class-admin.php:293
+#: includes/class-admin.php:303
 msgid "Configure the portal page"
 msgstr ""
 
-#: includes/class-admin.php:294
+#: includes/class-admin.php:304
 msgid "Publish the page selected in Settings and include the [cliapwo_portal] shortcode."
 msgstr ""
 
-#: includes/class-admin.php:296
+#: includes/class-admin.php:306
 msgid "Edit portal page"
 msgstr ""
 
-#: includes/class-admin.php:301
+#: includes/class-admin.php:311
 msgid "Create a client account"
 msgstr ""
 
-#: includes/class-admin.php:302
+#: includes/class-admin.php:312
 msgid "Add the client or account that will receive portal updates and approval requests."
 msgstr ""
 
-#: includes/class-admin.php:304
+#: includes/class-admin.php:314
 msgid "Create client"
 msgstr ""
 
-#: includes/class-admin.php:309
+#: includes/class-admin.php:319
 msgid "Assign a portal user"
 msgstr ""
 
-#: includes/class-admin.php:310
+#: includes/class-admin.php:320
 msgid "Assign an existing non-staff WordPress user who has permission to view the client portal."
 msgstr ""
 
-#: includes/class-admin.php:312
+#: includes/class-admin.php:322
 msgid "Assign portal user"
 msgstr ""
 
-#: includes/class-admin.php:312
+#: includes/class-admin.php:322
 msgid "Create client first"
 msgstr ""
 
-#: includes/class-admin.php:317
+#: includes/class-admin.php:327
 msgid "Create an approval request"
 msgstr ""
 
-#: includes/class-admin.php:318
+#: includes/class-admin.php:328
 msgid "Publish a request for a real client account so it appears in their portal."
 msgstr ""
 
-#: includes/class-admin.php:320
+#: includes/class-admin.php:330
 msgid "Create request"
 msgstr ""
 
-#: includes/class-admin.php:325
+#: includes/class-admin.php:335
 msgid "Record a client response"
 msgstr ""
 
-#: includes/class-admin.php:326
+#: includes/class-admin.php:336
 msgid "Sign in as the assigned client user and submit any valid approval outcome from the portal."
 msgstr ""
 
-#: includes/class-admin.php:328
+#: includes/class-admin.php:338
 msgid "Open client portal"
 msgstr ""
 
-#: includes/class-admin.php:365
+#: includes/class-admin.php:375
 msgid "Completed"
 msgstr ""
 
-#: includes/class-admin.php:367
+#: includes/class-admin.php:377
 msgid "Next step"
 msgstr ""
 
-#: includes/class-admin.php:369
+#: includes/class-admin.php:379
 msgid "To do"
 msgstr ""
 
-#: includes/class-admin.php:396
+#: includes/class-admin.php:406
 msgid "Create portal page"
 msgstr ""
 
 #. translators: 1: completed onboarding step count, 2: total onboarding step count
-#: includes/class-admin.php:429
+#: includes/class-admin.php:439
 #, php-format
 msgid "Setup is hidden. %1$d of %2$d steps are complete."
 msgstr ""
 
-#: includes/class-admin.php:436
+#: includes/class-admin.php:446
 msgid "Show setup progress"
 msgstr ""
 
-#: includes/class-admin.php:454
+#: includes/class-admin.php:464
 msgid "SignoffFlow setup complete"
 msgstr ""
 
-#: includes/class-admin.php:455
+#: includes/class-admin.php:465
 msgid "Your portal has reached its first recorded client response. You can continue managing normal settings below."
 msgstr ""
 
-#: includes/class-admin.php:458
+#: includes/class-admin.php:468
 msgid "View portal"
 msgstr ""
 
-#: includes/class-admin.php:492
+#: includes/class-admin.php:502
 msgid "Portal page created and saved to SignoffFlow settings."
 msgstr ""
 
-#: includes/class-admin.php:493
+#: includes/class-admin.php:503
 msgid "A portal page is already configured in SignoffFlow settings."
 msgstr ""
 
-#: includes/class-admin.php:494
+#: includes/class-admin.php:504
 msgid "The portal page could not be created automatically. Create a page manually, add the [cliapwo_portal] shortcode, and select it below."
+msgstr ""
+
+#: includes/class-admin.php:533
+msgid "Explore with sample content"
+msgstr ""
+
+#: includes/class-admin.php:534
+msgid "Create a clearly labeled client, update, and open approval request to preview the workflow before entering real client data."
+msgstr ""
+
+#: includes/class-admin.php:540
+msgid "Sample ready"
+msgstr ""
+
+#: includes/class-admin.php:542
+msgid "Repair needed"
+msgstr ""
+
+#: includes/class-admin.php:544
+msgid "Not created"
+msgstr ""
+
+#: includes/class-admin.php:551
+msgid "Sample creation does not add or assign users, create files, send email, contact external services, or count toward onboarding progress."
+msgstr ""
+
+#: includes/class-admin.php:555
+msgid "Some recorded sample items are missing or no longer connected correctly. Repair recreates only what is needed and keeps edited titles and content."
+msgstr ""
+
+#: includes/class-admin.php:564
+msgid "Repair sample content"
+msgstr ""
+
+#: includes/class-admin.php:564
+msgid "Create sample content"
+msgstr ""
+
+#: includes/class-admin.php:566
+msgid "Preview sample portal"
+msgstr ""
+
+#: includes/class-admin.php:568
+msgid "Configure portal to preview"
+msgstr ""
+
+#: includes/class-admin.php:579
+msgid "I understand that cleanup permanently deletes every recorded item that still has the SignoffFlow sample marker, including items I edited."
+msgstr ""
+
+#: includes/class-admin.php:581
+msgid "Delete sample content"
+msgstr ""
+
+#: includes/class-admin.php:598
+msgid "Edit sample client"
+msgstr ""
+
+#: includes/class-admin.php:599
+msgid "Edit sample update"
+msgstr ""
+
+#: includes/class-admin.php:600
+msgid "Edit sample request"
+msgstr ""
+
+#: includes/class-admin.php:616
+msgid "Sample content records"
+msgstr ""
+
+#: includes/class-admin.php:651
+msgid "Sample content created. Preview the sample portal or edit the generated records below."
+msgstr ""
+
+#: includes/class-admin.php:652
+msgid "The recorded sample content is already complete, so no duplicate records were created."
+msgstr ""
+
+#: includes/class-admin.php:653
+msgid "Sample content repaired without overwriting edited titles or content."
+msgstr ""
+
+#: includes/class-admin.php:654
+msgid "Sample content permanently deleted."
+msgstr ""
+
+#: includes/class-admin.php:655
+msgid "SignoffFlow created part of the sample workflow but could not finish it. Use Repair sample content to retry."
+msgstr ""
+
+#: includes/class-admin.php:656
+msgid "Some recorded items were not deleted because their sample marker or post type no longer matched. No unverified content was removed."
+msgstr ""
+
+#: includes/class-admin.php:657
+msgid "Confirm that you understand the cleanup is permanent before deleting sample content."
+msgstr ""
+
+#: includes/class-admin.php:658
+msgid "Sample content could not be created. No existing real content was changed."
 msgstr ""
 
 #: includes/class-clients.php:68
@@ -225,7 +326,7 @@ msgid "Clients"
 msgstr ""
 
 #: includes/class-clients.php:69
-#: includes/class-events.php:445
+#: includes/class-events.php:527
 #: includes/class-files.php:228
 #: includes/class-files.php:384
 #: includes/class-lifecycle.php:77
@@ -308,36 +409,38 @@ msgstr ""
 msgid "No assigned users"
 msgstr ""
 
-#: includes/class-events.php:123
 #: includes/class-events.php:125
+#: includes/class-events.php:127
 msgid "Event Log"
 msgstr ""
 
-#: includes/class-events.php:124
-#: includes/class-events.php:1159
+#: includes/class-events.php:126
+#: includes/class-events.php:1241
 msgid "Event"
 msgstr ""
 
-#: includes/class-events.php:126
+#: includes/class-events.php:128
 msgid "View Event"
 msgstr ""
 
-#: includes/class-events.php:127
+#: includes/class-events.php:129
 msgid "Search Events"
 msgstr ""
 
-#: includes/class-events.php:128
+#: includes/class-events.php:130
 msgid "No events found."
 msgstr ""
 
 #. translators: %s: update title
-#: includes/class-events.php:184
+#: includes/class-events.php:186
+#: includes/class-events.php:381
 #, php-format
 msgid "Update posted: %s"
 msgstr ""
 
 #. translators: 1: client name, 2: update title
-#: includes/class-events.php:190
+#: includes/class-events.php:192
+#: includes/class-events.php:386
 #, php-format
 msgid ""
 "Client: %1$s\n"
@@ -345,92 +448,96 @@ msgid ""
 msgstr ""
 
 #. translators: 1: site name, 2: client name
-#: includes/class-events.php:204
+#: includes/class-events.php:206
 #, php-format
 msgid "[%1$s] New portal update for %2$s"
 msgstr ""
 
-#: includes/class-events.php:211
+#: includes/class-events.php:213
 msgid "A new update has been posted in your client-approval-workflow portal."
 msgstr ""
 
 #. translators: %s: client name
-#: includes/class-events.php:214
-#: includes/class-events.php:312
-#: includes/class-events.php:407
+#: includes/class-events.php:216
+#: includes/class-events.php:314
+#: includes/class-events.php:489
 #, php-format
 msgid "Client: %s"
 msgstr ""
 
 #. translators: %s: update title
-#: includes/class-events.php:219
+#: includes/class-events.php:221
 #, php-format
 msgid "Update: %s"
 msgstr ""
 
 #. translators: %s: portal URL
-#: includes/class-events.php:224
-#: includes/class-events.php:322
-#: includes/class-events.php:417
+#: includes/class-events.php:226
+#: includes/class-events.php:324
+#: includes/class-events.php:499
 #, php-format
 msgid "Portal link: %s"
 msgstr ""
 
 #. translators: %s: update title
-#: includes/class-events.php:237
+#: includes/class-events.php:239
 #, php-format
 msgid "update \"%s\""
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:267
+#: includes/class-events.php:269
+#: includes/class-events.php:394
 #, php-format
 msgid "Request created: %s"
 msgstr ""
 
 #. translators: 1: client name, 2: request title
-#: includes/class-events.php:273
+#: includes/class-events.php:275
+#: includes/class-events.php:399
 #, php-format
 msgid ""
 "Client: %1$s\n"
 "Request: %2$s"
 msgstr ""
 
-#: includes/class-events.php:279
-#: includes/class-events.php:730
+#: includes/class-events.php:281
+#: includes/class-events.php:391
+#: includes/class-events.php:812
+#: includes/class-sample-content.php:564
 msgid "Staff user"
 msgstr ""
 
 #. translators: 1: site name, 2: client name
-#: includes/class-events.php:302
+#: includes/class-events.php:304
 #, php-format
 msgid "[%1$s] New request for %2$s"
 msgstr ""
 
-#: includes/class-events.php:309
+#: includes/class-events.php:311
 msgid "A new request has been added to your client-approval-workflow portal."
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:317
+#: includes/class-events.php:319
 #, php-format
 msgid "Request: %s"
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:335
+#: includes/class-events.php:337
 #, php-format
 msgid "request \"%s\""
 msgstr ""
 
 #. translators: %s: file name
-#: includes/class-events.php:377
+#: includes/class-events.php:459
 #, php-format
 msgid "File uploaded: %s"
 msgstr ""
 
 #. translators: 1: client name, 2: file name
-#: includes/class-events.php:383
+#: includes/class-events.php:465
 #, php-format
 msgid ""
 "Client: %1$s\n"
@@ -438,169 +545,169 @@ msgid ""
 msgstr ""
 
 #. translators: 1: site name, 2: client name
-#: includes/class-events.php:397
+#: includes/class-events.php:479
 #, php-format
 msgid "[%1$s] New file available for %2$s"
 msgstr ""
 
-#: includes/class-events.php:404
+#: includes/class-events.php:486
 msgid "A new file has been uploaded to your client-approval-workflow portal."
 msgstr ""
 
 #. translators: %s: file name
-#: includes/class-events.php:412
+#: includes/class-events.php:494
 #, php-format
 msgid "File: %s"
 msgstr ""
 
 #. translators: %s: file name
-#: includes/class-events.php:430
+#: includes/class-events.php:512
 #, php-format
 msgid "file \"%s\""
 msgstr ""
 
-#: includes/class-events.php:444
+#: includes/class-events.php:526
 msgid "Type"
 msgstr ""
 
-#: includes/class-events.php:446
+#: includes/class-events.php:528
 msgid "Related item"
 msgstr ""
 
-#: includes/class-events.php:468
-#: includes/class-events.php:477
+#: includes/class-events.php:550
+#: includes/class-events.php:559
 msgid "Unknown"
 msgstr ""
 
-#: includes/class-events.php:668
-#: includes/class-events.php:729
-#: includes/class-events.php:911
+#: includes/class-events.php:750
+#: includes/class-events.php:811
+#: includes/class-events.php:993
 msgid "Client user"
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:746
+#: includes/class-events.php:828
 #, php-format
 msgid "Client response: %s"
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:752
+#: includes/class-events.php:834
 #, php-format
 msgid "Request reopened: %s"
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:758
+#: includes/class-events.php:840
 #, php-format
 msgid "Request status changed: %s"
 msgstr ""
 
 #. translators: 1: previous request status, 2: new request status
-#: includes/class-events.php:766
+#: includes/class-events.php:848
 #, php-format
 msgid "Status: %1$s to %2$s"
 msgstr ""
 
 #. translators: %s: actor display name
-#: includes/class-events.php:772
+#: includes/class-events.php:854
 #, php-format
 msgid "Actor: %s"
 msgstr ""
 
 #. translators: %s: client response note
-#: includes/class-events.php:780
+#: includes/class-events.php:862
 #, php-format
 msgid "Response note: %s"
 msgstr ""
 
-#: includes/class-events.php:912
+#: includes/class-events.php:994
 msgid "Unknown user"
 msgstr ""
 
-#: includes/class-events.php:917
+#: includes/class-events.php:999
 msgid "Your team"
 msgstr ""
 
-#: includes/class-events.php:921
-#: includes/class-events.php:1136
+#: includes/class-events.php:1003
+#: includes/class-events.php:1218
 msgid "Request created"
 msgstr ""
 
-#: includes/class-events.php:923
+#: includes/class-events.php:1005
 msgid "Client responded"
 msgstr ""
 
-#: includes/class-events.php:925
-#: includes/class-events.php:1144
+#: includes/class-events.php:1007
+#: includes/class-events.php:1226
 msgid "Request reopened"
 msgstr ""
 
-#: includes/class-events.php:927
+#: includes/class-events.php:1009
 msgid "Status changed"
 msgstr ""
 
-#: includes/class-events.php:1132
+#: includes/class-events.php:1214
 msgid "Email attempt"
 msgstr ""
 
-#: includes/class-events.php:1140
+#: includes/class-events.php:1222
 msgid "Client response"
 msgstr ""
 
-#: includes/class-events.php:1148
+#: includes/class-events.php:1230
 msgid "Request status changed"
 msgstr ""
 
-#: includes/class-events.php:1152
+#: includes/class-events.php:1234
 msgid "File uploaded"
 msgstr ""
 
-#: includes/class-events.php:1156
+#: includes/class-events.php:1238
 msgid "Update created"
 msgstr ""
 
-#: includes/class-events.php:1175
+#: includes/class-events.php:1257
 msgid "accepted by wp_mail()"
 msgstr ""
 
-#: includes/class-events.php:1176
+#: includes/class-events.php:1258
 msgid "wp_mail() returned false"
 msgstr ""
 
 #. translators: %s: object label
-#: includes/class-events.php:1180
+#: includes/class-events.php:1262
 #, php-format
 msgid "Email attempt: %s"
 msgstr ""
 
 #. translators: %s: object label
-#: includes/class-events.php:1188
+#: includes/class-events.php:1270
 #, php-format
 msgid "Context: %s"
 msgstr ""
 
 #. translators: %s: mail result
-#: includes/class-events.php:1193
+#: includes/class-events.php:1275
 #, php-format
 msgid "Result: %s"
 msgstr ""
 
 #. translators: %s: recipient list
-#: includes/class-events.php:1198
+#: includes/class-events.php:1280
 #, php-format
 msgid "Recipients: %s"
 msgstr ""
 
-#: includes/class-events.php:1224
+#: includes/class-events.php:1306
 msgid "Email delivery could not be confirmed. Check SignoffFlow > Event Log and verify your WordPress mail transport or SMTP configuration."
 msgstr ""
 
 #: includes/class-files.php:139
 #: includes/class-files.php:141
-#: includes/class-portal.php:254
-#: includes/class-portal.php:262
-#: includes/class-portal.php:444
+#: includes/class-portal.php:267
+#: includes/class-portal.php:275
+#: includes/class-portal.php:457
 msgid "Files"
 msgstr ""
 
@@ -752,6 +859,7 @@ msgid "Choose a valid onboarding visibility action."
 msgstr ""
 
 #: includes/class-onboarding.php:168
+#: includes/class-sample-content.php:98
 msgid "Invalid request"
 msgstr ""
 
@@ -762,187 +870,191 @@ msgid "Please log in to view your client portal: %s"
 msgstr ""
 
 #: includes/class-portal.php:160
+msgid "This sample preview link is invalid or the sample content is no longer available."
+msgstr ""
+
+#: includes/class-portal.php:173
 msgid "No portal assigned."
 msgstr ""
 
-#: includes/class-portal.php:167
+#: includes/class-portal.php:180
 msgid "You do not have access to this portal."
 msgstr ""
 
-#: includes/class-portal.php:217
+#: includes/class-portal.php:230
 msgid "SignoffFlow logo"
 msgstr ""
 
-#: includes/class-portal.php:232
+#: includes/class-portal.php:245
 msgid "Staff preview"
 msgstr ""
 
-#: includes/class-portal.php:238
+#: includes/class-portal.php:251
 msgid "Signed in as"
 msgstr ""
 
-#: includes/class-portal.php:241
+#: includes/class-portal.php:254
 msgid "Sign out"
 msgstr ""
 
-#: includes/class-portal.php:247
+#: includes/class-portal.php:260
 msgid "Client workspace"
 msgstr ""
 
-#: includes/class-portal.php:249
+#: includes/class-portal.php:262
 msgid "Updates, decisions, and shared deliverables in one secure place."
 msgstr ""
 
-#: includes/class-portal.php:251
+#: includes/class-portal.php:264
 msgid "Workspace totals"
 msgstr ""
 
-#: includes/class-portal.php:252
-#: includes/class-portal.php:260
-#: includes/class-portal.php:292
+#: includes/class-portal.php:265
+#: includes/class-portal.php:273
+#: includes/class-portal.php:305
 #: includes/class-updates.php:78
 #: includes/class-updates.php:80
 msgid "Updates"
 msgstr ""
 
-#: includes/class-portal.php:253
-#: includes/class-portal.php:261
-#: includes/class-portal.php:357
+#: includes/class-portal.php:266
+#: includes/class-portal.php:274
+#: includes/class-portal.php:370
 #: includes/class-requests.php:201
 #: includes/class-requests.php:203
 msgid "Requests"
 msgstr ""
 
-#: includes/class-portal.php:258
+#: includes/class-portal.php:271
 msgid "Portal sections"
 msgstr ""
 
-#: includes/class-portal.php:259
+#: includes/class-portal.php:272
 msgid "Overview"
 msgstr ""
 
-#: includes/class-portal.php:268
+#: includes/class-portal.php:281
 msgid "Action required"
 msgstr ""
 
 #. translators: %d: number of open requests
-#: includes/class-portal.php:274
+#: includes/class-portal.php:287
 #, php-format
 msgid "%d request needs your attention."
 msgid_plural "%d requests need your attention."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-portal.php:280
+#: includes/class-portal.php:293
 msgid "You are all caught up."
 msgstr ""
 
-#: includes/class-portal.php:284
+#: includes/class-portal.php:297
 msgid "Review requests"
 msgstr ""
 
-#: includes/class-portal.php:293
+#: includes/class-portal.php:306
 msgid "Latest progress and delivery notes from your team."
 msgstr ""
 
 #. translators: 1: date, 2: author name
-#: includes/class-portal.php:312
+#: includes/class-portal.php:325
 #, php-format
 msgid "Posted on %1$s by %2$s"
 msgstr ""
 
-#: includes/class-portal.php:345
+#: includes/class-portal.php:358
 msgid "No updates yet. Publish a client update from client-approval-workflow > Updates."
 msgstr ""
 
-#: includes/class-portal.php:346
+#: includes/class-portal.php:359
 msgid "No updates yet. New project updates will appear here."
 msgstr ""
 
-#: includes/class-portal.php:358
+#: includes/class-portal.php:371
 msgid "Outstanding actions and confirmations for this client account."
 msgstr ""
 
-#: includes/class-portal.php:401
+#: includes/class-portal.php:414
 msgid "Response note"
 msgstr ""
 
-#: includes/class-portal.php:412
+#: includes/class-portal.php:425
 msgid "Required when requesting changes, rejecting, or blocking. Optional when approving. Maximum 500 characters."
 msgstr ""
 
-#: includes/class-portal.php:415
+#: includes/class-portal.php:428
 msgid "Approve"
 msgstr ""
 
-#: includes/class-portal.php:416
+#: includes/class-portal.php:429
 msgid "Request changes"
 msgstr ""
 
-#: includes/class-portal.php:417
+#: includes/class-portal.php:430
 msgid "Reject"
 msgstr ""
 
-#: includes/class-portal.php:418
+#: includes/class-portal.php:431
 msgid "Block"
 msgstr ""
 
-#: includes/class-portal.php:421
+#: includes/class-portal.php:434
 msgid "Reopen"
 msgstr ""
 
-#: includes/class-portal.php:433
+#: includes/class-portal.php:446
 msgid "No requests yet. Add one from client-approval-workflow > Requests."
 msgstr ""
 
-#: includes/class-portal.php:434
+#: includes/class-portal.php:447
 msgid "No requests yet. Your team will add anything they still need from you here."
 msgstr ""
 
-#: includes/class-portal.php:445
+#: includes/class-portal.php:458
 msgid "Shared deliverables and protected downloads for this client account."
 msgstr ""
 
-#: includes/class-portal.php:489
+#: includes/class-portal.php:502
 msgid "No files yet. Upload one from client-approval-workflow > Files."
 msgstr ""
 
-#: includes/class-portal.php:490
+#: includes/class-portal.php:503
 msgid "No files yet. Shared deliverables and downloads will appear here."
 msgstr ""
 
-#: includes/class-portal.php:500
+#: includes/class-portal.php:513
 msgid "Secure client workspace"
 msgstr ""
 
-#: includes/class-portal.php:502
+#: includes/class-portal.php:515
 msgid "Private to your account"
 msgstr ""
 
-#: includes/class-portal.php:536
+#: includes/class-portal.php:549
 #: includes/class-requests.php:360
 msgid "Previous client response"
 msgstr ""
 
-#: includes/class-portal.php:537
+#: includes/class-portal.php:550
 #: includes/class-requests.php:361
 msgid "Latest client response"
 msgstr ""
 
-#: includes/class-portal.php:543
+#: includes/class-portal.php:556
 #: includes/class-requests.php:366
 msgid "Outcome:"
 msgstr ""
 
 #. translators: 1: client user display name, 2: response date and time
-#: includes/class-portal.php:556
+#: includes/class-portal.php:569
 #: includes/class-requests.php:380
 #, php-format
 msgid "Responded by %1$s on %2$s"
 msgstr ""
 
 #. translators: %d: number of request activity entries
-#: includes/class-portal.php:590
+#: includes/class-portal.php:603
 #, php-format
 msgid "Activity history (%d item)"
 msgid_plural "Activity history (%d items)"
@@ -950,14 +1062,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: actor display name, 2: event date and time
-#: includes/class-portal.php:614
+#: includes/class-portal.php:627
 #: includes/class-requests.php:427
 #, php-format
 msgid "%1$s on %2$s"
 msgstr ""
 
 #. translators: 1: previous request status, 2: new request status
-#: includes/class-portal.php:625
+#: includes/class-portal.php:638
 #: includes/class-requests.php:438
 #, php-format
 msgid "%1$s to %2$s"
@@ -1105,6 +1217,34 @@ msgstr ""
 #: includes/class-requests.php:1226
 #: includes/class-requests.php:1322
 msgid "Open"
+msgstr ""
+
+#: includes/class-sample-content.php:81
+msgid "You are not allowed to manage SignoffFlow sample content."
+msgstr ""
+
+#: includes/class-sample-content.php:97
+msgid "Choose a valid sample-content action."
+msgstr ""
+
+#: includes/class-sample-content.php:338
+msgid "Sample Client — Northstar Studio"
+msgstr ""
+
+#: includes/class-sample-content.php:359
+msgid "Sample update: Homepage concepts ready"
+msgstr ""
+
+#: includes/class-sample-content.php:360
+msgid "We prepared the first homepage concepts and refined the navigation, calls to action, and mobile layout. Review the approval request and share your decision."
+msgstr ""
+
+#: includes/class-sample-content.php:386
+msgid "Sample request: Approve the homepage direction"
+msgstr ""
+
+#: includes/class-sample-content.php:387
+msgid "Please review the homepage direction and confirm whether the team should move into final design."
 msgstr ""
 
 #: includes/class-settings.php:73

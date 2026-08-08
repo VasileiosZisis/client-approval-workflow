@@ -17,6 +17,7 @@ The plugin includes:
 - immutable per-request activity histories that preserve earlier approval outcomes and response notes
 - clear status badges and free admin filtering for approval requests
 - state-aware first-run setup that tracks progress through the first real client response
+- opt-in sample content with a safe staff preview and exact cleanup
 - focused, responsive portal workspace with section navigation and accessible motion
 - event logging for key actions
 - email notifications for requests, updates, and files
@@ -25,7 +26,7 @@ The plugin includes:
 ## How It Works
 
 1. Install and activate the plugin in WordPress.
-2. Follow the state-aware setup progress in `SignoffFlow > Settings`.
+2. Follow the state-aware setup progress in `SignoffFlow > Settings`, or create the optional sample workflow for a staff-only preview.
 3. Create or choose a published portal page and place the `[cliapwo_portal]` shortcode on it.
 4. Create a client account in `SignoffFlow > Clients` and assign a portal user.
 5. Publish an approval request for that client account.

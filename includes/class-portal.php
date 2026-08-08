@@ -153,6 +153,19 @@ class Portal
 		);
 		$current_user_id = get_current_user_id();
 		$requested_id    = absint($atts['client_id']);
+		$sample_preview  = Sample_Content::get_preview_request();
+
+		if (! empty($sample_preview['requested']) && absint($sample_preview['client_id']) <= 0) {
+			return $this->wrap_empty_state(
+				'<p class="cliapwo-empty">' . esc_html__('This sample preview link is invalid or the sample content is no longer available.', 'signoffflow-client-approval-workflow') . '</p>',
+				$settings
+			);
+		}
+
+		if (! empty($sample_preview['requested'])) {
+			$requested_id = absint($sample_preview['client_id']);
+		}
+
 		$client          = $this->resolve_client($requested_id, $current_user_id);
 
 		if (! $client instanceof \WP_Post) {

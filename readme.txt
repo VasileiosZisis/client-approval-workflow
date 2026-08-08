@@ -4,7 +4,7 @@ Tags: client-portal, approvals, workflow, agency, file-sharing
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,7 @@ Create a private portal workspace per client account where you can:
 * Review an immutable activity history for every approval request
 * Scan and filter approval requests by status in WordPress admin
 * Follow state-aware setup progress through the first real client response
+* Create an optional sample workflow for a safe staff-only preview, then remove it exactly
 
 Portal access is restricted to WordPress users assigned to a client account, plus staff users with management capability.
 
@@ -35,10 +36,11 @@ The page selected in SignoffFlow settings uses a focused, responsive portal canv
 == Getting started ==
 1. Go to `SignoffFlow > Settings`.
 2. Use the state-aware setup panel to create a portal page, or create a page manually and add `[cliapwo_portal]`.
-3. Confirm that page is selected as the portal page in SignoffFlow settings.
-4. Create a client account in `SignoffFlow > Clients` and assign one or more WordPress portal users.
-5. Add updates, files, and requests for that client account.
-6. Log in as an assigned portal user to view the portal and respond to requests.
+3. Optionally create the clearly labeled sample workflow from the sample-content card and preview it as staff. No demo user, file, or email is created.
+4. Confirm that page is selected as the portal page in SignoffFlow settings.
+5. Create a client account in `SignoffFlow > Clients` and assign one or more WordPress portal users.
+6. Add updates, files, and requests for that client account.
+7. Log in as an assigned portal user to view the portal and respond to requests.
 
 == Installation ==
 
@@ -93,6 +95,11 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 
 == Changelog ==
 
+= 1.6.0 =
+* Added explicitly opt-in sample client, update, and approval-request content with a signed staff preview.
+* Added idempotent repair and marker-validated permanent cleanup without creating users, files, emails, tracking, or onboarding progress.
+* Added non-notifying sample event entries so the example request includes its creation history.
+
 = 1.5.0 =
 * Replaced the static quick-setup checklist with five automatically detected onboarding milestones.
 * Added direct next-step actions, accessible progress presentation, and a concise completion state after the first client response.
@@ -127,6 +134,9 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 Initial release.
 
 == Upgrade Notice ==
+
+= 1.6.0 =
+SignoffFlow Settings can now create a safe, clearly labeled sample workflow for staff preview and remove only the recorded marked sample items afterward.
 
 = 1.5.0 =
 SignoffFlow Settings now shows state-aware progress from portal creation through the first real client response. Existing setup is detected automatically.

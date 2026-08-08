@@ -66,6 +66,8 @@ class Events
 
 	public const TYPE_REQUEST_STATUS_CHANGED = 'request_status_changed';
 
+	public const TYPE_UPDATE_CREATED = 'update_created';
+
 	/**
 	 * Actor types stored on request lifecycle events.
 	 */
@@ -335,6 +337,86 @@ class Events
 				__('request "%s"', 'signoffflow-client-approval-workflow'),
 				$request->post_title
 			)
+		);
+	}
+
+	/**
+	 * Record a sample update or request event without dispatching notifications.
+	 *
+	 * This intentionally bypasses the normal creation actions so sample setup
+	 * cannot invoke mail or third-party listeners attached to those actions.
+	 *
+	 * @param int    $object_id  Update or request post ID.
+	 * @param int    $client_id  Sample client post ID.
+	 * @param string $event_type Allowed sample event type.
+	 * @param int    $actor_id   Staff actor user ID.
+	 * @return int Event post ID, or zero on failure.
+	 */
+	public static function record_sample_created_event($object_id, $client_id, $event_type, $actor_id = 0)
+	{
+		$object_id = absint($object_id);
+		$client_id = absint($client_id);
+		$event_type = sanitize_key($event_type);
+		$actor_id  = absint($actor_id);
+		$object    = get_post($object_id);
+		$client    = get_post($client_id);
+
+		if (
+			! $object instanceof \WP_Post
+			|| ! $client instanceof \WP_Post
+			|| Clients::POST_TYPE !== $client->post_type
+			|| '1' !== (string) get_post_meta($object_id, Onboarding::SAMPLE_CONTENT_META_KEY, true)
+			|| '1' !== (string) get_post_meta($client_id, Onboarding::SAMPLE_CONTENT_META_KEY, true)
+		) {
+			return 0;
+		}
+
+		$meta = array(
+			Onboarding::SAMPLE_CONTENT_META_KEY => '1',
+		);
+
+		if (self::TYPE_UPDATE_CREATED === $event_type && Updates::POST_TYPE === $object->post_type) {
+			$title = sprintf(
+				/* translators: %s: update title */
+				__('Update posted: %s', 'signoffflow-client-approval-workflow'),
+				$object->post_title
+			);
+			$content = sprintf(
+				/* translators: 1: client name, 2: update title */
+				__("Client: %1\$s\nUpdate: %2\$s", 'signoffflow-client-approval-workflow'),
+				$client->post_title,
+				$object->post_title
+			);
+		} elseif (self::TYPE_REQUEST_CREATED === $event_type && Requests::POST_TYPE === $object->post_type) {
+			$actor_name = self::get_actor_name($actor_id, __('Staff user', 'signoffflow-client-approval-workflow'));
+			$title      = sprintf(
+				/* translators: %s: request title */
+				__('Request created: %s', 'signoffflow-client-approval-workflow'),
+				$object->post_title
+			);
+			$content    = sprintf(
+				/* translators: 1: client name, 2: request title */
+				__("Client: %1\$s\nRequest: %2\$s", 'signoffflow-client-approval-workflow'),
+				$client->post_title,
+				$object->post_title
+			);
+			$meta[ self::ACTOR_ID_META_KEY ]   = $actor_id;
+			$meta[ self::ACTOR_NAME_META_KEY ] = $actor_name;
+			$meta[ self::ACTOR_TYPE_META_KEY ] = self::ACTOR_TYPE_STAFF;
+			$meta[ self::NEW_STATUS_META_KEY ] = Requests::STATUS_OPEN;
+		} else {
+			return 0;
+		}
+
+		return self::create_event_entry(
+			$title,
+			$content,
+			$event_type,
+			$client_id,
+			$object_id,
+			$meta,
+			0,
+			$actor_id
 		);
 	}
 

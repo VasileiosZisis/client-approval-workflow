@@ -90,6 +90,7 @@ delete_option('cliapwo_settings');
 delete_option('cliapwo_data_version');
 delete_option('cliapwo_onboarding_first_run');
 delete_option('cliapwo_onboarding_completed_at');
+delete_option('cliapwo_sample_content_ids');
 delete_metadata('user', 0, 'cliapwo_onboarding_dismissed', '', true);
 delete_transient('cliapwo_plugin_activated');
 

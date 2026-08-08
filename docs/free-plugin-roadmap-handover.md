@@ -7,7 +7,7 @@ This is the living product handover and note-keeping document for the recommende
 - Intended audience: product owner, maintainers, developers, QA, and release owners.
 - Source strategy: [SignoffFlow Free Version Strategy](./deep-research-report.md).
 - Last reviewed: 2026-08-01.
-- Repository snapshot: `main` branch, working version `1.5.0`.
+- Repository snapshot: `main` branch, working version `1.6.0`.
 - Compatibility snapshot: WordPress 6.0+, tested through WordPress 7.0, PHP 7.4+.
 
 The research report describes the product at an earlier point in time. When it conflicts with this document, verify the current repository and update this handover rather than relying on the report's old implementation snapshot.
@@ -40,7 +40,7 @@ The research report describes the product at an earlier point in time. When it c
 | 3 | Better request status UI | **Released** | 1.3.0 | Makes request state easier to scan, filter, and act on. | Preserve filtering, legacy-status compatibility, and responsive action styling in regression testing. |
 | 4 | Per-request activity/history | **Released** | 1.4.0 | Provides a readable record of how each approval progressed. | Preserve immutable-event, migration, privacy, and timeline behavior in regression testing. |
 | 5 | Improved first-run onboarding | **Implemented, pending release** | 1.5.0 | Gets a new user to the first successful approval faster. | Complete manual QA, packaging, commit, and release. |
-| 6 | Sample/demo content | **Planned** | TBD | Lets users understand the workflow before entering real client data. | Design opt-in creation, markers, and safe cleanup. |
+| 6 | Sample/demo content | **Implemented, pending release** | 1.6.0 | Lets users understand the workflow before entering real client data. | Complete manual QA, packaging, commit, and release. |
 | 7 | Contextual upgrade prompts | **Deferred pending separate add-on** | After add-on launch | Introduces relevant paid capabilities without degrading free. | Wait for real add-on functionality, documentation, and destination URLs. |
 | 8 | Activation and trust materials | **Partially implemented** | Ongoing | Improves discovery, credibility, and activation. | Complete external listing assets, demo, GitHub metadata, and releases. |
 
@@ -284,7 +284,7 @@ The onboarding service and [admin module](../includes/class-admin.php) now detec
 
 ## 6. Sample/Demo Content
 
-**Status:** Planned.
+**Status:** Implemented, pending release in 1.6.0.
 
 ### Goal And User Value
 
@@ -292,7 +292,7 @@ Give new users a safe, immediate example of the client portal and approval workf
 
 ### Current State
 
-Quick setup can create a page containing the portal shortcode. It does not create a sample client, update, approval request, response, or protected file.
+SignoffFlow Settings now includes an always-available sample-content card that creates one marked client, update, open approval request, and non-notifying event records. Administrators can preview the exact sample client through a signed staff-only URL, repair partial sets, and permanently remove only recorded posts whose marker and post type still match.
 
 ### Recommended Behavior
 
@@ -318,15 +318,14 @@ Quick setup can create a page containing the portal shortcode. It does not creat
 
 ### Remaining Work And Dependencies
 
-- Finalize sample copy and cleanup confirmation language.
-- Decide how edited sample records should be treated during cleanup.
-- Prevent sample records from completing real onboarding activation metrics.
-- Implement after the state-aware onboarding model is defined.
+- Complete WordPress 7.0 manual QA and release packaging.
 
 ### Handover Notes
 
 - Prefer a small representative workflow over broad project-management demo content.
 - The sample portal page alone is not sufficient to demonstrate approval value.
+- 2026-08-08: Chose version 1.6.0, an always-visible Settings card, and cleanup of edited records while the reserved sample marker remains present.
+- 2026-08-08: Implemented stored-ID idempotency, marker-and-type-validated cleanup, direct non-notifying sample events, and a signed staff-preview selector.
 
 ## 7. Contextual Upgrade Prompts
 
@@ -460,6 +459,6 @@ The free plugin must remain fully functional as distributed through WordPress.or
 - [x] Decide activity-history event limits and backfill behavior.
 - [x] Complete the 1.4.0 activity-history manual test matrix on WordPress 7.0.
 - [x] Package and release the 1.4.0 activity-history work.
-- [ ] Define onboarding completion and sample-content isolation rules.
+- [x] Define onboarding completion and sample-content isolation rules.
 - [ ] Recheck external WordPress.org and GitHub trust assets.
 - [ ] Confirm no Pro-only code or locked controls have entered the free repository.
