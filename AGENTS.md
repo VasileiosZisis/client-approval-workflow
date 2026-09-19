@@ -215,3 +215,179 @@ D) WordPress “registration” names (strings stored/used globally)
 
 - Do NOT run submission detection / nonce checks / processing logic in global scope (file load).
 - Only process requests inside the appropriate hooked callbacks (admin page handlers, form handlers, AJAX actions, REST callbacks).
+
+## Subagent review policy
+
+Project-specific review agents are available under `.codex/agents/`.
+
+Use subagents selectively based on the areas affected by the current change. Do not spawn every subagent for every task.
+
+Subagents are primarily independent reviewers, not primary implementers. Unless the user explicitly requests otherwise, the parent agent should implement the requested change first and then invoke the relevant subagents.
+
+All review subagents must remain read-only.
+
+### `reviewer`
+
+Use `reviewer` for non-trivial changes where an independent general code review would provide meaningful value.
+
+Typical triggers include:
+
+- multi-file feature work
+- non-trivial bug fixes
+- refactors that can change behavior
+- request handlers or state-changing actions
+- persistence changes
+- authentication or authorization changes
+- shared utility changes
+- changes with meaningful regression risk
+
+Do not spawn `reviewer` for trivial copy, comments, formatting, or styling-only changes unless behavior also changes.
+
+### `security_isolation`
+
+Use `security_isolation` whenever a change affects or could affect a security or authorization boundary.
+
+Typical triggers include:
+
+- client portal access
+- client-specific requests, updates, or files
+- protected file downloads
+- entity lookup by ID
+- WordPress capabilities
+- nonce-protected actions
+- AJAX, REST, admin-post, or custom request handlers
+- authentication or account handling
+- redirects or callback URLs
+- uploads or filesystem access
+- input sanitization or validation
+- output escaping
+- user-provided HTML
+- demo/client data isolation
+- sensitive logging or error handling
+
+The agent should look specifically for concrete reachable issues such as:
+
+- cross-client data access
+- IDOR/BOLA
+- authorization based only on request parameters
+- nonce checks used as a substitute for authorization
+- CSRF
+- privilege escalation
+- stored or reflected XSS
+- unsafe file access
+- path traversal
+- open redirects
+- sensitive-data disclosure
+
+### `workflow_integrity`
+
+Use `workflow_integrity` whenever a change affects approval workflow semantics or persisted workflow history.
+
+Typical triggers include:
+
+- approve actions
+- reject actions
+- blocked states
+- request-changes actions
+- client response notes
+- responder identity
+- response timestamps
+- latest-response state
+- activity/history records
+- client/request associations
+- notifications related to workflow actions
+- sample/setup workflow data
+- cleanup of workflow records
+
+The agent should verify that:
+
+- each response applies to the intended request and client
+- distinct workflow outcomes retain their intended semantics
+- new activity is appended rather than rewriting immutable history
+- latest-response data and historical activity remain consistent
+- repeated actions do not accidentally create contradictory or duplicate state
+- notifications correspond to successful state changes
+- cleanup does not delete unrelated real data
+
+### `test_auditor`
+
+If `test_auditor` is available, use it for non-trivial behavioral changes where meaningful regression coverage may be missing.
+
+Typical triggers include:
+
+- workflow-state changes
+- authorization changes
+- protected-download changes
+- bug fixes that should remain fixed
+- persistence changes
+- request handlers
+- authentication changes
+- important edge cases
+
+The test auditor must inspect relevant existing tests before recommending new tests.
+
+Do not recommend tests merely to increase coverage.
+
+For each meaningful gap, identify:
+
+1. the behavior that needs protection
+2. the failure scenario
+3. the existing test file to extend, or an appropriate new test location
+4. a concise Arrange / Act / Assert outline
+
+Do not write or run tests unless explicitly requested.
+
+### Choosing which subagents to use
+
+Use the smallest useful review set.
+
+Examples:
+
+- Copy, CSS, or documentation-only change:
+
+  - normally no subagents
+
+- Non-trivial general implementation:
+
+  - `reviewer`
+
+- Protected download or client portal authorization change:
+
+  - `security_isolation`
+  - `reviewer`
+  - add `test_auditor` when behavior changes
+
+- Approval/reject/request-changes behavior:
+
+  - `workflow_integrity`
+  - `reviewer`
+  - add `test_auditor` when regression coverage is relevant
+
+- Client response handler that both authorizes the client and records workflow state:
+
+  - `security_isolation`
+  - `workflow_integrity`
+  - `reviewer`
+  - `test_auditor` when appropriate
+
+### Review workflow
+
+For relevant non-trivial changes:
+
+1. The parent agent implements the requested change.
+2. Determine which review domains were affected.
+3. Spawn the relevant subagents in parallel when possible.
+4. Keep review agents read-only.
+5. Wait for all requested review agents to finish.
+6. The parent agent must independently evaluate every finding.
+7. Deduplicate findings reported by multiple agents.
+8. Discard speculative, unsupported, style-only, unrelated, or incorrect findings.
+9. Fix valid in-scope findings.
+10. Request targeted re-review when a fix materially changes the affected area.
+11. Complete the project’s normal verification process according to the existing repository instructions.
+
+Subagent findings are advisory. The parent agent remains responsible for deciding whether a finding is valid and whether the proposed fix is appropriate.
+
+Do not change correct code merely because a subagent prefers another implementation.
+
+Do not expand scope because a reviewer notices unrelated technical debt.
