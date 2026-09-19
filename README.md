@@ -62,6 +62,11 @@ Useful commands:
 
 - `composer run lint`
 - `composer run lint:fix`
+- `composer run compat`
+- `composer run test:php` after configuring the WordPress test library
+- `powershell -ExecutionPolicy Bypass -File tools/run-test-matrix.ps1` for the disposable local compatibility matrix after setting `CLIAPWO_TEST_DB_USER`, `CLIAPWO_TEST_DB_PASSWORD`, and `CLIAPWO_TEST_DB_HOST`
+
+The matrix runner creates only randomly named `cliapwo_test_*` databases and removes them after each run. It never uses an existing WordPress site database. Downloaded WordPress test trees and the checksum-verified PHP 7.4 runtime stay in ignored local tooling directories.
 
 ## Notes
 

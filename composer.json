@@ -1,16 +1,30 @@
 {
   "name": "vasileioszisis/client-approval-workflow-dev",
+  "license": "GPL-2.0-or-later",
   "config": {
+    "platform": {
+      "php": "7.4.0"
+    },
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^3.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpcompatibility/phpcompatibility-wp": "^2.1.8",
+    "phpunit/phpunit": "^9.6",
+    "yoast/phpunit-polyfills": "^2.0.5"
   },
   "scripts": {
     "lint": "phpcs --standard=phpcs.xml.dist",
-    "lint:fix": "phpcbf --standard=phpcs.xml.dist"
+    "lint:fix": "phpcbf --standard=phpcs.xml.dist",
+    "compat": "phpcs --standard=phpcompatibility.xml.dist",
+    "test:php": "phpunit --configuration phpunit.xml.dist",
+    "test": [
+      "@lint",
+      "@compat",
+      "@test:php"
+    ]
   }
 }

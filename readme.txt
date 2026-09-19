@@ -2,9 +2,9 @@
 Contributors: vzisis
 Tags: client-portal, approvals, workflow, agency, file-sharing
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,11 +89,17 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 1. Client portal dashboard with Action required
 2. Updates timeline inside the client portal
 3. Files area with protected client downloads
-4. Requests checklist with client approval outcomes, response notes, and clear status actions
-5. SignoffFlow settings and notification toggles
+4. Requests with approval outcomes, response notes, and immutable activity history
+5. State-aware onboarding checklist with detected setup progress and direct next actions
 6. Event Log showing audit and email-attempt entries
+7. Optional sample-content workflow with staff preview, repair, and exact cleanup controls
 
 == Changelog ==
+
+= 1.6.1 =
+* Added a locally runnable WordPress integration-test suite covering request lifecycles, immutable history, legacy response migration, cross-client authorization, protected file paths, onboarding, and sample content.
+* Added PHP 7.4 compatibility analysis and a disposable WordPress/PHP test matrix for WordPress 6.0, 7.0, and the latest maintained release.
+* Audited privileged handlers, portal accessibility, responsive layouts, translation behavior, and release metadata without changing existing workflows or stored data.
 
 = 1.6.0 =
 * Added explicitly opt-in sample client, update, and approval-request content with a signed staff preview.
@@ -134,6 +140,9 @@ Yes. The Requests admin screen includes status badges and filters for Open, Appr
 Initial release.
 
 == Upgrade Notice ==
+
+= 1.6.1 =
+This maintenance release strengthens compatibility and regression coverage without changing existing client workflows or stored approval history.
 
 = 1.6.0 =
 SignoffFlow Settings can now create a safe, clearly labeled sample workflow for staff preview and remove only the recorded marked sample items afterward.

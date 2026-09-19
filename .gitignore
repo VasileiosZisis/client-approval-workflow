@@ -13,6 +13,8 @@ node_modules/
 # Tool caches
 .phpcs-cache
 .phpunit.result.cache
+.cliapwo-tools/
+.cliapwo-test-cache/
 
 # Logs
 *.log

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="SignoffFlow PHP Compatibility">
+	<description>Verify SignoffFlow remains compatible with PHP 7.4 and later.</description>
+
+	<file>client-approval-workflow.php</file>
+	<file>includes</file>
+	<file>templates</file>
+	<file>uninstall.php</file>
+
+	<config name="testVersion" value="7.4-"/>
+	<rule ref="PHPCompatibilityWP"/>
+</ruleset>

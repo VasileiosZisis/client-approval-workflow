@@ -141,7 +141,7 @@
 }
 
 .cliapwo-onboarding--complete {
-	border-left: 4px solid #008a20;
+	border-inline-start: 4px solid #008a20;
 }
 
 .cliapwo-sample-content {
@@ -208,14 +208,14 @@
 .cliapwo-sample-content__privacy-note {
 	margin-top: 14px;
 	padding: 12px;
-	border-left: 4px solid #72aee6;
+	border-inline-start: 4px solid #72aee6;
 	background: #f0f6fc;
 }
 
 .cliapwo-sample-content__warning {
 	margin-top: 14px;
 	padding: 12px;
-	border-left: 4px solid #dba617;
+	border-inline-start: 4px solid #dba617;
 	background: #fcf9e8;
 }
 
