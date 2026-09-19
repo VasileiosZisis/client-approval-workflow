@@ -6,8 +6,8 @@ This is the living product handover and note-keeping document for the recommende
 
 - Intended audience: product owner, maintainers, developers, QA, and release owners.
 - Source strategy: [SignoffFlow Free Version Strategy](./deep-research-report.md).
-- Last reviewed: 2026-08-01.
-- Repository snapshot: `main` branch, working version `1.6.0`.
+- Last reviewed: 2026-09-19.
+- Repository snapshot: `main` branch, current released version `1.6.0`.
 - Compatibility snapshot: WordPress 6.0+, tested through WordPress 7.0, PHP 7.4+.
 
 The research report describes the product at an earlier point in time. When it conflicts with this document, verify the current repository and update this handover rather than relying on the report's old implementation snapshot.
@@ -39,8 +39,8 @@ The research report describes the product at an earlier point in time. When it c
 | 2 | Client response note | **Released** | 1.2.0 | Captures the reason behind a client's decision. | Keep the latest-response summary aligned with immutable history. |
 | 3 | Better request status UI | **Released** | 1.3.0 | Makes request state easier to scan, filter, and act on. | Preserve filtering, legacy-status compatibility, and responsive action styling in regression testing. |
 | 4 | Per-request activity/history | **Released** | 1.4.0 | Provides a readable record of how each approval progressed. | Preserve immutable-event, migration, privacy, and timeline behavior in regression testing. |
-| 5 | Improved first-run onboarding | **Implemented, pending release** | 1.5.0 | Gets a new user to the first successful approval faster. | Complete manual QA, packaging, commit, and release. |
-| 6 | Sample/demo content | **Implemented, pending release** | 1.6.0 | Lets users understand the workflow before entering real client data. | Complete manual QA, packaging, commit, and release. |
+| 5 | Improved first-run onboarding | **Released** | 1.5.0 | Gets a new user to the first successful approval faster. | Preserve milestone, dismissal, repair, and sample-isolation behavior in regression testing. |
+| 6 | Sample/demo content | **Released** | 1.6.0 | Lets users understand the workflow before entering real client data. | Preserve idempotency, non-notifying creation, signed preview, and exact cleanup behavior in regression testing. |
 | 7 | Contextual upgrade prompts | **Deferred pending separate add-on** | After add-on launch | Introduces relevant paid capabilities without degrading free. | Wait for real add-on functionality, documentation, and destination URLs. |
 | 8 | Activation and trust materials | **Partially implemented** | Ongoing | Improves discovery, credibility, and activation. | Complete external listing assets, demo, GitHub metadata, and releases. |
 
@@ -234,7 +234,7 @@ No release-blocking work remains. Keep repeated approval cycles, migration retri
 
 ## 5. Improved First-run Onboarding
 
-**Status:** Implemented, pending release in 1.5.0.
+**Status:** Released in 1.5.0.
 
 ### Goal And User Value
 
@@ -271,8 +271,7 @@ The onboarding service and [admin module](../includes/class-admin.php) now detec
 
 ### Remaining Work And Dependencies
 
-- Complete WordPress 7.0 manual QA and release packaging.
-- Require item 6 sample records to use the reserved `cliapwo_sample_content` marker.
+No feature work remains. Keep milestone detection, historical completion, live portal-page validation, per-administrator dismissal, authorization, and sample-content exclusion in regression coverage.
 
 ### Handover Notes
 
@@ -281,10 +280,11 @@ The onboarding service and [admin module](../includes/class-admin.php) now detec
 - 2026-08-01: Chose any valid client response as activation proof, per-administrator dismissal, and compact prompting for upgraded installations.
 - 2026-08-01: Made successful onboarding historically sticky while continuing to validate the configured portal page on every settings view.
 - 2026-08-01: Reserved `cliapwo_sample_content` so future sample records cannot complete real onboarding progress.
+- 2026-08-01: Released the state-aware first-run onboarding workflow in version 1.5.0.
 
 ## 6. Sample/Demo Content
 
-**Status:** Implemented, pending release in 1.6.0.
+**Status:** Released in 1.6.0.
 
 ### Goal And User Value
 
@@ -318,7 +318,7 @@ SignoffFlow Settings now includes an always-available sample-content card that c
 
 ### Remaining Work And Dependencies
 
-- Complete WordPress 7.0 manual QA and release packaging.
+No feature work remains. Keep explicit opt-in creation, idempotent repair, notification isolation, signed staff preview, marker-and-type-validated cleanup, and uninstall behavior in regression coverage.
 
 ### Handover Notes
 
@@ -326,6 +326,7 @@ SignoffFlow Settings now includes an always-available sample-content card that c
 - The sample portal page alone is not sufficient to demonstrate approval value.
 - 2026-08-08: Chose version 1.6.0, an always-visible Settings card, and cleanup of edited records while the reserved sample marker remains present.
 - 2026-08-08: Implemented stored-ID idempotency, marker-and-type-validated cleanup, direct non-notifying sample events, and a signed staff-preview selector.
+- 2026-08-08: Released the sample-content workflow in version 1.6.0 and tagged the distributable WordPress.org package.
 
 ## 7. Contextual Upgrade Prompts
 
@@ -384,7 +385,7 @@ Improve discovery, confidence, and successful activation by accurately showing w
 
 ### Current State
 
-Repository-facing work includes updated [README](../README.md), [WordPress.org readme](../readme.txt), versioned changelogs, tested-version metadata, clearer feature descriptions, screenshot captions, and release-oriented plugin metadata. The repository does not contain final WordPress.org screenshot/banner assets or a documented live demo. No git tags are present in the inspected local repository snapshot.
+Repository-facing work includes updated [README](../README.md), [WordPress.org readme](../readme.txt), versioned changelogs, tested-version metadata, clearer feature descriptions, screenshot captions, and release-oriented plugin metadata. The official WordPress.org SVN repository contains the plugin icons, banners, six screenshots, and an immutable `tags/1.6.0` package that matches the released trunk. The screenshots predate the 1.5.0 onboarding and 1.6.0 sample-content releases, no documented live demo exists, and no Git tags are present in the inspected repository snapshot.
 
 ### Remaining External Checklist
 
@@ -395,7 +396,7 @@ Repository-facing work includes updated [README](../README.md), [WordPress.org r
 - Publish and maintain a live demo only if it can be kept secure and current.
 - Add accurate GitHub description, topics, and homepage metadata.
 - Create version tags and human-readable GitHub releases for shipped versions.
-- Verify release packages contain distributable plugin files and no development-only material.
+- Continue verifying that every release package contains distributable plugin files and no development-only material; the WordPress.org `1.6.0` tag passed this check.
 - Invite honest feedback without review manipulation, incentives, or admin spam.
 - Recheck external links, privacy disclosures, and service disclosures before each release.
 
@@ -410,7 +411,7 @@ Repository-facing work includes updated [README](../README.md), [WordPress.org r
 
 ### Remaining Work And Dependencies
 
-Capture final status-UI screenshots from the released 1.3.0 experience. Refresh assets again after onboarding and sample content materially change first-use screens.
+Capture refreshed WordPress.org screenshots for the released 1.6.0 experience, especially state-aware onboarding, the sample-content card, signed staff preview, and request activity history. Update captions after the assets are final, add accurate GitHub tags/releases and repository metadata, and publish a live demo only if it can be maintained securely.
 
 ### Handover Notes
 
@@ -419,10 +420,10 @@ Capture final status-UI screenshots from the released 1.3.0 experience. Refresh 
 
 ## Recommended Dependency Order
 
-1. Upgrade onboarding to a state-aware first-approval checklist.
-2. Add opt-in sample/demo content that integrates with onboarding safely.
-3. Refresh activation and trust materials after the first-use workflow is stable.
-4. Add contextual upgrade prompts only after the separate add-on exists and passes compliance review.
+1. Completed: upgrade onboarding to a state-aware first-approval checklist.
+2. Completed: add opt-in sample/demo content that integrates with onboarding safely.
+3. Next: refresh activation and trust materials now that the first-use workflow is stable.
+4. Deferred: add contextual upgrade prompts only after the separate add-on exists and passes compliance review.
 
 ## Pro-only Boundary Appendix
 
@@ -450,6 +451,9 @@ The free plugin must remain fully functional as distributed through WordPress.or
 | 2026-06-27 | Use this file as the canonical free-roadmap handover. | Update after each material product or release decision. |
 | 2026-07-18 | Release the better request status UI. | Released in 1.3.0; filtering remains free and sorting remains reserved for a separate add-on. |
 | 2026-07-18 | Implement immutable per-request activity history. | Released in 1.4.0 with a collapsed full portal timeline and one reliable legacy-response backfill. |
+| 2026-08-01 | Release state-aware first-run onboarding. | Released in 1.5.0 with five live milestones, historical completion, and per-administrator dismissal. |
+| 2026-08-08 | Release opt-in sample/demo content. | Released in 1.6.0 with idempotent repair, non-notifying events, signed staff preview, and validated cleanup. |
+| 2026-09-19 | Reconcile the roadmap with the WordPress.org release repository. | Verified the clean `1.6.0` tag and package, marked items 5–6 Released, and moved current follow-up work to activation and trust materials. |
 
 ## Next Review Checklist
 
@@ -460,5 +464,8 @@ The free plugin must remain fully functional as distributed through WordPress.or
 - [x] Complete the 1.4.0 activity-history manual test matrix on WordPress 7.0.
 - [x] Package and release the 1.4.0 activity-history work.
 - [x] Define onboarding completion and sample-content isolation rules.
+- [x] Complete, package, and release the 1.5.0 state-aware onboarding work.
+- [x] Complete, package, and release the 1.6.0 sample-content work.
+- [x] Verify the WordPress.org `1.6.0` tag matches release trunk and excludes development-only files.
 - [ ] Recheck external WordPress.org and GitHub trust assets.
-- [ ] Confirm no Pro-only code or locked controls have entered the free repository.
+- [x] Confirm no Pro-only code or locked controls have entered the free repository.
