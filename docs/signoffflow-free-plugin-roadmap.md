@@ -152,6 +152,10 @@ A release upgrade must not:
 
 **Priority: P0**
 
+**Status:** Implemented in v1.7.0, pending release.
+
+Due soon includes today through seven calendar days ahead in the WordPress site timezone. The portal retains its summary with urgency counts and orders requests before its display limit. Staff due-date edits append immutable activity events; resolving or reopening preserves the date. Date edits send no additional emails.
+
 This should be the next meaningful Free feature.
 
 The current workflow tells clients **what** needs attention, but not **when** it is needed.

@@ -44,6 +44,13 @@ class Plugin
 	private $sample_content;
 
 	/**
+	 * Internal feature release announcements.
+	 *
+	 * @var Release_Notices
+	 */
+	private $release_notices;
+
+	/**
 	 * Admin UI service.
 	 *
 	 * @var Admin
@@ -101,7 +108,8 @@ class Plugin
 		$this->settings      = new Settings();
 		$this->onboarding    = new Onboarding();
 		$this->sample_content = new Sample_Content();
-		$this->admin         = new Admin($this->settings, $this->onboarding, $this->sample_content);
+		$this->release_notices = new Release_Notices();
+		$this->admin         = new Admin($this->settings, $this->onboarding, $this->sample_content, $this->release_notices);
 		$this->clients       = new Clients();
 		$this->updates       = new Updates();
 		$this->portal        = new Portal();
@@ -121,6 +129,7 @@ class Plugin
 		$this->settings->register();
 		$this->onboarding->register();
 		$this->sample_content->register();
+		$this->release_notices->register();
 		$this->admin->register();
 		$this->clients->register();
 		$this->updates->register();

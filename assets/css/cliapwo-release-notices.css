@@ -1,0 +1,26 @@
+.cliapwo-release-notice {
+	overflow-wrap: anywhere;
+}
+
+.cliapwo-release-notice__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-block: 12px;
+}
+
+.cliapwo-release-notice__actions form {
+	margin: 0;
+}
+
+.cliapwo-release-notice__actions .button {
+	white-space: normal;
+	height: auto;
+	text-align: center;
+}
+
+.cliapwo-release-notice__actions .button:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 3px;
+}

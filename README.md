@@ -16,6 +16,9 @@ The plugin includes:
 - latest client response details in the portal and WordPress admin, including the responder and timestamp
 - immutable per-request activity histories that preserve earlier approval outcomes and response notes
 - clear status badges and free admin filtering for approval requests
+- optional request due dates, overdue and seven-day due-soon filters, and due-date sorting
+- portal attention counts and request ordering that brings urgent open requests first
+- immutable staff due-date edits in request activity history
 - state-aware first-run setup that tracks progress through the first real client response
 - opt-in sample content with a safe staff preview and exact cleanup
 - focused, responsive portal workspace with section navigation and accessible motion
@@ -29,10 +32,12 @@ The plugin includes:
 2. Follow the state-aware setup progress in `SignoffFlow > Settings`, or create the optional sample workflow for a staff-only preview.
 3. Create or choose a published portal page and place the `[cliapwo_portal]` shortcode on it.
 4. Create a client account in `SignoffFlow > Clients` and assign a portal user.
-5. Publish an approval request for that client account.
+5. Publish an approval request for that client account, optionally setting a due date in Request Details.
 6. The assigned user logs in with normal WordPress authentication and records a response from the portal.
 
 The page selected in SignoffFlow settings uses the plugin's focused portal canvas, without the active theme's public header and footer. Shortcodes placed on other pages remain embedded in the theme as normal.
+
+Due dates use the WordPress site timezone. A request is overdue only while open and after its due day has ended. “Due soon” includes today through seven calendar days ahead. Resolving or reopening a request preserves its deadline. New-request emails include the deadline; date edits do not send reminders or additional emails.
 
 ## Repository Notes
 

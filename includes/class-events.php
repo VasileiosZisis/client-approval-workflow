@@ -65,6 +65,9 @@ class Events
 	public const TYPE_REQUEST_REOPENED = 'request_reopened';
 
 	public const TYPE_REQUEST_STATUS_CHANGED = 'request_status_changed';
+	public const TYPE_REQUEST_DUE_DATE_CHANGED = 'request_due_date_changed';
+	public const PREVIOUS_DUE_DATE_META_KEY = 'cliapwo_event_previous_due_date';
+	public const NEW_DUE_DATE_META_KEY = 'cliapwo_event_new_due_date';
 
 	public const TYPE_UPDATE_CREATED = 'update_created';
 
@@ -291,6 +294,7 @@ class Events
 				self::ACTOR_NAME_META_KEY     => $actor_name,
 				self::ACTOR_TYPE_META_KEY     => self::ACTOR_TYPE_STAFF,
 				self::NEW_STATUS_META_KEY     => Requests::STATUS_OPEN,
+				self::NEW_DUE_DATE_META_KEY   => Request_Dates::get_date($request_id),
 			)
 		);
 
@@ -326,6 +330,11 @@ class Events
 				),
 			)
 		);
+		$due_date = Request_Dates::get_date($request_id);
+		if ('' !== $due_date) {
+			/* translators: %s: localized request due date in the site timezone. */
+			$message .= "\n\n" . sprintf(__('Due date: %s (site timezone)', 'signoffflow-client-approval-workflow'), Request_Dates::format($due_date));
+		}
 
 		$this->send_email_to_client_users(
 			$client_id,
@@ -404,6 +413,7 @@ class Events
 			$meta[ self::ACTOR_NAME_META_KEY ] = $actor_name;
 			$meta[ self::ACTOR_TYPE_META_KEY ] = self::ACTOR_TYPE_STAFF;
 			$meta[ self::NEW_STATUS_META_KEY ] = Requests::STATUS_OPEN;
+			$meta[ self::NEW_DUE_DATE_META_KEY ] = Request_Dates::get_date($object_id);
 		} else {
 			return 0;
 		}
@@ -1005,6 +1015,8 @@ class Events
 			$label = __('Client responded', 'signoffflow-client-approval-workflow');
 		} elseif (self::TYPE_REQUEST_REOPENED === $event_type) {
 			$label = __('Request reopened', 'signoffflow-client-approval-workflow');
+		} elseif (self::TYPE_REQUEST_DUE_DATE_CHANGED === $event_type) {
+			$label = __('Due date changed', 'signoffflow-client-approval-workflow');
 		} else {
 			$label = __('Status changed', 'signoffflow-client-approval-workflow');
 		}
@@ -1018,7 +1030,81 @@ class Events
 			'new_status'      => self::normalize_request_status((string) get_post_meta($event->ID, self::NEW_STATUS_META_KEY, true)),
 			'response_note'   => (string) get_post_meta($event->ID, self::RESPONSE_NOTE_META_KEY, true),
 			'timestamp'       => (int) get_post_time('U', true, $event),
+			'previous_due_date' => (string) get_post_meta($event->ID, self::PREVIOUS_DUE_DATE_META_KEY, true),
+			'new_due_date'     => (string) get_post_meta($event->ID, self::NEW_DUE_DATE_META_KEY, true),
 		);
+	}
+
+	/**
+	 * Record an immutable staff date edit without status or notification hooks.
+	 *
+	 * @param int    $request_id Request ID.
+	 * @param string $previous Previous validated date.
+	 * @param string $date New validated date.
+	 * @return int Event ID or zero.
+	 */
+	public static function record_due_date_change($request_id, $previous, $date)
+	{
+		$request = get_post($request_id);
+		if (! $request instanceof \WP_Post || Requests::POST_TYPE !== $request->post_type || ! current_user_can('cliapwo_manage_portal')) {
+			return 0;
+		}
+		if ($previous === $date || ('' !== $previous && ! Request_Dates::is_valid($previous)) || ('' !== $date && ! Request_Dates::is_valid($date))) {
+			return 0;
+		}
+		$actor_id = get_current_user_id();
+		$meta = array(
+			self::ACTOR_ID_META_KEY => $actor_id,
+			self::ACTOR_NAME_META_KEY => self::get_actor_name($actor_id, __('Staff user', 'signoffflow-client-approval-workflow')),
+			self::ACTOR_TYPE_META_KEY => self::ACTOR_TYPE_STAFF,
+			self::PREVIOUS_DUE_DATE_META_KEY => $previous,
+			self::NEW_DUE_DATE_META_KEY => $date,
+		);
+		$is_sample = '1' === (string) get_post_meta($request_id, Onboarding::SAMPLE_CONTENT_META_KEY, true);
+		if ($is_sample) {
+			$meta[Onboarding::SAMPLE_CONTENT_META_KEY] = '1';
+		}
+		$event_id = self::create_event_entry(
+			sprintf(
+				/* translators: %s: request title. */
+				__('Request due date changed: %s', 'signoffflow-client-approval-workflow'),
+				$request->post_title
+			),
+			self::format_due_date_change(array('previous_due_date' => $previous, 'new_due_date' => $date)),
+			self::TYPE_REQUEST_DUE_DATE_CHANGED,
+			Requests::get_client_id_for_request($request_id),
+			$request_id,
+			$meta,
+			time(),
+			$actor_id
+		);
+		if ($event_id <= 0) {
+			return 0;
+		}
+		$required = array_merge($meta, array(self::TYPE_META_KEY => self::TYPE_REQUEST_DUE_DATE_CHANGED, self::CLIENT_META_KEY => Requests::get_client_id_for_request($request_id), self::OBJECT_ID_META_KEY => absint($request_id)));
+		foreach ($required as $key => $value) {
+			if (! metadata_exists('post', $event_id, $key) || (string) get_post_meta($event_id, $key, true) !== (string) $value) {
+				wp_delete_post($event_id, true);
+				return 0;
+			}
+		}
+		if ($event_id > 0 && $is_sample && ! Sample_Content::track_due_date_event($request_id, $event_id)) {
+			wp_delete_post($event_id, true);
+			return 0;
+		}
+		return $event_id;
+	}
+
+	/**
+	 * Format only date snapshots for safe timeline presentation.
+	 *
+	 * @param array<string,mixed> $event_data Event view data.
+	 * @return string
+	 */
+	public static function format_due_date_change(array $event_data)
+	{
+		/* translators: 1: previous due date or No due date, 2: new due date or No due date. */
+		return sprintf(__('Due date: %1$s to %2$s', 'signoffflow-client-approval-workflow'), Request_Dates::format($event_data['previous_due_date']), Request_Dates::format($event_data['new_due_date']));
 	}
 
 	/**
@@ -1093,6 +1179,7 @@ class Events
 			self::TYPE_REQUEST_RESPONSE,
 			self::TYPE_REQUEST_REOPENED,
 			self::TYPE_REQUEST_STATUS_CHANGED,
+			self::TYPE_REQUEST_DUE_DATE_CHANGED,
 		);
 	}
 
@@ -1210,6 +1297,9 @@ class Events
 	 */
 	private function get_event_type_label($event_type)
 	{
+		if (self::TYPE_REQUEST_DUE_DATE_CHANGED === $event_type) {
+			return __('Due date changed', 'signoffflow-client-approval-workflow');
+		}
 		if ('email_attempt' === $event_type) {
 			return __('Email attempt', 'signoffflow-client-approval-workflow');
 		}

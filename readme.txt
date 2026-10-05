@@ -4,7 +4,7 @@ Tags: client portal, approval, agency, file sharing, workflow
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,7 @@ Clients can use their private workspace to:
 * Mark a request as blocked.
 * Add response notes.
 * Review their request activity.
+* See request deadlines and which open requests are overdue or due soon.
 
 Portal access is restricted to WordPress users assigned to the relevant client account, plus staff users with the SignoffFlow management capability.
 
@@ -68,6 +69,7 @@ The request history can include:
 * The responding user.
 * Staff reopen actions.
 * Staff status changes.
+* Staff due-date changes, including previous and new dates.
 * Earlier response-note snapshots from previous approval cycles.
 
 This gives agencies and service teams a clearer record of how each client approval progressed over time.
@@ -87,6 +89,16 @@ Requests include clear status badges and can be filtered by:
 * Blocked.
 
 Use the filters to quickly find requests that still need action or review previously completed client approvals.
+
+= Request due dates and attention =
+
+Set an optional due date in Request Details. Deadlines use the WordPress site timezone and remain separate from approval status.
+
+Open requests become overdue after their due day has ended. Due soon includes today through seven calendar days ahead. The portal shows urgency counts and places overdue requests first, followed by due-soon requests and other open requests.
+
+Staff can sort the Requests list by due date and combine the existing status filter with Due soon, Overdue, or No due date. Undated requests remain visible and sort last when ordering by date.
+
+Due-date edits are preserved in Activity History. Resolving or reopening a request keeps its deadline. New-request notification emails include the due date when present; changing a date does not send another email or schedule a reminder.
 
 = Share project updates with clients =
 
@@ -471,6 +483,15 @@ Shortcodes added to other WordPress pages remain embedded in the site's normal a
 
 == Changelog ==
 
+= 1.7.0 =
+
+* Show a compact, per-administrator dismissible due-date release notice on SignoffFlow Settings and the Requests list for upgraded installations; fresh installations retain first-run onboarding.
+* Added optional request due dates using the WordPress site calendar and timezone.
+* Added due-date sorting and combined due-state/status filtering in the Requests list.
+* Added portal urgency counts and attention ordering that prioritizes older overdue requests before the display limit.
+* Added immutable due-date-change events and initial-date snapshots in request history.
+* Included due dates in new-request emails without adding reminders or date-change notifications.
+
 = 1.6.1 =
 
 * Added a locally runnable WordPress integration-test suite covering request lifecycles, immutable history, legacy response migration, cross-client authorization, protected file paths, onboarding, and sample content.
@@ -520,3 +541,9 @@ Shortcodes added to other WordPress pages remain embedded in the site's normal a
 = 1.0.0 =
 
 * Initial release.
+
+== Upgrade Notice ==
+
+= 1.7.0 =
+
+Add optional request deadlines, urgency ordering, due-state filters, and immutable due-date history. Existing requests remain undated until staff set a deadline. No migration or scheduled reminders are required.

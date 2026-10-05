@@ -1111,6 +1111,35 @@ body.cliapwo-portal-page {
 	}
 }
 
+.cliapwo-portal .cliapwo-request-due {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 12px;
+	margin: 12px 0;
+	font-size: 0.875rem;
+	color: var(--cliapwo-text-soft);
+	overflow-wrap: anywhere;
+}
+
+.cliapwo-portal .cliapwo-request-due__state {
+	font-weight: 600;
+}
+
+.cliapwo-portal .cliapwo-request-due--overdue {
+	color: #8a4b00;
+}
+
+.cliapwo-portal__request--overdue {
+	border-inline-start: 3px solid #b7791f;
+}
+
+.cliapwo-portal__attention-counts {
+	margin: 10px 0 0;
+	color: var(--cliapwo-text-soft);
+	font-size: 0.875rem;
+	overflow-wrap: anywhere;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.cliapwo-portal *,
 	.cliapwo-portal *::before,

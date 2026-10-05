@@ -42,6 +42,13 @@ class Admin
 	private $sample_content;
 
 	/**
+	 * Internal release announcements.
+	 *
+	 * @var Release_Notices
+	 */
+	private $release_notices;
+
+	/**
 	 * Registered settings screen hook suffixes.
 	 *
 	 * @var array<int, string>
@@ -54,12 +61,14 @@ class Admin
 	 * @param Settings       $settings       Settings service.
 	 * @param Onboarding     $onboarding     Onboarding service.
 	 * @param Sample_Content $sample_content Sample content service.
+	 * @param Release_Notices|null $release_notices Release announcements.
 	 */
-	public function __construct(Settings $settings, Onboarding $onboarding, Sample_Content $sample_content)
+	public function __construct(Settings $settings, Onboarding $onboarding, Sample_Content $sample_content, ?Release_Notices $release_notices = null)
 	{
 		$this->settings       = $settings;
 		$this->onboarding     = $onboarding;
 		$this->sample_content = $sample_content;
+		$this->release_notices = $release_notices;
 	}
 
 	/**
@@ -103,6 +112,9 @@ class Admin
 		foreach (array($top_level_hook, $submenu_hook) as $screen_hook) {
 			if (is_string($screen_hook) && '' !== $screen_hook) {
 				$this->settings_screen_hooks[] = $screen_hook;
+				if ($this->release_notices instanceof Release_Notices) {
+					$this->release_notices->add_settings_screen($screen_hook);
+				}
 			}
 		}
 

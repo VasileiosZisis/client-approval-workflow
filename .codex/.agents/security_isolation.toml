@@ -1,7 +1,7 @@
 name = "security_isolation"
 description = "Security and authorization auditor for SignoffFlow client isolation, protected files, WordPress capabilities, nonces, and input/output handling."
 
-model = "gpt-5.6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 

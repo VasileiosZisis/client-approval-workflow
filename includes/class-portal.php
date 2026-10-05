@@ -189,7 +189,7 @@ class Portal
 				'paged' => $paged,
 			)
 		);
-		$requests_query = Requests::get_requests_query_for_client($client->ID);
+		$requests_query = Requests::get_requests_query_for_client($client->ID, array('cliapwo_attention_order' => true));
 		$request_ids   = array();
 
 		foreach ($requests_query->posts as $request_post) {
@@ -200,7 +200,8 @@ class Portal
 
 		$request_histories = Events::get_request_histories($request_ids, $client->ID);
 		$files_query      = Files::get_files_query_for_client($client->ID);
-		$open_requests    = Requests::get_open_request_count_for_client($client->ID);
+		$attention_counts = Request_Dates::attention_counts($client->ID);
+		$open_requests    = $attention_counts['open'];
 		$logo_url         = $this->get_branding_logo_url($settings);
 		$primary_color    = isset($settings['primary_color']) ? sanitize_hex_color((string) $settings['primary_color']) : false;
 		$updates_count    = $this->get_query_count($updates_query);
@@ -286,6 +287,16 @@ class Portal
 								/* translators: %d: number of open requests */
 								esc_html(_n('%d request needs your attention.', '%d requests need your attention.', $open_requests, 'signoffflow-client-approval-workflow')),
 								esc_html($open_requests)
+							);
+							?>
+						</p>
+						<p class="cliapwo-portal__attention-counts">
+							<?php
+							printf(
+								/* translators: 1: number of overdue requests, 2: number due today or in the next seven days. */
+								esc_html__('%1$d overdue · %2$d due soon (next 7 days)', 'signoffflow-client-approval-workflow'),
+								esc_html((string) $attention_counts['overdue']),
+								esc_html((string) $attention_counts['soon'])
 							);
 							?>
 						</p>
@@ -382,13 +393,14 @@ class Portal
 									$can_choose_outcome = ! $can_manage && Requests::STATUS_OPEN === $request_status;
 									$can_reopen      = $can_manage && Requests::is_resolved_status($request_status);
 									?>
-									<li class="cliapwo-portal__request">
+									<li class="cliapwo-portal__request cliapwo-portal__request--<?php echo esc_attr(Request_Dates::get_state($request_id)); ?>">
 										<div class="cliapwo-portal__request-header">
 											<strong><?php echo esc_html(get_the_title($request_id)); ?></strong>
 											<span class="cliapwo-portal__request-status cliapwo-status cliapwo-status--<?php echo esc_attr(sanitize_html_class($request_status)); ?>">
 												<?php echo esc_html(Requests::get_status_label($request_status)); ?>
 											</span>
 										</div>
+										<?php Request_Dates::render($request_id); ?>
 
 										<?php if ('' !== (string) get_post_field('post_content', $request_id)) : ?>
 											<div class="cliapwo-portal__request-content">
@@ -614,7 +626,7 @@ class Portal
 					<li class="cliapwo-portal__request-history-item">
 						<div class="cliapwo-portal__request-history-header">
 							<strong><?php echo esc_html((string) $event_data['label']); ?></strong>
-							<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+							<?php if (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Events::TYPE_REQUEST_DUE_DATE_CHANGED), true)) : ?>
 								<span class="cliapwo-status cliapwo-status--<?php echo esc_attr(sanitize_html_class((string) $event_data['new_status'])); ?>">
 									<?php echo esc_html(Requests::get_status_label((string) $event_data['new_status'])); ?>
 								</span>
@@ -630,7 +642,11 @@ class Portal
 							);
 							?>
 						</p>
-						<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+						<?php if (Events::TYPE_REQUEST_DUE_DATE_CHANGED === $event_data['type']) : ?>
+							<p class="cliapwo-portal__request-history-transition"><?php echo esc_html(Events::format_due_date_change($event_data)); ?></p>
+						<?php elseif (Events::TYPE_REQUEST_CREATED === $event_data['type'] && '' !== $event_data['new_due_date']) : ?>
+							<p class="cliapwo-portal__request-history-transition"><?php echo esc_html(Request_Dates::format($event_data['new_due_date'])); ?></p>
+						<?php elseif (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
 							<p class="cliapwo-portal__request-history-transition">
 								<?php
 								printf(

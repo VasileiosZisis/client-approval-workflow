@@ -108,8 +108,38 @@
 	margin-bottom: 0;
 }
 
+.cliapwo-request-due {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 10px;
+	margin: 8px 0;
+	overflow-wrap: anywhere;
+}
+
+.cliapwo-request-due__state {
+	font-weight: 600;
+}
+
+.cliapwo-request-due--overdue {
+	color: #8a4b00;
+}
+
+.column-cliapwo_request_due_date {
+	width: 17%;
+}
+
+.column-cliapwo_request_due_date a:focus-visible,
+#cliapwo_request_due_date:focus-visible,
+#cliapwo_request_due_filter:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 3px;
+}
+
 @media screen and (max-width: 782px) {
 	.column-cliapwo_request_status {
+		width: auto;
+	}
+	.column-cliapwo_request_due_date {
 		width: auto;
 	}
 }

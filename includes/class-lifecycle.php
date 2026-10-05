@@ -27,6 +27,7 @@ class Lifecycle
 		self::ensure_roles();
 
 		if ($is_fresh_install) {
+			Release_Notices::mark_fresh_install();
 			add_option(Settings::OPTION_KEY, Settings::get_default_settings());
 			Onboarding::mark_fresh_install();
 		}

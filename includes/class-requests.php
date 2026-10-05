@@ -154,6 +154,8 @@ class Requests
 	 */
 	public function register()
 	{
+		(new Request_Dates())->register();
+		add_action('admin_notices', array($this, 'render_due_date_notice'));
 		add_action('init', array($this, 'register_post_type'));
 		add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
 		add_action('save_post_' . self::POST_TYPE, array($this, 'save_request_meta'), 10, 2);
@@ -332,6 +334,12 @@ class Requests
 			<span class="cliapwo-request-saved-status__label"><?php esc_html_e('Saved status:', 'signoffflow-client-approval-workflow'); ?></span>
 			<?php self::render_admin_status_badge($status); ?>
 		</p>
+		<p>
+			<label for="cliapwo_request_due_date"><strong><?php esc_html_e('Due date', 'signoffflow-client-approval-workflow'); ?></strong></label><br />
+			<input class="widefat" type="date" min="1000-01-01" max="9999-12-31" id="cliapwo_request_due_date" name="cliapwo_request_due_date" value="<?php echo esc_attr(Request_Dates::get_date($post->ID)); ?>" aria-describedby="cliapwo_request_due_date_help" />
+		</p>
+		<p class="description" id="cliapwo_request_due_date_help"><?php esc_html_e('Optional. Due by the end of this day in the WordPress site timezone. Leave empty to remove the deadline.', 'signoffflow-client-approval-workflow'); ?></p>
+		<?php Request_Dates::render($post->ID); ?>
 		<p class="description"><?php esc_html_e('Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here.', 'signoffflow-client-approval-workflow'); ?></p>
 		<?php $this->render_client_response_summary($post->ID, $status); ?>
 		<?php
@@ -416,7 +424,7 @@ class Requests
 				<li class="cliapwo-admin-history__item">
 					<div class="cliapwo-admin-history__header">
 						<strong><?php echo esc_html((string) $event_data['label']); ?></strong>
-						<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+						<?php if (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Events::TYPE_REQUEST_DUE_DATE_CHANGED), true)) : ?>
 							<?php self::render_admin_status_badge((string) $event_data['new_status']); ?>
 						<?php endif; ?>
 					</div>
@@ -430,7 +438,11 @@ class Requests
 						);
 						?>
 					</p>
-					<?php if (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+					<?php if (Events::TYPE_REQUEST_DUE_DATE_CHANGED === $event_data['type']) : ?>
+						<p class="cliapwo-admin-history__transition"><?php echo esc_html(Events::format_due_date_change($event_data)); ?></p>
+					<?php elseif (Events::TYPE_REQUEST_CREATED === $event_data['type'] && '' !== $event_data['new_due_date']) : ?>
+						<p class="cliapwo-admin-history__transition"><?php echo esc_html(Request_Dates::format($event_data['new_due_date'])); ?></p>
+					<?php elseif (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
 						<p class="cliapwo-admin-history__transition">
 							<?php
 							printf(
@@ -516,6 +528,12 @@ class Requests
 			$status = self::STATUS_OPEN;
 		}
 
+		if (isset($_POST[Request_Dates::META_KEY])) {
+			$date = is_string($_POST[Request_Dates::META_KEY]) ? trim(sanitize_text_field(wp_unslash($_POST[Request_Dates::META_KEY]))) : null;
+			if (null === $date || ('' !== $date && ! Request_Dates::is_valid($date)) || ! $this->save_due_date($post_id, $date)) {
+				set_transient('cliapwo_due_date_notice_' . get_current_user_id(), 'failed', MINUTE_IN_SECONDS);
+			}
+		}
 		$this->maybe_dispatch_created_event($post_id, $post, $client_id);
 		$this->transition_status(
 			$post_id,
@@ -537,6 +555,7 @@ class Requests
 	{
 		$columns['cliapwo_request_client'] = __('Client', 'signoffflow-client-approval-workflow');
 		$columns['cliapwo_request_status'] = __('Status', 'signoffflow-client-approval-workflow');
+		$columns['cliapwo_request_due_date'] = Request_Dates::column_heading();
 
 		return $columns;
 	}
@@ -550,6 +569,10 @@ class Requests
 	 */
 	public function render_request_column($column, $post_id)
 	{
+		if (Request_Dates::META_KEY === $column) {
+			Request_Dates::render($post_id);
+			return;
+		}
 		if ('cliapwo_request_client' === $column) {
 			$client = get_post(self::get_client_id_for_request($post_id));
 			echo $client instanceof \WP_Post ? esc_html($client->post_title) : esc_html__('Unassigned', 'signoffflow-client-approval-workflow');
@@ -591,7 +614,69 @@ class Requests
 				</option>
 			<?php endforeach; ?>
 		</select>
+		<label class="screen-reader-text" for="<?php echo esc_attr(Request_Dates::FILTER_KEY); ?>"><?php esc_html_e('Filter by due state', 'signoffflow-client-approval-workflow'); ?></label>
+		<select name="<?php echo esc_attr(Request_Dates::FILTER_KEY); ?>" id="<?php echo esc_attr(Request_Dates::FILTER_KEY); ?>">
+			<?php foreach (array('' => __('All due states', 'signoffflow-client-approval-workflow'), 'soon' => __('Due soon', 'signoffflow-client-approval-workflow'), 'overdue' => __('Overdue', 'signoffflow-client-approval-workflow'), 'none' => __('No due date', 'signoffflow-client-approval-workflow')) as $value => $label) : ?>
+				<option value="<?php echo esc_attr($value); ?>" <?php selected(Request_Dates::selected_filter(), $value); ?>><?php echo esc_html($label); ?></option>
+			<?php endforeach; ?>
+		</select>
 		<?php
+	}
+
+	/**
+	 * Persist a due date and its history under the request transition lock.
+	 *
+	 * @param int    $request_id Request ID.
+	 * @param string $date Valid date or empty string.
+	 * @return bool
+	 */
+	private function save_due_date($request_id, $date)
+	{
+		$lock = self::acquire_transition_lock($request_id);
+		if ('' === $lock) {
+			return false;
+		}
+		try {
+			$previous = Request_Dates::get_date($request_id);
+			if ($previous === $date) {
+				return true;
+			}
+			$snapshot = self::get_meta_snapshot($request_id, Request_Dates::META_KEY);
+			if ('' === $date) {
+				delete_post_meta($request_id, Request_Dates::META_KEY);
+			} else {
+				update_post_meta($request_id, Request_Dates::META_KEY, $date);
+			}
+			if (Request_Dates::get_date($request_id) !== $date) {
+				self::restore_meta_snapshot($request_id, Request_Dates::META_KEY, $snapshot);
+				return false;
+			}
+			if ('1' === (string) get_post_meta($request_id, self::NOTIFIED_META_KEY, true)) {
+				$event_id = Events::record_due_date_change($request_id, $previous, $date);
+				if ($event_id <= 0) {
+					self::restore_meta_snapshot($request_id, Request_Dates::META_KEY, $snapshot);
+					return false;
+				}
+			}
+			return true;
+		} finally {
+			self::release_transition_lock($request_id, $lock);
+		}
+	}
+
+	/** Render a user-scoped request-screen date-save error. */
+	public function render_due_date_notice()
+	{
+		$screen = get_current_screen();
+		if (! $screen instanceof \WP_Screen || self::POST_TYPE !== $screen->post_type || ! current_user_can('cliapwo_manage_portal')) {
+			return;
+		}
+		$key = 'cliapwo_due_date_notice_' . get_current_user_id();
+		if (! get_transient($key)) {
+			return;
+		}
+		delete_transient($key);
+		echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__('The due date was not saved. Enter a valid date between years 1000 and 9999, or leave it empty to remove it. If the date is valid, retry after the current request update finishes.', 'signoffflow-client-approval-workflow') . '</p></div>';
 	}
 
 	/**
@@ -995,6 +1080,14 @@ class Requests
 	 */
 	private static function acquire_transition_lock($request_id)
 	{
+		global $wpdb;
+		// The database lock closes the SELECT/INSERT race in unique post metadata.
+		// It is connection-owned and released automatically if the worker exits.
+		$database_lock = 'cliapwo_' . md5(DB_NAME . ':' . $wpdb->postmeta . ':' . absint($request_id));
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- connection locks must never be cached.
+		if ('1' !== (string) $wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s, 0)', $database_lock))) {
+			return '';
+		}
 		$existing_lock = (string) get_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, true);
 
 		if (0 === strpos($existing_lock, 'processing:')) {
@@ -1007,7 +1100,12 @@ class Requests
 
 		$lock_value = 'processing:' . time() . ':' . wp_generate_uuid4();
 
-		return add_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $lock_value, true) ? $lock_value : '';
+		if (! add_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $lock_value, true)) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- release this connection's lock on failure.
+			$wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $database_lock));
+			return '';
+		}
+		return $lock_value;
 	}
 
 	/**
@@ -1020,6 +1118,10 @@ class Requests
 	private static function release_transition_lock($request_id, $lock_value)
 	{
 		delete_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $lock_value);
+		global $wpdb;
+		$database_lock = 'cliapwo_' . md5(DB_NAME . ':' . $wpdb->postmeta . ':' . absint($request_id));
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- connection locks must never be cached.
+		$wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $database_lock));
 	}
 
 	/**

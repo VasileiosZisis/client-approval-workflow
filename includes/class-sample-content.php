@@ -457,6 +457,12 @@ class Sample_Content
 		$expected_types = $this->get_expected_post_types();
 		$delete_order   = array('request_event', 'update_event', 'request', 'update', 'client');
 		$remaining      = $ids;
+		foreach ($ids as $key => $value) {
+			if (preg_match('/^due_event_[0-9]+$/D', $key)) {
+				array_unshift($delete_order, $key);
+				$expected_types[$key] = Events::POST_TYPE;
+			}
+		}
 
 		foreach ($delete_order as $key) {
 			$post_id = isset($ids[$key]) ? absint($ids[$key]) : 0;
@@ -641,7 +647,10 @@ class Sample_Content
 
 		$ids = array();
 
-		foreach (array('client', 'update', 'request', 'update_event', 'request_event') as $key) {
+		foreach (array_keys($stored) as $key) {
+			if (! is_string($key) || (! in_array($key, array('client', 'update', 'request', 'update_event', 'request_event'), true) && ! preg_match('/^due_event_[0-9]+$/D', $key))) {
+				continue;
+			}
 			if (isset($stored[$key]) && absint($stored[$key]) > 0) {
 				$ids[$key] = absint($stored[$key]);
 			}
@@ -660,7 +669,10 @@ class Sample_Content
 	{
 		$sanitized = array();
 
-		foreach (array('client', 'update', 'request', 'update_event', 'request_event') as $key) {
+		foreach (array_keys($ids) as $key) {
+			if (! is_string($key) || (! in_array($key, array('client', 'update', 'request', 'update_event', 'request_event'), true) && ! preg_match('/^due_event_[0-9]+$/D', $key))) {
+				continue;
+			}
 			if (isset($ids[$key]) && absint($ids[$key]) > 0) {
 				$sanitized[$key] = absint($ids[$key]);
 			}
@@ -672,6 +684,29 @@ class Sample_Content
 		}
 
 		update_option(self::OPTION_KEY, $sanitized, false);
+	}
+
+	/**
+	 * Track one marked date event for exact sample cleanup.
+	 *
+	 * @param int $request_id Sample request ID.
+	 * @param int $event_id Created date event ID.
+	 * @return bool
+	 * @internal
+	 */
+	public static function track_due_date_event($request_id, $event_id)
+	{
+		$request_id = absint($request_id);
+		$event_id = absint($event_id);
+		$ids = self::get_recorded_ids();
+		if (! isset($ids['request']) || $request_id !== $ids['request']) {
+			return false;
+		}
+		$key = 'due_event_' . absint($event_id);
+		$ids[$key] = absint($event_id);
+		self::persist_ids($ids);
+		$saved = self::get_recorded_ids();
+		return isset($saved[$key]) && $event_id === $saved[$key];
 	}
 
 	/**
