@@ -40,10 +40,13 @@ All Pro functionality remains planned.
 | Private portal, WordPress login, client accounts, assigned users, protected downloads, updates, and basic notifications | Free — implemented | These are the complete portal foundation. |
 | Approved, Changes requested, Rejected, and Blocked outcomes; response notes; staff reopening and overrides | Free — implemented | Explicit client decisions are the product's core promise. |
 | Latest-response summaries and immutable per-request lifecycle history | Free — implemented | Trustworthy decisions must not depend on a paid add-on. |
-| Status badges and filters, optional deadlines, due-state filters, due-date sorting, portal urgency counts, and attention ordering | Free — implemented | Users need to know what requires attention and when. |
+| Status badges and filters | Free — implemented | Ordinary request state must be understandable without an add-on. |
+| Due dates, overdue visibility, due-state filters, due-date sorting, portal urgency counts, and attention ordering | Free — high priority; implemented in 1.7.0 | Clients need to understand when action is required. |
 | State-aware onboarding, optional sample content, safe staff preview, exact sample cleanup, and scoped dismissible release notices | Free — implemented | Adoption, recovery, and maintenance serve every installation. |
 | Logo/color branding, portal styling hooks, responsive layouts, accessibility, translation readiness, and regression protection | Free — implemented foundation | Ordinary presentation and reliability are baseline responsibilities. |
-| Protected staff files attached directly to a request and protected client response uploads inside that request | Free — planned | The requested material should stay with the request that asked for it. |
+| Protected staff files attached directly to requests | Free — high priority; planned | Review material belongs beside the decision. |
+| Request-scoped protected client uploads | Free — planned | Clients can complete requests that require supplying material. |
+| Reference to the material/version reviewed, preserved with the decision | Free foundation — planned | Approval history needs clear context about what was reviewed, not only who responded and when. |
 | Needs Attention admin view, combined client/status/due/date/search filters, request duplication, and deliberate manual resend | Free — planned | These reduce routine administration without introducing automation. |
 | Authorized client-account switching for users assigned to multiple accounts | Free — planned | The portal should correctly expose its existing multi-account data model. |
 | WordPress Privacy API integration and basic client/account CSV or JSON exports | Free — planned | Data ownership and ordinary portability are not premium evidence products. |
@@ -65,17 +68,26 @@ with safe types and sizes, generated server-side filenames, authorization on
 every download, and an activity record. A general file-sync service or cloud
 storage replacement is not part of that scope.
 
+Identifying the material or version reviewed is also a Free foundation, not a
+paid evidence feature. Plan a clear material reference and, where applicable,
+a version/revision label, captured with each decision so later edits or file
+replacement cannot silently change the meaning of earlier approval history.
+Keep references client-authorized and avoid physical paths. This is basic
+decision context, not a promise of full document version control, permanent
+binary retention, or legal proof. Historical records without reliable context
+must not acquire invented version references.
+
 Basic Free export means an authorized administrator can obtain understandable
 CSV or JSON for one client account, including request outcomes, response notes,
-dates, and relevant history. Schema/format safety, authorization, and clear
-feedback are Free requirements. Bundling protected file binaries is not required
-for the first export implementation.
+dates, recorded material/version references, and relevant history. Schema/format
+safety, authorization, and clear feedback are Free requirements. Bundling
+protected file binaries is not required for the first export implementation.
 
 Pro may compose polished PDF evidence packages, certificates, advanced reports,
 and scheduled delivery from authorized records. That does not make the existing
-history, its integrity, or ordinary client/account export paid features. Neither
-Free nor Pro should claim guaranteed legal compliance or legal validity merely
-because it records an approval.
+history, reviewed-material context, integrity, or ordinary client/account export
+paid features. Neither Free nor Pro should claim guaranteed legal compliance or
+legal validity merely because it records an approval.
 
 Basic logo/color controls and the existing portal styling hooks remain Free.
 Paid white-labeling must not remove those capabilities or introduce unwanted

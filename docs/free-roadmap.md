@@ -5,8 +5,9 @@ plugin. [Product scope](product-scope.md) owns feature placement; the
 [Pro roadmap](pro-roadmap.md) covers the separate planned paid add-on.
 
 The current repository implementation baseline is **1.7.0**. Request-linked
-attachments, client response uploads, additional admin efficiency tools, an
-account switcher, privacy/export tools, and expanded health/API support remain
+attachments, reviewed-material/version references, client response uploads,
+additional admin efficiency tools, an account switcher, privacy/export tools,
+and expanded health/API support remain
 **planned, not shipped**. No new future release numbers, dates, prices, or effort
 estimates are assigned here. The earlier suggested 1.8.0–1.12.0 sequence is
 replaced by the delivery order below, not a commitment to those release numbers.
@@ -64,7 +65,8 @@ and publication are complete; version metadata alone is not proof of deployment.
 
 ## Planned delivery order
 
-1. Protected staff attachments linked directly to requests.
+1. Protected staff attachments linked directly to requests, with the Free
+   foundation for identifying the material/version reviewed.
 2. Protected client response uploads inside requests.
 3. Admin workflow efficiency: Needs Attention view, combined filters, manual
    resend, and simple draft duplication.
@@ -72,14 +74,17 @@ and publication are complete; version metadata alone is not proof of deployment.
 5. Privacy integration and basic client/account data export.
 6. Site Health diagnostics, supported extension contracts, and schema hardening.
 
-The two attachment features are the next core priority. Within admin efficiency,
+Due dates and overdue visibility are high-priority Free capabilities already
+implemented in 1.7.0. Protected staff attachments are the next high-priority
+addition, with reviewed-material/version context delivered alongside them. The
+two attachment features remain the next core priority. Within admin efficiency,
 triage, filters, and manual resend take precedence over duplication. Continuous
 security/compatibility maintenance and justified accessibility corrections do
 not have to wait for the next feature milestone.
 
 ### 1. Protected staff attachments on requests
 
-**Status:** Planned; next Free feature.
+**Status:** Planned; high priority and next Free feature.
 
 **Purpose:** Keep review material with the approval request instead of making
 the client search the general Files section.
@@ -87,6 +92,8 @@ the client search the general Files section.
 **Scope and dependencies:** Reuse existing SignoffFlow-protected files, client
 relationships, and download authorization. Allow staff to associate one or more
 eligible files with a request and show those attachments inside the request.
+Include the reviewed-material/version foundation below rather than reserving
+basic approval context for Pro evidence packages.
 
 **Acceptance criteria:**
 
@@ -98,6 +105,37 @@ eligible files with a request and show those attachments inside the request.
 - Removing a link must not silently delete a protected file used elsewhere.
 - Preserve existing requests, general file sharing, response semantics, and
   immutable history. Define association-change/history behavior before coding.
+
+#### Reviewed material/version references
+
+**Status:** Planned; Free foundation delivered with request-linked review material.
+
+**Purpose:** Make each decision understandable by recording what the client was
+asked to review, including an identifiable version where applicable.
+
+**Scope and dependencies:** Use the request's review context and protected-file
+associations. Support a human-readable material reference and optional explicit
+version/revision label. A mutable filename or live URL alone must not be treated
+as proof of which version was reviewed. Full document version control, content
+diffs, permanent binary archives, and legal certification are not required.
+
+**Acceptance criteria:**
+
+- Show the relevant material reference and version label, when supplied, beside
+  the request before the client records a decision.
+- Capture the reference/version context associated with each response as an
+  immutable history snapshot, not merely a lookup of the request's latest values.
+- Later request edits, renamed/replaced files, and new review cycles must not
+  rewrite earlier decision context. Define material-change and in-flight-response
+  handling before implementation; do not silently attribute a response to a
+  version different from the one presented for review.
+- Apply the same client authorization as the request and protected downloads.
+  References never expose physical paths or grant access to removed/reassigned
+  material merely because a historical record mentions it.
+- Preserve existing approval outcomes and history. Leave unavailable historical
+  context explicitly unknown rather than fabricating labels during migration.
+- Include recorded references in the planned basic Free client/account export.
+  Pro may package that context, but its basic recording and viewing remain Free.
 
 ### 2. Protected client response uploads
 
@@ -193,7 +231,8 @@ deactivation/uninstall behavior. Review response attachments when delivered.
   rewrite another person's decision history. Document any retained information
   and limitations without claiming guaranteed legal compliance.
 - Export understandable client/request titles, outcomes, response context, notes,
-  due dates, and history timestamps with strict administrator authorization.
+  due dates, recorded material/version references, and history timestamps with
+  strict administrator authorization.
 - Escape exports appropriately, including spreadsheet formula-injection risks
   for CSV. Do not include credentials, internal paths, unrelated client data,
   or unrestricted internal metadata.

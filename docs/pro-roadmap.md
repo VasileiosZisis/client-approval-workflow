@@ -17,8 +17,9 @@ advanced coordination, branded delivery, integrations, and agency scale**.
 
 Free already includes rich decisions, response notes, immutable lifecycle
 history, protected staff file sharing, basic branding/notifications, and deadline
-attention. Request-linked staff attachments and client response uploads,
-ordinary admin triage/filtering, manual resend, request duplication, account
+attention. Request-linked staff attachments, reviewed-material/version references,
+and client response uploads, ordinary admin triage/filtering, manual resend,
+request duplication, account
 switching, basic data export, and expanded diagnostics/API support belong to
 the Free roadmap. Pro must not take those features away or repackage their
 essential safety as a paid upgrade.
@@ -118,6 +119,9 @@ Free account export foundations where appropriate. Plan polished PDF approval
 certificates, evidence bundles, advanced activity exports, and selected reporting
 formats. Client response attachments can be included only after their Free
 storage/authorization and retention behavior is delivered.
+Basic identification of the material/version reviewed and its immutable
+decision context belong to Free. Pro packages that context; it does not gate
+recording or viewing it behind an evidence-export feature.
 
 **Acceptance criteria:**
 
