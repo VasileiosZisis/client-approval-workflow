@@ -198,6 +198,7 @@ class Portal
 			}
 		}
 
+		Request_Materials::prime_files($request_ids);
 		$request_histories = Events::get_request_histories($request_ids, $client->ID);
 		$files_query      = Files::get_files_query_for_client($client->ID);
 		$attention_counts = Request_Dates::attention_counts($client->ID);
@@ -408,6 +409,8 @@ class Portal
 											</div>
 										<?php endif; ?>
 
+										<?php $material = Request_Materials::current($request_id); ?>
+										<?php Request_Materials::render_context($material, $request_id); ?>
 										<?php $this->render_request_response_summary($request_id, $request_status); ?>
 										<?php $this->render_request_history($request_id, isset($request_histories[$request_id]) ? $request_histories[$request_id] : array()); ?>
 
@@ -419,6 +422,7 @@ class Portal
 												<input type="hidden" name="action" value="<?php echo esc_attr(Requests::STATUS_UPDATE_ACTION); ?>" />
 												<input type="hidden" name="cliapwo_request_id" value="<?php echo esc_attr((string) $request_id); ?>" />
 												<?php wp_nonce_field(Requests::STATUS_UPDATE_ACTION, Requests::STATUS_UPDATE_NONCE_NAME); ?>
+												<input type="hidden" name="<?php echo esc_attr(Request_Materials::TOKEN_FIELD); ?>" value="<?php echo esc_attr(Request_Materials::token($request_id)); ?>" />
 
 												<?php if ($can_choose_outcome) : ?>
 													<div class="cliapwo-portal__request-note-field">
@@ -437,7 +441,7 @@ class Portal
 															<?php esc_html_e('Required when requesting changes, rejecting, or blocking. Optional when approving. Maximum 500 characters.', 'signoffflow-client-approval-workflow'); ?>
 														</p>
 													</div>
-													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_APPROVED); ?>" class="cliapwo-button cliapwo-button--approve" formnovalidate><?php esc_html_e('Approve', 'signoffflow-client-approval-workflow'); ?></button>
+															<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_APPROVED); ?>" class="cliapwo-button cliapwo-button--approve" formnovalidate <?php disabled(in_array(false, array_column($material['files'], 'available'), true)); ?>><?php esc_html_e('Approve', 'signoffflow-client-approval-workflow'); ?></button>
 													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_CHANGES_REQUESTED); ?>" class="cliapwo-button cliapwo-button--secondary cliapwo-button--changes"><?php esc_html_e('Request changes', 'signoffflow-client-approval-workflow'); ?></button>
 													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_REJECTED); ?>" class="cliapwo-button cliapwo-button--secondary cliapwo-button--reject"><?php esc_html_e('Reject', 'signoffflow-client-approval-workflow'); ?></button>
 													<button type="submit" name="cliapwo_request_status" value="<?php echo esc_attr(Requests::STATUS_BLOCKED); ?>" class="cliapwo-button cliapwo-button--secondary cliapwo-button--block"><?php esc_html_e('Block', 'signoffflow-client-approval-workflow'); ?></button>
@@ -573,6 +577,7 @@ class Portal
 			<?php if ('' !== $response_note) : ?>
 				<div class="cliapwo-portal__request-response-note"><?php echo nl2br(esc_html($response_note)); ?></div>
 			<?php endif; ?>
+			<?php Request_Materials::render_context(Request_Materials::safe_context(get_post_meta($request_id, Request_Materials::RESPONSE_META_KEY, true), $current_client)); ?>
 			<?php if ($responder instanceof \WP_User && $responded_at > 0) : ?>
 				<p class="cliapwo-portal__request-response-meta">
 					<?php
@@ -626,7 +631,7 @@ class Portal
 					<li class="cliapwo-portal__request-history-item">
 						<div class="cliapwo-portal__request-history-header">
 							<strong><?php echo esc_html((string) $event_data['label']); ?></strong>
-							<?php if (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Events::TYPE_REQUEST_DUE_DATE_CHANGED), true)) : ?>
+							<?php if (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Events::TYPE_REQUEST_DUE_DATE_CHANGED, Request_Materials::EVENT_TYPE), true)) : ?>
 								<span class="cliapwo-status cliapwo-status--<?php echo esc_attr(sanitize_html_class((string) $event_data['new_status'])); ?>">
 									<?php echo esc_html(Requests::get_status_label((string) $event_data['new_status'])); ?>
 								</span>
@@ -646,7 +651,7 @@ class Portal
 							<p class="cliapwo-portal__request-history-transition"><?php echo esc_html(Events::format_due_date_change($event_data)); ?></p>
 						<?php elseif (Events::TYPE_REQUEST_CREATED === $event_data['type'] && '' !== $event_data['new_due_date']) : ?>
 							<p class="cliapwo-portal__request-history-transition"><?php echo esc_html(Request_Dates::format($event_data['new_due_date'])); ?></p>
-						<?php elseif (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+						<?php elseif (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Request_Materials::EVENT_TYPE), true)) : ?>
 							<p class="cliapwo-portal__request-history-transition">
 								<?php
 								printf(
@@ -660,6 +665,9 @@ class Portal
 						<?php endif; ?>
 						<?php if ('' !== (string) $event_data['response_note']) : ?>
 							<div class="cliapwo-portal__request-history-note"><?php echo nl2br(esc_html((string) $event_data['response_note'])); ?></div>
+						<?php endif; ?>
+						<?php if (in_array($event_data['type'], array(Events::TYPE_REQUEST_RESPONSE, Events::TYPE_REQUEST_CREATED, Request_Materials::EVENT_TYPE), true)) : ?>
+							<?php Request_Materials::render_context($event_data['review_context']); ?>
 						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>

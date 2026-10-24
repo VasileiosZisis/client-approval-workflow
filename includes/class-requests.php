@@ -155,6 +155,7 @@ class Requests
 	public function register()
 	{
 		(new Request_Dates())->register();
+		(new Request_Materials())->register();
 		add_action('admin_notices', array($this, 'render_due_date_notice'));
 		add_action('init', array($this, 'register_post_type'));
 		add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
@@ -392,6 +393,7 @@ class Requests
 				?>
 			</p>
 		<?php endif; ?>
+		<?php Request_Materials::render_context(Request_Materials::safe_context(get_post_meta($request_id, Request_Materials::RESPONSE_META_KEY, true), absint(get_post_meta($request_id, self::RESPONSE_CLIENT_META_KEY, true)))); ?>
 		<?php
 	}
 
@@ -424,7 +426,7 @@ class Requests
 				<li class="cliapwo-admin-history__item">
 					<div class="cliapwo-admin-history__header">
 						<strong><?php echo esc_html((string) $event_data['label']); ?></strong>
-						<?php if (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Events::TYPE_REQUEST_DUE_DATE_CHANGED), true)) : ?>
+						<?php if (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Events::TYPE_REQUEST_DUE_DATE_CHANGED, Request_Materials::EVENT_TYPE), true)) : ?>
 							<?php self::render_admin_status_badge((string) $event_data['new_status']); ?>
 						<?php endif; ?>
 					</div>
@@ -442,7 +444,7 @@ class Requests
 						<p class="cliapwo-admin-history__transition"><?php echo esc_html(Events::format_due_date_change($event_data)); ?></p>
 					<?php elseif (Events::TYPE_REQUEST_CREATED === $event_data['type'] && '' !== $event_data['new_due_date']) : ?>
 						<p class="cliapwo-admin-history__transition"><?php echo esc_html(Request_Dates::format($event_data['new_due_date'])); ?></p>
-					<?php elseif (Events::TYPE_REQUEST_CREATED !== $event_data['type']) : ?>
+					<?php elseif (! in_array($event_data['type'], array(Events::TYPE_REQUEST_CREATED, Request_Materials::EVENT_TYPE), true)) : ?>
 						<p class="cliapwo-admin-history__transition">
 							<?php
 							printf(
@@ -456,6 +458,9 @@ class Requests
 					<?php endif; ?>
 					<?php if ('' !== (string) $event_data['response_note']) : ?>
 						<div class="cliapwo-admin-history__note"><?php echo nl2br(esc_html((string) $event_data['response_note'])); ?></div>
+					<?php endif; ?>
+					<?php if (in_array($event_data['type'], array(Events::TYPE_REQUEST_RESPONSE, Events::TYPE_REQUEST_CREATED, Request_Materials::EVENT_TYPE), true)) : ?>
+						<?php Request_Materials::render_context($event_data['review_context']); ?>
 					<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
@@ -512,37 +517,62 @@ class Requests
 			}
 		}
 
-		if ($client_id > 0) {
-			update_post_meta($post_id, self::CLIENT_META_KEY, $client_id);
-		} else {
-			delete_post_meta($post_id, self::CLIENT_META_KEY);
+		$lock = self::acquire_transition_lock($post_id);
+		if ('' === $lock) {
+			set_transient('cliapwo_material_notice_' . get_current_user_id(), 'failed', MINUTE_IN_SECONDS);
+			return;
 		}
-
-		$status = self::STATUS_OPEN;
-
-		if (isset($_POST['cliapwo_request_status'])) {
-			$status = sanitize_key(wp_unslash($_POST['cliapwo_request_status']));
-		}
-
-		if (! in_array($status, self::get_allowed_statuses(), true)) {
-			$status = self::STATUS_OPEN;
-		}
-
-		if (isset($_POST[Request_Dates::META_KEY])) {
-			$date = is_string($_POST[Request_Dates::META_KEY]) ? trim(sanitize_text_field(wp_unslash($_POST[Request_Dates::META_KEY]))) : null;
-			if (null === $date || ('' !== $date && ! Request_Dates::is_valid($date)) || ! $this->save_due_date($post_id, $date)) {
-				set_transient('cliapwo_due_date_notice_' . get_current_user_id(), 'failed', MINUTE_IN_SECONDS);
+		try {
+			$initial_date_snapshot = null;
+			if ('1' !== (string) get_post_meta($post_id, self::NOTIFIED_META_KEY, true) && ! Events::request_creation_record($post_id) && isset($_POST[Request_Dates::META_KEY]) && is_string($_POST[Request_Dates::META_KEY])) {
+				$initial_date = trim(sanitize_text_field(wp_unslash($_POST[Request_Dates::META_KEY])));
+				if ('' === $initial_date || Request_Dates::is_valid($initial_date)) {
+					$initial_date_snapshot = self::get_meta_snapshot($post_id, Request_Dates::META_KEY);
+					if (! $this->save_due_date($post_id, $initial_date, true)) {
+						set_transient('cliapwo_due_date_notice_' . get_current_user_id(), 'failed', MINUTE_IN_SECONDS);
+						return;
+					}
+				}
 			}
+			if (! Request_Materials::save_from_post($post_id, $client_id)) {
+				if (is_array($initial_date_snapshot) && ! Events::request_creation_record($post_id)) {
+					self::restore_meta_snapshot($post_id, Request_Dates::META_KEY, $initial_date_snapshot);
+				}
+				set_transient('cliapwo_material_notice_' . get_current_user_id(), 'failed', MINUTE_IN_SECONDS);
+				return;
+			}
+
+			$status = self::STATUS_OPEN;
+
+			if (isset($_POST['cliapwo_request_status'])) {
+				$status = sanitize_key(wp_unslash($_POST['cliapwo_request_status']));
+			}
+
+			if (! in_array($status, self::get_allowed_statuses(), true)) {
+				$status = self::STATUS_OPEN;
+			}
+
+			if (isset($_POST[Request_Dates::META_KEY])) {
+				$date = is_string($_POST[Request_Dates::META_KEY]) ? trim(sanitize_text_field(wp_unslash($_POST[Request_Dates::META_KEY]))) : null;
+				if (null === $date || ('' !== $date && ! Request_Dates::is_valid($date)) || ! $this->save_due_date($post_id, $date, true)) {
+					set_transient('cliapwo_due_date_notice_' . get_current_user_id(), 'failed', MINUTE_IN_SECONDS);
+				}
+			}
+			if (! $this->maybe_dispatch_created_event($post_id, $post, $client_id)) {
+				return;
+			}
+			$this->transition_status(
+				$post_id,
+				$status,
+				array(
+					'actor_id'   => get_current_user_id(),
+					'actor_type' => Events::ACTOR_TYPE_STAFF,
+					'lock_held'  => true,
+				)
+			);
+		} finally {
+			self::release_transition_lock($post_id, $lock);
 		}
-		$this->maybe_dispatch_created_event($post_id, $post, $client_id);
-		$this->transition_status(
-			$post_id,
-			$status,
-			array(
-				'actor_id'   => get_current_user_id(),
-				'actor_type' => Events::ACTOR_TYPE_STAFF,
-			)
-		);
 	}
 
 	/**
@@ -628,11 +658,12 @@ class Requests
 	 *
 	 * @param int    $request_id Request ID.
 	 * @param string $date Valid date or empty string.
+	 * @param bool   $lock_held Whether the caller already owns the request lock.
 	 * @return bool
 	 */
-	private function save_due_date($request_id, $date)
+	private function save_due_date($request_id, $date, $lock_held = false)
 	{
-		$lock = self::acquire_transition_lock($request_id);
+		$lock = $lock_held ? 'held' : self::acquire_transition_lock($request_id);
 		if ('' === $lock) {
 			return false;
 		}
@@ -651,7 +682,7 @@ class Requests
 				self::restore_meta_snapshot($request_id, Request_Dates::META_KEY, $snapshot);
 				return false;
 			}
-			if ('1' === (string) get_post_meta($request_id, self::NOTIFIED_META_KEY, true)) {
+			if ('1' === (string) get_post_meta($request_id, self::NOTIFIED_META_KEY, true) || Events::request_creation_record($request_id)) {
 				$event_id = Events::record_due_date_change($request_id, $previous, $date);
 				if ($event_id <= 0) {
 					self::restore_meta_snapshot($request_id, Request_Dates::META_KEY, $snapshot);
@@ -891,6 +922,7 @@ class Requests
 				'actor_type'        => Events::ACTOR_TYPE_CLIENT,
 				'is_client_response' => true,
 				'response_note'      => $response_note,
+				'review_token'       => isset($_POST[Request_Materials::TOKEN_FIELD]) && is_string($_POST[Request_Materials::TOKEN_FIELD]) ? sanitize_text_field(wp_unslash($_POST[Request_Materials::TOKEN_FIELD])) : '',
 			)
 		)) {
 			wp_die(
@@ -931,6 +963,39 @@ class Requests
 	 */
 	private function transition_status($request_id, $new_status, array $context = array())
 	{
+		$lock = ! empty($context['lock_held']) ? 'held' : self::acquire_transition_lock($request_id);
+		if ('' === $lock) {
+			return false;
+		}
+		$ids = Request_Materials::file_ids($request_id);
+		$payload = array();
+		try {
+			if (! Request_Materials::lock_files($ids)) {
+				return false;
+			}
+			try {
+				$result = $this->transition_status_locked($request_id, $new_status, $context, $payload);
+			} finally {
+				Request_Materials::unlock_files($ids);
+			}
+		} finally {
+			self::release_transition_lock($request_id, $lock);
+		}
+		if ($result && ! empty($payload)) {
+			/**
+			 * Fires after an immutable live request transition event is recorded.
+			 *
+			 * @param int                  $request_id Request post ID.
+			 * @param array<string, mixed> $transition Complete transition snapshot, including reviewed context for new responses.
+			 */
+			do_action('cliapwo_request_status_transitioned', absint($request_id), $payload);
+		}
+		return $result;
+	}
+
+	/** Apply a transition while the request and its linked files are serialized. */
+	private function transition_status_locked($request_id, $new_status, array $context, array &$payload)
+	{
 		$request_id = absint($request_id);
 		$request    = get_post($request_id);
 
@@ -944,15 +1009,24 @@ class Requests
 			return false;
 		}
 
-		$transition_lock = self::acquire_transition_lock($request_id);
-
-		if ('' === $transition_lock) {
-			return false;
-		}
+		$transition_lock = 'held';
 
 		$stored_status   = (string) get_post_meta($request_id, self::STATUS_META_KEY, true);
 		$current_status  = self::normalize_status_for_ui(self::get_status_for_request($request_id));
 		$is_client_event = ! empty($context['is_client_response']);
+		$review_context = Request_Materials::current($request_id);
+		if ($is_client_event) {
+			$token = isset($context['review_token']) && is_string($context['review_token']) ? $context['review_token'] : '';
+			$note = isset($context['response_note']) && is_string($context['response_note']) ? trim(sanitize_textarea_field($context['response_note'])) : '';
+			$client_id = self::get_client_id_for_request($request_id);
+			if ('publish' !== $request->post_status || ! current_user_can('cliapwo_view_portal') || current_user_can('cliapwo_manage_portal')
+				|| ! Clients::user_can_view_client($client_id) || ! in_array($new_status, self::get_client_outcome_statuses(), true)
+				|| self::STATUS_OPEN !== $current_status || (self::response_note_is_required($new_status) && '' === $note) || self::get_string_length($note) > self::RESPONSE_NOTE_MAX_LENGTH
+				|| '' === $token || ! hash_equals(Request_Materials::token($request_id), $token)
+				|| (self::STATUS_APPROVED === $new_status && in_array(false, array_column($review_context['files'], 'available'), true))) {
+				return false;
+			}
+		}
 
 		if (self::normalize_status_for_ui($new_status) === $current_status) {
 			if (self::STATUS_COMPLETE === $stored_status) {
@@ -973,7 +1047,7 @@ class Requests
 			return false;
 		}
 
-		$actor_id     = isset($context['actor_id']) ? absint($context['actor_id']) : get_current_user_id();
+		$actor_id     = $is_client_event ? get_current_user_id() : (isset($context['actor_id']) ? absint($context['actor_id']) : get_current_user_id());
 		$actor_type   = isset($context['actor_type']) ? sanitize_key((string) $context['actor_type']) : Events::ACTOR_TYPE_STAFF;
 		$actor_type   = Events::ACTOR_TYPE_CLIENT === $actor_type ? Events::ACTOR_TYPE_CLIENT : Events::ACTOR_TYPE_STAFF;
 		$response_note = isset($context['response_note']) ? trim(sanitize_textarea_field((string) $context['response_note'])) : '';
@@ -981,6 +1055,7 @@ class Requests
 		$occurred_at   = time();
 		$meta_snapshot = array(
 			self::STATUS_META_KEY => self::get_meta_snapshot($request_id, self::STATUS_META_KEY),
+			Request_Materials::CYCLE_META_KEY => self::get_meta_snapshot($request_id, Request_Materials::CYCLE_META_KEY),
 		);
 
 		if ($is_client_event) {
@@ -990,6 +1065,7 @@ class Requests
 				self::RESPONDED_BY_META_KEY,
 				self::RESPONDED_AT_META_KEY,
 				self::RESPONSE_CLIENT_META_KEY,
+				Request_Materials::RESPONSE_META_KEY,
 			);
 
 			foreach ($client_response_keys as $meta_key) {
@@ -999,16 +1075,33 @@ class Requests
 			if ('' === $response_note) {
 				delete_post_meta($request_id, self::RESPONSE_NOTE_META_KEY);
 			} else {
-				update_post_meta($request_id, self::RESPONSE_NOTE_META_KEY, $response_note);
+				update_post_meta($request_id, self::RESPONSE_NOTE_META_KEY, wp_slash($response_note));
 			}
 
 			update_post_meta($request_id, self::RESPONSE_STATUS_META_KEY, $new_status);
 			update_post_meta($request_id, self::RESPONDED_BY_META_KEY, $actor_id);
 			update_post_meta($request_id, self::RESPONDED_AT_META_KEY, $occurred_at);
 			update_post_meta($request_id, self::RESPONSE_CLIENT_META_KEY, $client_id);
+			update_post_meta($request_id, Request_Materials::RESPONSE_META_KEY, wp_slash($review_context));
 		}
 
 		update_post_meta($request_id, self::STATUS_META_KEY, $new_status);
+		$cycle = wp_generate_uuid4();
+		update_post_meta($request_id, Request_Materials::CYCLE_META_KEY, $cycle);
+		$persisted = get_post_meta($request_id, self::STATUS_META_KEY, true) === $new_status && get_post_meta($request_id, Request_Materials::CYCLE_META_KEY, true) === $cycle;
+		if ($is_client_event) {
+			$expected = array(self::RESPONSE_STATUS_META_KEY => $new_status, self::RESPONDED_BY_META_KEY => $actor_id, self::RESPONDED_AT_META_KEY => $occurred_at, self::RESPONSE_CLIENT_META_KEY => $client_id, Request_Materials::RESPONSE_META_KEY => $review_context);
+			foreach ($expected as $key => $value) {
+				$persisted = $persisted && (is_array($value) ? get_post_meta($request_id, $key, true) === $value : (string) get_post_meta($request_id, $key, true) === (string) $value);
+			}
+			$persisted = $persisted && (string) get_post_meta($request_id, self::RESPONSE_NOTE_META_KEY, true) === $response_note;
+		}
+		if (! $persisted) {
+			foreach ($meta_snapshot as $key => $snapshot) {
+				self::restore_meta_snapshot($request_id, $key, $snapshot);
+			}
+			return false;
+		}
 
 		if ($is_client_event) {
 			$event_type = Events::TYPE_REQUEST_RESPONSE;
@@ -1030,6 +1123,7 @@ class Requests
 				'response_note'   => $response_note,
 				'occurred_at'     => $occurred_at,
 				'is_backfill'     => false,
+				'review_context'  => $is_client_event ? $review_context : null,
 			)
 		);
 
@@ -1061,13 +1155,10 @@ class Requests
 			'is_backfill'     => false,
 		);
 
-		/**
-		 * Fires after an immutable live request transition event is recorded.
-		 *
-		 * @param int                  $request_id Request post ID.
-		 * @param array<string, mixed> $transition Complete transition snapshot.
-		 */
-		do_action('cliapwo_request_status_transitioned', $request_id, $transition);
+		if ($is_client_event) {
+			$transition['review_context'] = $review_context;
+		}
+		$payload = $transition;
 
 		return true;
 	}
@@ -1080,12 +1171,7 @@ class Requests
 	 */
 	private static function acquire_transition_lock($request_id)
 	{
-		global $wpdb;
-		// The database lock closes the SELECT/INSERT race in unique post metadata.
-		// It is connection-owned and released automatically if the worker exits.
-		$database_lock = 'cliapwo_' . md5(DB_NAME . ':' . $wpdb->postmeta . ':' . absint($request_id));
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- connection locks must never be cached.
-		if ('1' !== (string) $wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s, 0)', $database_lock))) {
+		if (! Request_Materials::lock_operation()) {
 			return '';
 		}
 		$existing_lock = (string) get_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, true);
@@ -1101,10 +1187,10 @@ class Requests
 		$lock_value = 'processing:' . time() . ':' . wp_generate_uuid4();
 
 		if (! add_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $lock_value, true)) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- release this connection's lock on failure.
-			$wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $database_lock));
+			Request_Materials::unlock_operation();
 			return '';
 		}
+		clean_post_cache($request_id);
 		return $lock_value;
 	}
 
@@ -1117,11 +1203,11 @@ class Requests
 	 */
 	private static function release_transition_lock($request_id, $lock_value)
 	{
+		if ('held' === $lock_value) {
+			return;
+		}
 		delete_post_meta($request_id, self::TRANSITION_LOCK_META_KEY, $lock_value);
-		global $wpdb;
-		$database_lock = 'cliapwo_' . md5(DB_NAME . ':' . $wpdb->postmeta . ':' . absint($request_id));
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- connection locks must never be cached.
-		$wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $database_lock));
+		Request_Materials::unlock_operation();
 	}
 
 	/**
@@ -1150,7 +1236,7 @@ class Requests
 	private static function restore_meta_snapshot($post_id, $meta_key, array $snapshot)
 	{
 		if (! empty($snapshot['exists'])) {
-			update_post_meta($post_id, $meta_key, $snapshot['value']);
+			update_post_meta($post_id, $meta_key, wp_slash($snapshot['value']));
 			return;
 		}
 
@@ -1520,17 +1606,25 @@ class Requests
 	private function maybe_dispatch_created_event($post_id, $post, $client_id)
 	{
 		if (! $post instanceof \WP_Post || 'publish' !== $post->post_status) {
-			return;
+			return true;
 		}
 
 		$client_id = absint($client_id);
 
 		if ($client_id <= 0) {
-			return;
+			return true;
 		}
 
 		if ('1' === (string) get_post_meta($post_id, self::NOTIFIED_META_KEY, true)) {
-			return;
+			return true;
+		}
+		if (! Events::ensure_request_creation_record($post_id, $client_id)) {
+			set_transient('cliapwo_material_notice_' . get_current_user_id(), 'failed', MINUTE_IN_SECONDS);
+			return false;
+		}
+		update_post_meta($post_id, self::NOTIFIED_META_KEY, '1');
+		if ('1' !== (string) get_post_meta($post_id, self::NOTIFIED_META_KEY, true)) {
+			return false;
 		}
 
 		/**
@@ -1541,7 +1635,7 @@ class Requests
 		 */
 		do_action('cliapwo_request_created', $post_id, $client_id);
 		do_action('cliapwo_after_request_created', $post_id, $client_id);
-		update_post_meta($post_id, self::NOTIFIED_META_KEY, '1');
+		return true;
 	}
 
 	/**

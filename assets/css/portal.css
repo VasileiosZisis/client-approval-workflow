@@ -1150,3 +1150,16 @@ body.cliapwo-portal-page {
 		transition-duration: 0.01ms !important;
 	}
 }
+/* Material references never force a horizontal portal scroll. */
+.cliapwo-portal .cliapwo-review-material {
+	max-inline-size: 100%;
+	overflow-wrap: anywhere;
+	margin-block: 1rem;
+}
+.cliapwo-portal .cliapwo-review-material ul {
+	padding-inline-start: 1.5rem;
+}
+.cliapwo-portal .cliapwo-review-material a:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}

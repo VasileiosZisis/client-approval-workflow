@@ -240,7 +240,7 @@ class Cliapwo_Request_Dates_Test extends Cliapwo_Test_Case
 		$id = $this->create_request($this->create_client());
 		$this->save_date($id, '2026-10-05');
 		$other = new wpdb(DB_USER, DB_PASSWORD, DB_NAME, DB_HOST);
-		$name = 'cliapwo_' . md5(DB_NAME . ':' . $wpdb->postmeta . ':' . $id);
+		$name = 'cliapwo_operation_' . md5(DB_NAME . ':' . $wpdb->postmeta);
 		$this->assertSame('1', (string) $other->get_var($other->prepare('SELECT GET_LOCK(%s, 0)', $name)));
 		try {
 			$this->save_date($id, '2026-10-06');

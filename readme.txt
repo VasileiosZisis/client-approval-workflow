@@ -4,7 +4,7 @@ Tags: client portal, approval, agency, file sharing, workflow
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,14 @@ Give clients a focused workspace instead of managing deliverables and approvals 
 **Creative and service teams**
 
 Request approval for files, project stages, tasks, deliverables, or other work that needs a documented client response.
+
+= Review material on requests =
+
+Staff can link existing published protected files to requests for the same client. Save the request's client association, then use its Review material panel to select files and optionally add a material reference and revision label.
+
+Clients see review material beside their response controls. Every new response preserves descriptive context in Activity History. Historical entries do not grant downloads or retain deleted binaries, and this is not legal certification or proof that a client opened every file.
+
+Reopen and save resolved requests before changing their material. Create a new protected file for each revision: linked files cannot be replaced in place. Removing a link or deleting a request does not delete the file. Unavailable attachments prevent approval; clients can still request changes, reject, or block with an explanation. Material changes do not send notifications.
 
 = Account-based client access =
 
@@ -483,6 +491,15 @@ Shortcodes added to other WordPress pages remain embedded in the site's normal a
 
 == Changelog ==
 
+= 1.8.0 =
+
+* Added protected staff files linked directly to same-client requests, with a paged, keyboard-accessible Review material picker.
+* Added optional material references/revision labels and immutable reviewed-context snapshots in response summaries and Activity History.
+* Added request-bound protected download checks, stale-form protection, serialized material changes, and failure rollback.
+* Require a saved reopen before editing resolved review material and a new file record for replacements of linked binaries.
+* Unavailable attachments prevent approval while allowing explained non-approval outcomes; removing links never deletes shared files.
+* Announce 1.8.0 on Settings and Requests with independent per-administrator/site/release dismissal, while preserving prior announcement dismissals.
+
 = 1.7.0 =
 
 * Show a compact, per-administrator dismissible due-date release notice on SignoffFlow Settings and the Requests list for upgraded installations; fresh installations retain first-run onboarding.
@@ -543,6 +560,10 @@ Shortcodes added to other WordPress pages remain embedded in the site's normal a
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.8.0 =
+
+Link protected files to requests and preserve reviewed references/revisions with each new response. Existing requests are not automatically linked and historical context is not invented. Reopen resolved requests before editing material, and create a new file record for each linked revision. No binary archive, client upload, or extra notification is added.
 
 = 1.7.0 =
 

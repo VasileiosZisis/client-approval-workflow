@@ -267,36 +267,9 @@ class Events
 			return;
 		}
 
-		$title = sprintf(
-			/* translators: %s: request title */
-			__('Request created: %s', 'signoffflow-client-approval-workflow'),
-			$request->post_title
-		);
-
-		$details = sprintf(
-			/* translators: 1: client name, 2: request title */
-			__("Client: %1\$s\nRequest: %2\$s", 'signoffflow-client-approval-workflow'),
-			$client->post_title,
-			$request->post_title
-		);
-
-		$actor_id   = get_current_user_id();
-		$actor_name = self::get_actor_name($actor_id, __('Staff user', 'signoffflow-client-approval-workflow'));
-
-		self::create_event_entry(
-			$title,
-			$details,
-			self::TYPE_REQUEST_CREATED,
-			$client_id,
-			$request_id,
-			array(
-				self::ACTOR_ID_META_KEY       => $actor_id,
-				self::ACTOR_NAME_META_KEY     => $actor_name,
-				self::ACTOR_TYPE_META_KEY     => self::ACTOR_TYPE_STAFF,
-				self::NEW_STATUS_META_KEY     => Requests::STATUS_OPEN,
-				self::NEW_DUE_DATE_META_KEY   => Request_Dates::get_date($request_id),
-			)
-		);
+		if (! self::ensure_request_creation_record($request_id, $client_id)) {
+			return;
+		}
 
 		if (! $this->should_send_notification('notify_requests')) {
 			return;
@@ -347,6 +320,40 @@ class Events
 				$request->post_title
 			)
 		);
+	}
+
+	/** Record initial material before publication hooks or notification bookkeeping. @internal */
+	public static function ensure_request_creation_record($request_id, $client_id)
+	{
+		$request = get_post($request_id);
+		if (! $request instanceof \WP_Post || Requests::POST_TYPE !== $request->post_type || ! get_post($client_id) instanceof \WP_Post) {
+			return 0;
+		}
+		$existing = self::request_creation_record($request_id);
+		if ($existing) {
+			return $existing;
+		}
+		$actor = get_current_user_id();
+		$meta = array(self::ACTOR_ID_META_KEY => $actor, self::ACTOR_NAME_META_KEY => self::get_actor_name($actor, __('Staff user', 'signoffflow-client-approval-workflow')), self::ACTOR_TYPE_META_KEY => self::ACTOR_TYPE_STAFF, self::NEW_STATUS_META_KEY => Requests::STATUS_OPEN, self::NEW_DUE_DATE_META_KEY => Request_Dates::get_date($request_id), Request_Materials::EVENT_META_KEY => Request_Materials::current($request_id));
+		/* translators: %s: request title */
+		$id = self::create_event_entry(sprintf(__('Request created: %s', 'signoffflow-client-approval-workflow'), $request->post_title), '', self::TYPE_REQUEST_CREATED, $client_id, $request_id, $meta);
+		$required = array_merge($meta, array(self::TYPE_META_KEY => self::TYPE_REQUEST_CREATED, self::OBJECT_ID_META_KEY => absint($request_id), self::CLIENT_META_KEY => absint($client_id)));
+		foreach ($required as $key => $value) {
+			if (! $id || ! metadata_exists('post', $id, $key) || (is_array($value) ? get_post_meta($id, $key, true) !== $value : (string) get_post_meta($id, $key, true) !== (string) $value)) {
+				if ($id) {
+					wp_delete_post($id, true);
+				}
+				return 0;
+			}
+		}
+		return $id;
+	}
+
+	/** Existing immutable creation, not notification success, defines the audit boundary. @internal */
+	public static function request_creation_record($request_id)
+	{
+		$ids = get_posts(array('post_type' => self::POST_TYPE, 'post_status' => 'publish', 'posts_per_page' => 1, 'fields' => 'ids', 'meta_query' => array(array('key' => self::TYPE_META_KEY, 'value' => self::TYPE_REQUEST_CREATED), array('key' => self::OBJECT_ID_META_KEY, 'value' => absint($request_id))))); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- bounded internal creation/audit boundary lookup.
+		return $ids ? (int) $ids[0] : 0;
 	}
 
 	/**
@@ -414,6 +421,7 @@ class Events
 			$meta[ self::ACTOR_TYPE_META_KEY ] = self::ACTOR_TYPE_STAFF;
 			$meta[ self::NEW_STATUS_META_KEY ] = Requests::STATUS_OPEN;
 			$meta[ self::NEW_DUE_DATE_META_KEY ] = Request_Dates::get_date($object_id);
+			$meta[ Request_Materials::EVENT_META_KEY ] = Request_Materials::current($object_id);
 		} else {
 			return 0;
 		}
@@ -888,6 +896,7 @@ class Events
 				self::NEW_STATUS_META_KEY     => $new_status,
 				self::RESPONSE_NOTE_META_KEY  => $response_note,
 				self::IS_BACKFILL_META_KEY    => $is_backfill ? '1' : '0',
+				Request_Materials::EVENT_META_KEY => ! $is_backfill && isset($transition['review_context']) ? Request_Materials::safe_context($transition['review_context'], $client_id) : '',
 			),
 			$occurred_at,
 			$actor_id
@@ -897,6 +906,23 @@ class Events
 			return 0;
 		}
 
+		$required = array(self::TYPE_META_KEY => $event_type, self::CLIENT_META_KEY => $client_id, self::OBJECT_ID_META_KEY => $request_id, self::NEW_STATUS_META_KEY => $new_status, self::RESPONSE_NOTE_META_KEY => $response_note);
+		if (! $is_backfill && isset($transition['review_context'])) {
+			$required[Request_Materials::EVENT_META_KEY] = Request_Materials::safe_context($transition['review_context'], $client_id);
+		}
+		foreach ($required as $key => $value) {
+			if (! metadata_exists('post', $event_id, $key) || (is_array($value) ? get_post_meta($event_id, $key, true) !== $value : (string) get_post_meta($event_id, $key, true) !== (string) $value)) {
+				wp_delete_post($event_id, true);
+				return 0;
+			}
+		}
+		if ('1' === (string) get_post_meta($request_id, Onboarding::SAMPLE_CONTENT_META_KEY, true)) {
+			update_post_meta($event_id, Onboarding::SAMPLE_CONTENT_META_KEY, '1');
+			if ('1' !== (string) get_post_meta($event_id, Onboarding::SAMPLE_CONTENT_META_KEY, true) || ! Sample_Content::track_due_date_event($request_id, $event_id)) {
+				wp_delete_post($event_id, true);
+				return 0;
+			}
+		}
 		return $event_id;
 	}
 
@@ -1015,6 +1041,8 @@ class Events
 			$label = __('Client responded', 'signoffflow-client-approval-workflow');
 		} elseif (self::TYPE_REQUEST_REOPENED === $event_type) {
 			$label = __('Request reopened', 'signoffflow-client-approval-workflow');
+		} elseif (Request_Materials::EVENT_TYPE === $event_type) {
+			$label = __('Review material changed', 'signoffflow-client-approval-workflow');
 		} elseif (self::TYPE_REQUEST_DUE_DATE_CHANGED === $event_type) {
 			$label = __('Due date changed', 'signoffflow-client-approval-workflow');
 		} else {
@@ -1032,7 +1060,41 @@ class Events
 			'timestamp'       => (int) get_post_time('U', true, $event),
 			'previous_due_date' => (string) get_post_meta($event->ID, self::PREVIOUS_DUE_DATE_META_KEY, true),
 			'new_due_date'     => (string) get_post_meta($event->ID, self::NEW_DUE_DATE_META_KEY, true),
+			'review_context' => Request_Materials::safe_context(get_post_meta($event->ID, Request_Materials::EVENT_META_KEY, true), absint(get_post_meta($event->ID, self::CLIENT_META_KEY, true))),
+			'previous_review_context' => Request_Materials::safe_context(get_post_meta($event->ID, Request_Materials::PREVIOUS_META_KEY, true), absint(get_post_meta($event->ID, self::CLIENT_META_KEY, true))),
 		);
+	}
+
+	/** Record a non-notifying, immutable material edit with verified metadata. */
+	public static function record_material_change($request_id, $previous, array $next)
+	{
+		$actor = get_current_user_id();
+		$meta = array(
+			self::ACTOR_ID_META_KEY => $actor,
+			self::ACTOR_NAME_META_KEY => self::get_actor_name($actor, __('Staff user', 'signoffflow-client-approval-workflow')),
+			self::ACTOR_TYPE_META_KEY => self::ACTOR_TYPE_STAFF,
+			Request_Materials::EVENT_META_KEY => $next,
+			Request_Materials::PREVIOUS_META_KEY => is_array($previous) ? $previous : '',
+		);
+		$is_sample = '1' === (string) get_post_meta($request_id, Onboarding::SAMPLE_CONTENT_META_KEY, true);
+		if ($is_sample) {
+			$meta[Onboarding::SAMPLE_CONTENT_META_KEY] = '1';
+		}
+		$event_id = self::create_event_entry(__('Review material changed', 'signoffflow-client-approval-workflow'), '', Request_Materials::EVENT_TYPE, $next['client_id'], $request_id, $meta, time(), $actor);
+		$required = array_merge($meta, array(self::TYPE_META_KEY => Request_Materials::EVENT_TYPE, self::CLIENT_META_KEY => $next['client_id'], self::OBJECT_ID_META_KEY => absint($request_id)));
+		foreach ($required as $key => $value) {
+			if (! $event_id || ! metadata_exists('post', $event_id, $key) || (is_array($value) ? get_post_meta($event_id, $key, true) !== $value : (string) get_post_meta($event_id, $key, true) !== (string) $value)) {
+				if ($event_id) {
+					wp_delete_post($event_id, true);
+				}
+				return 0;
+			}
+		}
+		if ($is_sample && ! Sample_Content::track_due_date_event($request_id, $event_id)) {
+			wp_delete_post($event_id, true);
+			return 0;
+		}
+		return $event_id;
 	}
 
 	/**
@@ -1144,7 +1206,7 @@ class Events
 		}
 
 		$event_id = wp_insert_post(
-			$post_data,
+			wp_slash($post_data),
 			true
 		);
 
@@ -1161,7 +1223,7 @@ class Events
 				continue;
 			}
 
-			update_post_meta($event_id, $meta_key, $meta_value);
+			update_post_meta($event_id, $meta_key, wp_slash($meta_value));
 		}
 
 		return absint($event_id);
@@ -1180,6 +1242,7 @@ class Events
 			self::TYPE_REQUEST_REOPENED,
 			self::TYPE_REQUEST_STATUS_CHANGED,
 			self::TYPE_REQUEST_DUE_DATE_CHANGED,
+			Request_Materials::EVENT_TYPE,
 		);
 	}
 

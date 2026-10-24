@@ -112,7 +112,18 @@ abstract class Cliapwo_Test_Case extends WP_UnitTestCase
 			$method->setAccessible(true);
 		}
 
-		return (bool) $method->invoke(new Requests(), $request_id, $status, $context);
+		$previous_user = get_current_user_id();
+		if (! empty($context['is_client_response'])) {
+			wp_set_current_user(isset($context['actor_id']) ? $context['actor_id'] : 0);
+			if (! array_key_exists('review_token', $context)) {
+				$context['review_token'] = Vzisis\ClientApprovalWorkflow\Request_Materials::token($request_id);
+			}
+		}
+		try {
+			return (bool) $method->invoke(new Requests(), $request_id, $status, $context);
+		} finally {
+			wp_set_current_user($previous_user);
+		}
 	}
 
 	/**

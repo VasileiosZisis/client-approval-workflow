@@ -6,7 +6,7 @@ promising release dates, future version numbers, prices, effort estimates, or
 commercial tier names.
 
 [Product scope](product-scope.md) owns feature placement. The
-[Free roadmap](free-roadmap.md) records the implemented **1.7.0** baseline and
+[Free roadmap](free-roadmap.md) records the implemented **1.8.0** baseline and
 upcoming Free additions. Pro is planned as a separately distributed add-on;
 no paid implementation or locked Pro scaffolding belongs in this repository.
 
@@ -17,8 +17,8 @@ advanced coordination, branded delivery, integrations, and agency scale**.
 
 Free already includes rich decisions, response notes, immutable lifecycle
 history, protected staff file sharing, basic branding/notifications, and deadline
-attention. Request-linked staff attachments, reviewed-material/version references,
-and client response uploads, ordinary admin triage/filtering, manual resend,
+attention. Version 1.8.0 adds request-linked staff attachments and reviewed-material
+references (implemented, pending release). Client response uploads, ordinary admin triage/filtering, manual resend,
 request duplication, account
 switching, basic data export, and expanded diagnostics/API support belong to
 the Free roadmap. Pro must not take those features away or repackage their

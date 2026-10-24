@@ -82,17 +82,33 @@ class ReleaseNoticesTest extends Cliapwo_Test_Case
 		$this->assertSame($settings, get_option(Settings::OPTION_KEY));
 	}
 
+	public function test_upgrade_from_170_keeps_the_old_dismissal_independent()
+	{
+		$legacy_key = 'cliapwo_whats_new_dismissed_' . get_current_blog_id();
+		update_user_meta($this->administrator_id, $legacy_key, '1.7.0');
+		update_option(Release_Notices::VERSION_OPTION, '1.7.0', false);
+		update_option(Release_Notices::ANNOUNCEMENT_OPTION, '1.7.0', false);
+		$notices = new Release_Notices();
+		$notices->detect_upgrade();
+		set_current_screen('edit-cliapwo_request');
+		$this->assertStringContainsString('1.8.0', $this->rendered($notices));
+		$this->valid_submission();
+		$this->dismiss($notices);
+		$this->assertSame('1.7.0', get_user_meta($this->administrator_id, $legacy_key, true));
+		$this->assertSame('1.8.0', get_user_meta($this->administrator_id, Release_Notices::dismissal_key(), true));
+	}
+
 	public function test_patch_high_water_and_reactivation_do_not_reannounce()
 	{
 		$notices = new Release_Notices();
 		$notices->detect_upgrade();
 		$this->valid_submission();
 		$this->dismiss($notices);
-		update_option(Release_Notices::VERSION_OPTION, '1.7.1', false);
+		update_option(Release_Notices::VERSION_OPTION, '1.8.1', false);
 		Lifecycle::deactivate();
 		Lifecycle::activate();
 		$notices->detect_upgrade();
-		$this->assertSame('1.7.1', get_option(Release_Notices::VERSION_OPTION));
+		$this->assertSame('1.8.1', get_option(Release_Notices::VERSION_OPTION));
 		$this->assertSame(Release_Notices::RELEASE, get_user_meta($this->administrator_id, Release_Notices::dismissal_key(), true));
 		set_current_screen('edit-cliapwo_request');
 		$this->assertSame('', $this->rendered($notices));
@@ -121,7 +137,7 @@ class ReleaseNoticesTest extends Cliapwo_Test_Case
 		foreach (array($settings_hook, 'edit-cliapwo_request') as $screen) {
 			set_current_screen($screen);
 			$html = $this->rendered($notices);
-			$this->assertStringContainsString('New in SignoffFlow 1.7.0: Request due dates', $html);
+			$this->assertStringContainsString('New in SignoffFlow 1.8.0: Review material on requests', $html);
 			$this->assertStringContainsString('cliapwo_dismiss_whats_new', $html);
 			$this->assertStringNotContainsString('is-dismissible', $html);
 			$this->assertStringContainsString('aria-labelledby=', $html);

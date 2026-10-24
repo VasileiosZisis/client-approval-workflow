@@ -12,6 +12,8 @@ The plugin includes:
 - client account management inside WordPress admin
 - updates timeline for client-facing progress posts
 - protected file sharing with access-checked downloads
+- protected files linked directly to requests, with optional material references and revision labels
+- immutable reviewed-material snapshots per response and stale-form protection
 - requests/tasks that clients can approve, reject, block, or request changes for with a short response note
 - latest client response details in the portal and WordPress admin, including the responder and timestamp
 - immutable per-request activity histories that preserve earlier approval outcomes and response notes
@@ -36,6 +38,18 @@ The plugin includes:
 5. Publish an approval request for that client account, optionally setting a due date in Request Details.
 6. The assigned user logs in with normal WordPress authentication and records a response from the portal.
 
+To include review material, create a protected file in `SignoffFlow > Files`, save
+the request's client association, then select files in its **Review material**
+panel. Optional reference and revision labels identify the decision context.
+Reopen and save resolved requests before changing material. Create a new file
+record for each revision: linked binaries cannot be replaced in place. Removing
+a link does not delete the file. Unavailable files prevent approval but still
+allow an explained Changes requested, Rejected, or Blocked response.
+
+Earlier responses retain descriptive material snapshots, not permanent binary
+archives or proof that every file was opened. Old responses without reliable
+context remain explicitly unrecorded. Material edits do not send notifications.
+
 The page selected in SignoffFlow settings uses the plugin's focused portal canvas, without the active theme's public header and footer. Shortcodes placed on other pages remain embedded in the theme as normal.
 
 Due dates use the WordPress site timezone. A request is overdue only while open and after its due day has ended. “Due soon” includes today through seven calendar days ahead. Resolving or reopening a request preserves its deadline. New-request emails include the deadline; date edits do not send reminders or additional emails.
@@ -47,7 +61,7 @@ Due dates use the WordPress site timezone. A request is overdue only while open 
 - [Free roadmap and implementation status](docs/free-roadmap.md)
 - [Planned separate Pro add-on roadmap](docs/pro-roadmap.md)
 
-Product scope defines feature placement, while the roadmaps distinguish implemented work from planned additions. The current repository implementation baseline is **1.7.0**; publication status is tracked separately in the Free roadmap. The feature list above describes current Free functionality, not roadmap promises. Request-linked attachments, client response uploads, and all Pro functionality remain planned. Historical research and superseded plans remain available in Git history.
+Product scope defines feature placement, while the roadmaps distinguish implemented work from planned additions. The current repository implementation baseline is **1.8.0**, implemented pending release; publication status is tracked separately in the Free roadmap. The feature list above describes current Free functionality, not roadmap promises. Client response uploads and all Pro functionality remain planned. Historical research and superseded plans remain available in Git history.
 
 ## Repository Notes
 

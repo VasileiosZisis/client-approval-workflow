@@ -143,3 +143,14 @@
 		width: auto;
 	}
 }
+/* Review material stays readable in narrow editors and translated layouts. */
+.cliapwo-review-material {
+	overflow-wrap: anywhere;
+	max-inline-size: 100%;
+}
+.cliapwo-review-material a:focus-visible,
+#cliapwo_request_material a:focus-visible,
+#cliapwo_request_material input:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}

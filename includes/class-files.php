@@ -307,52 +307,64 @@ class Files
 			return;
 		}
 
-		$client_id = 0;
-
-		if (isset($_POST['cliapwo_file_client_id'])) {
-			$client_id = absint(wp_unslash($_POST['cliapwo_file_client_id']));
+		if (! Request_Materials::lock_files(array($post_id))) {
+			return;
 		}
-
-		if ($client_id > 0) {
-			$client = get_post($client_id);
-
-			if (! $client instanceof \WP_Post || Clients::POST_TYPE !== $client->post_type) {
-				$client_id = 0;
-			}
-		}
-
-		if ($client_id > 0) {
-			update_post_meta($post_id, self::CLIENT_META_KEY, $client_id);
-		} else {
-			delete_post_meta($post_id, self::CLIENT_META_KEY);
-		}
-
-		$file_data = $this->get_uploaded_file_data();
-
-		if (UPLOAD_ERR_NO_FILE !== $file_data['error']) {
-			$stored_file = $this->store_uploaded_file($file_data);
-
-			if (is_wp_error($stored_file)) {
-				set_transient(
-					'cliapwo_file_upload_error_' . $post_id,
-					$stored_file->get_error_message(),
-					MINUTE_IN_SECONDS
-				);
+		try {
+			$file_data = $this->get_uploaded_file_data();
+			if (UPLOAD_ERR_NO_FILE !== $file_data['error'] && Request_Materials::is_linked($post_id)) {
+				set_transient('cliapwo_file_upload_error_' . $post_id, __('This file is linked to a request and cannot be replaced in place. Create a new protected file for the revision, then reopen the request and change its file links.', 'signoffflow-client-approval-workflow'), MINUTE_IN_SECONDS);
 				return;
 			}
+			$client_id = 0;
 
-			$this->delete_current_stored_file($post_id);
-			$this->delete_legacy_attachment($post_id);
+			if (isset($_POST['cliapwo_file_client_id'])) {
+				$client_id = absint(wp_unslash($_POST['cliapwo_file_client_id']));
+			}
 
-			update_post_meta($post_id, self::STORED_RELATIVE_PATH_META_KEY, $stored_file['relative_path']);
-			update_post_meta($post_id, self::ORIGINAL_FILENAME_META_KEY, $stored_file['original_name']);
-			update_post_meta($post_id, self::MIME_TYPE_META_KEY, $stored_file['mime_type']);
-			update_post_meta($post_id, self::FILE_SIZE_META_KEY, $stored_file['file_size']);
-			update_post_meta($post_id, self::UPLOADER_ID_META_KEY, get_current_user_id());
-			update_post_meta($post_id, self::UPLOADED_AT_META_KEY, current_time('mysql', true));
+			if ($client_id > 0) {
+				$client = get_post($client_id);
+
+				if (! $client instanceof \WP_Post || Clients::POST_TYPE !== $client->post_type) {
+					$client_id = 0;
+				}
+			}
+
+			if ($client_id > 0) {
+				update_post_meta($post_id, self::CLIENT_META_KEY, $client_id);
+			} else {
+				delete_post_meta($post_id, self::CLIENT_META_KEY);
+			}
+
+			$file_data = $this->get_uploaded_file_data();
+
+			if (UPLOAD_ERR_NO_FILE !== $file_data['error']) {
+				$stored_file = $this->store_uploaded_file($file_data);
+
+				if (is_wp_error($stored_file)) {
+					set_transient(
+						'cliapwo_file_upload_error_' . $post_id,
+						$stored_file->get_error_message(),
+						MINUTE_IN_SECONDS
+					);
+					return;
+				}
+
+				$this->delete_current_stored_file($post_id);
+				$this->delete_legacy_attachment($post_id);
+
+				update_post_meta($post_id, self::STORED_RELATIVE_PATH_META_KEY, $stored_file['relative_path']);
+				update_post_meta($post_id, self::ORIGINAL_FILENAME_META_KEY, $stored_file['original_name']);
+				update_post_meta($post_id, self::MIME_TYPE_META_KEY, $stored_file['mime_type']);
+				update_post_meta($post_id, self::FILE_SIZE_META_KEY, $stored_file['file_size']);
+				update_post_meta($post_id, self::UPLOADER_ID_META_KEY, get_current_user_id());
+				update_post_meta($post_id, self::UPLOADED_AT_META_KEY, current_time('mysql', true));
+			}
+
+			$this->maybe_dispatch_upload_event($post_id, $post, $client_id, self::get_stored_relative_path_for_file($post_id));
+		} finally {
+			Request_Materials::unlock_files(array($post_id));
 		}
-
-		$this->maybe_dispatch_upload_event($post_id, $post, $client_id, self::get_stored_relative_path_for_file($post_id));
 	}
 
 	/**
@@ -418,12 +430,17 @@ class Files
 	public function handle_download()
 	{
 		$nonce = '';
+		$request_scoped = isset($_GET['cliapwo_request_id']) || isset($_GET['cliapwo_file_revision']);
+		$request_id = isset($_GET['cliapwo_request_id']) && is_scalar($_GET['cliapwo_request_id']) ? absint(wp_unslash($_GET['cliapwo_request_id'])) : 0;
+		$scoped_file_id = isset($_GET['cliapwo_file_id']) && is_scalar($_GET['cliapwo_file_id']) ? absint(wp_unslash($_GET['cliapwo_file_id'])) : 0;
+		$revision = isset($_GET['cliapwo_file_revision']) && is_string($_GET['cliapwo_file_revision']) ? sanitize_text_field(wp_unslash($_GET['cliapwo_file_revision'])) : '';
 
-		if (isset($_GET[self::DOWNLOAD_NONCE_NAME])) {
+		if (isset($_GET[self::DOWNLOAD_NONCE_NAME]) && is_string($_GET[self::DOWNLOAD_NONCE_NAME])) {
 			$nonce = sanitize_text_field(wp_unslash($_GET[self::DOWNLOAD_NONCE_NAME]));
 		}
 
-		if (! wp_verify_nonce($nonce, self::DOWNLOAD_ACTION)) {
+		$nonce_action = $request_scoped ? Request_Materials::download_action($request_id, $scoped_file_id, $revision) : self::DOWNLOAD_ACTION;
+		if (! wp_verify_nonce($nonce, $nonce_action) || ($request_scoped && (! $request_id || ! $scoped_file_id || ! preg_match('/^[a-f0-9]{64}$/D', $revision)))) {
 			wp_die(
 				esc_html__('Invalid download request.', 'signoffflow-client-approval-workflow'),
 				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
@@ -453,59 +470,72 @@ class Files
 			);
 		}
 
-		$file_post_id = 0;
-
-		if (isset($_GET['cliapwo_file_id'])) {
-			$file_post_id = absint(wp_unslash($_GET['cliapwo_file_id']));
+		$file_post_id = $scoped_file_id;
+		if (! Request_Materials::lock_files(array($file_post_id))) {
+			wp_die(esc_html__('The file is being updated. Refresh the portal and try again.', 'signoffflow-client-approval-workflow'), '', array('response' => 409));
 		}
+		try {
 
-		$file_post = get_post($file_post_id);
+			$file_post = get_post($file_post_id);
 
-		if (! $file_post instanceof \WP_Post || self::POST_TYPE !== $file_post->post_type || 'publish' !== $file_post->post_status) {
-			wp_die(
-				esc_html__('The requested file could not be found.', 'signoffflow-client-approval-workflow'),
-				esc_html__('Not Found', 'signoffflow-client-approval-workflow'),
-				array(
-					'response' => 404,
-				)
-			);
+			if (! $file_post instanceof \WP_Post || self::POST_TYPE !== $file_post->post_type || 'publish' !== $file_post->post_status) {
+				wp_die(
+					esc_html__('The requested file could not be found.', 'signoffflow-client-approval-workflow'),
+					esc_html__('Not Found', 'signoffflow-client-approval-workflow'),
+					array(
+						'response' => 404,
+					)
+				);
+			}
+
+			$client_id = self::get_client_id_for_file($file_post_id);
+
+			if (! Clients::user_can_view_client($client_id, get_current_user_id())) {
+				wp_die(
+					esc_html__('You do not have access to this file.', 'signoffflow-client-approval-workflow'),
+					esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
+					array(
+						'response' => 403,
+					)
+				);
+			}
+
+			$file_path = self::get_stored_file_path($file_post_id);
+			if ($request_scoped && ! Request_Materials::can_download($request_id, $file_post_id, $revision)) {
+				wp_die(esc_html__('This request attachment is no longer available. Refresh the portal or contact your team.', 'signoffflow-client-approval-workflow'), esc_html__('Forbidden', 'signoffflow-client-approval-workflow'), array('response' => 403));
+			}
+			$file_name = (string) get_post_meta($file_post_id, self::ORIGINAL_FILENAME_META_KEY, true);
+			$mime_type = (string) get_post_meta($file_post_id, self::MIME_TYPE_META_KEY, true);
+
+			if ('' === $file_path || ! is_file($file_path) || ! is_readable($file_path)) {
+				wp_die(
+					esc_html__('The requested file is missing from protected storage.', 'signoffflow-client-approval-workflow'),
+					esc_html__('Not Found', 'signoffflow-client-approval-workflow'),
+					array(
+						'response' => 404,
+					)
+				);
+			}
+
+			if ('' === $file_name) {
+				$file_name = basename($file_path);
+			}
+
+			if ('' === $mime_type) {
+				$mime_type = 'application/octet-stream';
+			}
+
+			$file_size = filesize($file_path);
+			// Open the authorized asset while serialized, but never hold the site write
+			// mutex while a slow client receives its contents.
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.PHP.NoSilencedErrors.Discouraged -- handle open errors generically without exposing disk paths if storage changes externally.
+			$file_handle = @fopen($file_path, 'rb');
+			if (false === $file_handle) {
+				wp_die(esc_html__('The requested file could not be opened.', 'signoffflow-client-approval-workflow'), '', array('response' => 404));
+			}
+		} finally {
+			Request_Materials::unlock_files(array($file_post_id));
 		}
-
-		$client_id = self::get_client_id_for_file($file_post_id);
-
-		if (! Clients::user_can_view_client($client_id, get_current_user_id())) {
-			wp_die(
-				esc_html__('You do not have access to this file.', 'signoffflow-client-approval-workflow'),
-				esc_html__('Forbidden', 'signoffflow-client-approval-workflow'),
-				array(
-					'response' => 403,
-				)
-			);
-		}
-
-		$file_path = self::get_stored_file_path($file_post_id);
-		$file_name = (string) get_post_meta($file_post_id, self::ORIGINAL_FILENAME_META_KEY, true);
-		$mime_type = (string) get_post_meta($file_post_id, self::MIME_TYPE_META_KEY, true);
-
-		if ('' === $file_path || ! file_exists($file_path)) {
-			wp_die(
-				esc_html__('The requested file is missing from protected storage.', 'signoffflow-client-approval-workflow'),
-				esc_html__('Not Found', 'signoffflow-client-approval-workflow'),
-				array(
-					'response' => 404,
-				)
-			);
-		}
-
-		if ('' === $file_name) {
-			$file_name = basename($file_path);
-		}
-
-		if ('' === $mime_type) {
-			$mime_type = 'application/octet-stream';
-		}
-
-		$file_size = filesize($file_path);
 
 		nocache_headers();
 		header('Content-Description: File Transfer');
@@ -514,8 +544,10 @@ class Files
 		header('Content-Length: ' . (string) absint($file_size));
 		header('X-Robots-Tag: noindex, nofollow', true);
 		header('Content-Transfer-Encoding: binary');
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- direct streaming is required for protected downloads.
-		readfile($file_path);
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fpassthru -- stream the already-authorized handle, never resolve a changed path again.
+		fpassthru($file_handle);
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- close the validated download handle.
+		fclose($file_handle);
 		exit;
 	}
 

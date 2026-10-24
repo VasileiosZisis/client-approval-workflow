@@ -25,13 +25,13 @@ getting client decisions, requested material, and approval evidence out of email
 Free must be a complete client approval product, not a demonstration with
 locked local functionality. Its intended core loop is: create a client, publish
 a request, provide relevant material, optionally set a deadline, let the assigned
-client respond, and preserve the decision and its context. Request-linked
-attachments and client uploads are still planned; they are not available merely
-because this document places them in Free.
+client respond, and preserve the decision and its context. Request-linked staff
+attachments and reviewed context are implemented in 1.8.0, pending release.
+Client uploads remain planned, not available merely because they belong in Free.
 
 ## Feature placement
 
-The current repository implementation baseline is **1.7.0**. Release publication
+The current repository implementation baseline is **1.8.0**. Release publication
 is tracked separately from implementation in the [Free roadmap](free-roadmap.md).
 All Pro functionality remains planned.
 
@@ -44,9 +44,9 @@ All Pro functionality remains planned.
 | Due dates, overdue visibility, due-state filters, due-date sorting, portal urgency counts, and attention ordering | Free — high priority; implemented in 1.7.0 | Clients need to understand when action is required. |
 | State-aware onboarding, optional sample content, safe staff preview, exact sample cleanup, and scoped dismissible release notices | Free — implemented | Adoption, recovery, and maintenance serve every installation. |
 | Logo/color branding, portal styling hooks, responsive layouts, accessibility, translation readiness, and regression protection | Free — implemented foundation | Ordinary presentation and reliability are baseline responsibilities. |
-| Protected staff files attached directly to requests | Free — high priority; planned | Review material belongs beside the decision. |
+| Protected staff files attached directly to requests | Free — high priority; implemented in 1.8.0, pending release | Review material belongs beside the decision. |
 | Request-scoped protected client uploads | Free — planned | Clients can complete requests that require supplying material. |
-| Reference to the material/version reviewed, preserved with the decision | Free foundation — planned | Approval history needs clear context about what was reviewed, not only who responded and when. |
+| Reference to the material/version reviewed, preserved with the decision | Free foundation — implemented in 1.8.0, pending release | Approval history needs clear context about what was reviewed, not only who responded and when. |
 | Needs Attention admin view, combined client/status/due/date/search filters, request duplication, and deliberate manual resend | Free — planned | These reduce routine administration without introducing automation. |
 | Authorized client-account switching for users assigned to multiple accounts | Free — planned | The portal should correctly expose its existing multi-account data model. |
 | WordPress Privacy API integration and basic client/account CSV or JSON exports | Free — planned | Data ownership and ordinary portability are not premium evidence products. |
@@ -69,7 +69,7 @@ every download, and an activity record. A general file-sync service or cloud
 storage replacement is not part of that scope.
 
 Identifying the material or version reviewed is also a Free foundation, not a
-paid evidence feature. Plan a clear material reference and, where applicable,
+paid evidence feature. Version 1.8.0 implements a clear material reference and, where applicable,
 a version/revision label, captured with each decision so later edits or file
 replacement cannot silently change the meaning of earlier approval history.
 Keep references client-authorized and avoid physical paths. This is basic

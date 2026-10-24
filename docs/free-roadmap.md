@@ -4,8 +4,7 @@ This document tracks implementation status and delivery order for the Free
 plugin. [Product scope](product-scope.md) owns feature placement; the
 [Pro roadmap](pro-roadmap.md) covers the separate planned paid add-on.
 
-The current repository implementation baseline is **1.7.0**. Request-linked
-attachments, reviewed-material/version references, client response uploads,
+The current repository implementation baseline is **1.8.0**. Client response uploads,
 additional admin efficiency tools, an account switcher, privacy/export tools,
 and expanded health/API support remain
 **planned, not shipped**. No new future release numbers, dates, prices, or effort
@@ -32,6 +31,7 @@ and publication are complete; version metadata alone is not proof of deployment.
 | 1.6.0: Sample content | Explicit sample client/update/request and marked events, signed exact staff preview, idempotent repair, and marker/type-validated cleanup without users, files, notifications, or onboarding progress. | Released |
 | 1.6.1: Stabilization | Local WordPress integration tests, PHP compatibility checks, disposable WordPress/PHP matrix, lifecycle/migration/isolation/file regressions, and accessibility/release audits. | Implemented, pending release confirmation |
 | 1.7.0: Due dates and attention | Optional deadlines, due-state filters and sorting, portal urgency counts/attention order, immutable deadline history, initial-request email dates, and an upgrade-only per-administrator/site dismissible announcement. | Implemented, pending release confirmation |
+| 1.8.0: Request review material | Same-client protected staff attachments, request reference/revision labels, immutable response context, stale-form protection, saved-reopen/new-file revision rules, and release-specific announcement dismissal. | Implemented, pending release |
 
 ### Current deadline and approval behavior
 
@@ -65,26 +65,24 @@ and publication are complete; version metadata alone is not proof of deployment.
 
 ## Planned delivery order
 
-1. Protected staff attachments linked directly to requests, with the Free
-   foundation for identifying the material/version reviewed.
-2. Protected client response uploads inside requests.
-3. Admin workflow efficiency: Needs Attention view, combined filters, manual
+1. Protected client response uploads inside requests.
+2. Admin workflow efficiency: Needs Attention view, combined filters, manual
    resend, and simple draft duplication.
-4. Authorized client-account switching.
-5. Privacy integration and basic client/account data export.
-6. Site Health diagnostics, supported extension contracts, and schema hardening.
+3. Authorized client-account switching.
+4. Privacy integration and basic client/account data export.
+5. Site Health diagnostics, supported extension contracts, and schema hardening.
 
 Due dates and overdue visibility are high-priority Free capabilities already
-implemented in 1.7.0. Protected staff attachments are the next high-priority
-addition, with reviewed-material/version context delivered alongside them. The
-two attachment features remain the next core priority. Within admin efficiency,
+implemented in 1.7.0. Protected staff attachments and reviewed-material context
+are implemented in 1.8.0, pending release. Client response uploads are the next
+core priority. Within admin efficiency,
 triage, filters, and manual resend take precedence over duplication. Continuous
 security/compatibility maintenance and justified accessibility corrections do
 not have to wait for the next feature milestone.
 
 ### 1. Protected staff attachments on requests
 
-**Status:** Planned; high priority and next Free feature.
+**Status:** Implemented in 1.8.0, pending release; high-priority Free feature.
 
 **Purpose:** Keep review material with the approval request instead of making
 the client search the general Files section.
@@ -108,7 +106,7 @@ basic approval context for Pro evidence packages.
 
 #### Reviewed material/version references
 
-**Status:** Planned; Free foundation delivered with request-linked review material.
+**Status:** Implemented in 1.8.0, pending release; Free foundation delivered with request-linked review material.
 
 **Purpose:** Make each decision understandable by recording what the client was
 asked to review, including an identifiable version where applicable.
@@ -137,9 +135,16 @@ diffs, permanent binary archives, and legal certification are not required.
 - Include recorded references in the planned basic Free client/account export.
   Pro may package that context, but its basic recording and viewing remain Free.
 
+**1.8.0 behavior:** One optional reference/revision per request; existing protected
+files only. Reopen and save before changing resolved material. Upload a new file
+record for each linked binary revision. Missing/unpublished/reassigned files
+prevent approval but allow explained non-approval outcomes. Snapshots preserve
+descriptions, not permanent binaries or proof of review. Legacy context stays
+unrecorded. No automatic linking, bulk migration, or material-edit email is added.
+
 ### 2. Protected client response uploads
 
-**Status:** Planned; follows request-linked staff attachments.
+**Status:** Planned; next Free feature after the implemented 1.8.0 foundation.
 
 **Purpose:** Let a client provide requested material inside the request that
 asked for it, rather than returning to email.

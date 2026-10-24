@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SignoffFlow - Client Approval Workflow & Client Portal 1.7.0\n"
+"Project-Id-Version: SignoffFlow - Client Approval Workflow & Client Portal 1.8.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/signoffflow-client-approval-workflow\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-05T14:29:37+00:00\n"
+"POT-Creation-Date: 2026-10-24T18:22:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: signoffflow-client-approval-workflow\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: includes/class-admin.php:94
 #: includes/class-admin.php:95
-#: includes/class-portal.php:338
+#: includes/class-portal.php:339
 msgid "SignoffFlow"
 msgstr ""
 
@@ -52,18 +52,19 @@ msgstr ""
 
 #: includes/class-admin.php:154
 #: includes/class-admin.php:191
-#: includes/class-files.php:429
-#: includes/class-files.php:439
-#: includes/class-files.php:449
-#: includes/class-files.php:479
-#: includes/class-files.php:531
+#: includes/class-files.php:446
+#: includes/class-files.php:456
+#: includes/class-files.php:466
+#: includes/class-files.php:496
+#: includes/class-files.php:505
+#: includes/class-files.php:563
 #: includes/class-onboarding.php:152
-#: includes/class-requests.php:758
-#: includes/class-requests.php:768
-#: includes/class-requests.php:781
-#: includes/class-requests.php:807
-#: includes/class-requests.php:859
-#: includes/class-requests.php:917
+#: includes/class-requests.php:789
+#: includes/class-requests.php:799
+#: includes/class-requests.php:812
+#: includes/class-requests.php:838
+#: includes/class-requests.php:890
+#: includes/class-requests.php:949
 #: includes/class-sample-content.php:82
 msgid "Forbidden"
 msgstr ""
@@ -327,12 +328,12 @@ msgid "Clients"
 msgstr ""
 
 #: includes/class-clients.php:69
-#: includes/class-events.php:537
+#: includes/class-events.php:545
 #: includes/class-files.php:228
-#: includes/class-files.php:384
+#: includes/class-files.php:396
 #: includes/class-lifecycle.php:78
-#: includes/class-requests.php:299
-#: includes/class-requests.php:556
+#: includes/class-requests.php:300
+#: includes/class-requests.php:586
 #: includes/class-updates.php:163
 #: includes/class-updates.php:253
 msgid "Client"
@@ -416,7 +417,7 @@ msgid "Event Log"
 msgstr ""
 
 #: includes/class-events.php:129
-#: includes/class-events.php:1331
+#: includes/class-events.php:1394
 msgid "Event"
 msgstr ""
 
@@ -434,14 +435,14 @@ msgstr ""
 
 #. translators: %s: update title
 #: includes/class-events.php:189
-#: includes/class-events.php:390
+#: includes/class-events.php:397
 #, php-format
 msgid "Update posted: %s"
 msgstr ""
 
 #. translators: 1: client name, 2: update title
 #: includes/class-events.php:195
-#: includes/class-events.php:395
+#: includes/class-events.php:402
 #, php-format
 msgid ""
 "Client: %1$s\n"
@@ -460,8 +461,8 @@ msgstr ""
 
 #. translators: %s: client name
 #: includes/class-events.php:219
-#: includes/class-events.php:318
-#: includes/class-events.php:499
+#: includes/class-events.php:291
+#: includes/class-events.php:507
 #, php-format
 msgid "Client: %s"
 msgstr ""
@@ -474,8 +475,8 @@ msgstr ""
 
 #. translators: %s: portal URL
 #: includes/class-events.php:229
-#: includes/class-events.php:328
-#: includes/class-events.php:509
+#: includes/class-events.php:301
+#: includes/class-events.php:517
 #, php-format
 msgid "Portal link: %s"
 msgstr ""
@@ -486,66 +487,66 @@ msgstr ""
 msgid "update \"%s\""
 msgstr ""
 
+#. translators: 1: site name, 2: client name
+#: includes/class-events.php:281
+#, php-format
+msgid "[%1$s] New request for %2$s"
+msgstr ""
+
+#: includes/class-events.php:288
+msgid "A new request has been added to your client-approval-workflow portal."
+msgstr ""
+
 #. translators: %s: request title
-#: includes/class-events.php:272
-#: includes/class-events.php:403
+#: includes/class-events.php:296
+#, php-format
+msgid "Request: %s"
+msgstr ""
+
+#. translators: %s: localized request due date in the site timezone.
+#: includes/class-events.php:309
+#, php-format
+msgid "Due date: %s (site timezone)"
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php:319
+#, php-format
+msgid "request \"%s\""
+msgstr ""
+
+#: includes/class-events.php:337
+#: includes/class-events.php:407
+#: includes/class-events.php:830
+#: includes/class-events.php:1074
+#: includes/class-events.php:1120
+#: includes/class-sample-content.php:570
+msgid "Staff user"
+msgstr ""
+
+#. translators: %s: request title
+#: includes/class-events.php:339
+#: includes/class-events.php:410
 #, php-format
 msgid "Request created: %s"
 msgstr ""
 
 #. translators: 1: client name, 2: request title
-#: includes/class-events.php:278
-#: includes/class-events.php:408
+#: includes/class-events.php:415
 #, php-format
 msgid ""
 "Client: %1$s\n"
 "Request: %2$s"
 msgstr ""
 
-#: includes/class-events.php:284
-#: includes/class-events.php:400
-#: includes/class-events.php:822
-#: includes/class-events.php:1058
-#: includes/class-sample-content.php:570
-msgid "Staff user"
-msgstr ""
-
-#. translators: 1: site name, 2: client name
-#: includes/class-events.php:308
-#, php-format
-msgid "[%1$s] New request for %2$s"
-msgstr ""
-
-#: includes/class-events.php:315
-msgid "A new request has been added to your client-approval-workflow portal."
-msgstr ""
-
-#. translators: %s: request title
-#: includes/class-events.php:323
-#, php-format
-msgid "Request: %s"
-msgstr ""
-
-#. translators: %s: localized request due date in the site timezone.
-#: includes/class-events.php:336
-#, php-format
-msgid "Due date: %s (site timezone)"
-msgstr ""
-
-#. translators: %s: request title
-#: includes/class-events.php:346
-#, php-format
-msgid "request \"%s\""
-msgstr ""
-
 #. translators: %s: file name
-#: includes/class-events.php:469
+#: includes/class-events.php:477
 #, php-format
 msgid "File uploaded: %s"
 msgstr ""
 
 #. translators: 1: client name, 2: file name
-#: includes/class-events.php:475
+#: includes/class-events.php:483
 #, php-format
 msgid ""
 "Client: %1$s\n"
@@ -553,186 +554,191 @@ msgid ""
 msgstr ""
 
 #. translators: 1: site name, 2: client name
-#: includes/class-events.php:489
+#: includes/class-events.php:497
 #, php-format
 msgid "[%1$s] New file available for %2$s"
 msgstr ""
 
-#: includes/class-events.php:496
+#: includes/class-events.php:504
 msgid "A new file has been uploaded to your client-approval-workflow portal."
 msgstr ""
 
 #. translators: %s: file name
-#: includes/class-events.php:504
+#: includes/class-events.php:512
 #, php-format
 msgid "File: %s"
 msgstr ""
 
 #. translators: %s: file name
-#: includes/class-events.php:522
+#: includes/class-events.php:530
 #, php-format
 msgid "file \"%s\""
 msgstr ""
 
-#: includes/class-events.php:536
+#: includes/class-events.php:544
 msgid "Type"
 msgstr ""
 
-#: includes/class-events.php:538
+#: includes/class-events.php:546
 msgid "Related item"
 msgstr ""
 
-#: includes/class-events.php:560
-#: includes/class-events.php:569
+#: includes/class-events.php:568
+#: includes/class-events.php:577
 msgid "Unknown"
 msgstr ""
 
-#: includes/class-events.php:760
-#: includes/class-events.php:821
-#: includes/class-events.php:1003
+#: includes/class-events.php:768
+#: includes/class-events.php:829
+#: includes/class-events.php:1029
 msgid "Client user"
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:838
+#: includes/class-events.php:846
 #, php-format
 msgid "Client response: %s"
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:844
+#: includes/class-events.php:852
 #, php-format
 msgid "Request reopened: %s"
 msgstr ""
 
 #. translators: %s: request title
-#: includes/class-events.php:850
+#: includes/class-events.php:858
 #, php-format
 msgid "Request status changed: %s"
 msgstr ""
 
 #. translators: 1: previous request status, 2: new request status
-#: includes/class-events.php:858
+#: includes/class-events.php:866
 #, php-format
 msgid "Status: %1$s to %2$s"
 msgstr ""
 
 #. translators: %s: actor display name
-#: includes/class-events.php:864
+#: includes/class-events.php:872
 #, php-format
 msgid "Actor: %s"
 msgstr ""
 
 #. translators: %s: client response note
-#: includes/class-events.php:872
+#: includes/class-events.php:880
 #, php-format
 msgid "Response note: %s"
 msgstr ""
 
-#: includes/class-events.php:1004
+#: includes/class-events.php:1030
 msgid "Unknown user"
 msgstr ""
 
-#: includes/class-events.php:1009
+#: includes/class-events.php:1035
 msgid "Your team"
 msgstr ""
 
-#: includes/class-events.php:1013
-#: includes/class-events.php:1308
+#: includes/class-events.php:1039
+#: includes/class-events.php:1371
 msgid "Request created"
 msgstr ""
 
-#: includes/class-events.php:1015
+#: includes/class-events.php:1041
 msgid "Client responded"
 msgstr ""
 
-#: includes/class-events.php:1017
-#: includes/class-events.php:1316
+#: includes/class-events.php:1043
+#: includes/class-events.php:1379
 msgid "Request reopened"
 msgstr ""
 
-#: includes/class-events.php:1019
-#: includes/class-events.php:1301
+#: includes/class-events.php:1045
+#: includes/class-events.php:1083
+msgid "Review material changed"
+msgstr ""
+
+#: includes/class-events.php:1047
+#: includes/class-events.php:1364
 msgid "Due date changed"
 msgstr ""
 
-#: includes/class-events.php:1021
+#: includes/class-events.php:1049
 msgid "Status changed"
 msgstr ""
 
 #. translators: %s: request title.
-#: includes/class-events.php:1070
+#: includes/class-events.php:1132
 #, php-format
 msgid "Request due date changed: %s"
 msgstr ""
 
 #. translators: 1: previous due date or No due date, 2: new due date or No due date.
-#: includes/class-events.php:1107
+#: includes/class-events.php:1169
 #, php-format
 msgid "Due date: %1$s to %2$s"
 msgstr ""
 
-#: includes/class-events.php:1304
+#: includes/class-events.php:1367
 msgid "Email attempt"
 msgstr ""
 
-#: includes/class-events.php:1312
+#: includes/class-events.php:1375
 msgid "Client response"
 msgstr ""
 
-#: includes/class-events.php:1320
+#: includes/class-events.php:1383
 msgid "Request status changed"
 msgstr ""
 
-#: includes/class-events.php:1324
+#: includes/class-events.php:1387
 msgid "File uploaded"
 msgstr ""
 
-#: includes/class-events.php:1328
+#: includes/class-events.php:1391
 msgid "Update created"
 msgstr ""
 
-#: includes/class-events.php:1347
+#: includes/class-events.php:1410
 msgid "accepted by wp_mail()"
 msgstr ""
 
-#: includes/class-events.php:1348
+#: includes/class-events.php:1411
 msgid "wp_mail() returned false"
 msgstr ""
 
 #. translators: %s: object label
-#: includes/class-events.php:1352
+#: includes/class-events.php:1415
 #, php-format
 msgid "Email attempt: %s"
 msgstr ""
 
 #. translators: %s: object label
-#: includes/class-events.php:1360
+#: includes/class-events.php:1423
 #, php-format
 msgid "Context: %s"
 msgstr ""
 
 #. translators: %s: mail result
-#: includes/class-events.php:1365
+#: includes/class-events.php:1428
 #, php-format
 msgid "Result: %s"
 msgstr ""
 
 #. translators: %s: recipient list
-#: includes/class-events.php:1370
+#: includes/class-events.php:1433
 #, php-format
 msgid "Recipients: %s"
 msgstr ""
 
-#: includes/class-events.php:1396
+#: includes/class-events.php:1459
 msgid "Email delivery could not be confirmed. Check SignoffFlow > Event Log and verify your WordPress mail transport or SMTP configuration."
 msgstr ""
 
 #: includes/class-files.php:139
 #: includes/class-files.php:141
-#: includes/class-portal.php:268
-#: includes/class-portal.php:276
-#: includes/class-portal.php:469
+#: includes/class-portal.php:269
+#: includes/class-portal.php:277
+#: includes/class-portal.php:473
 msgid "Files"
 msgstr ""
 
@@ -769,7 +775,7 @@ msgid "File Details"
 msgstr ""
 
 #: includes/class-files.php:233
-#: includes/class-requests.php:304
+#: includes/class-requests.php:305
 #: includes/class-updates.php:169
 msgid "Select a client"
 msgstr ""
@@ -798,80 +804,96 @@ msgstr ""
 msgid "Client downloads always go through client-approval-workflow access checks. On Nginx hosts, add a matching server deny rule for the protected uploads directory."
 msgstr ""
 
-#: includes/class-files.php:385
+#: includes/class-files.php:316
+msgid "This file is linked to a request and cannot be replaced in place. Create a new protected file for the revision, then reopen the request and change its file links."
+msgstr ""
+
+#: includes/class-files.php:397
 msgid "Stored file"
 msgstr ""
 
-#: includes/class-files.php:401
-#: includes/class-requests.php:578
+#: includes/class-files.php:413
+#: includes/class-requests.php:608
 #: includes/class-updates.php:275
 msgid "Unassigned"
 msgstr ""
 
-#: includes/class-files.php:410
+#: includes/class-files.php:422
 msgid "No file uploaded"
 msgstr ""
 
-#: includes/class-files.php:428
+#: includes/class-files.php:445
 msgid "Invalid download request."
 msgstr ""
 
-#: includes/class-files.php:438
-#: includes/class-files.php:530
+#: includes/class-files.php:455
+#: includes/class-files.php:562
 msgid "You must be logged in to download files."
 msgstr ""
 
-#: includes/class-files.php:448
+#: includes/class-files.php:465
 msgid "You are not allowed to download files."
 msgstr ""
 
-#: includes/class-files.php:466
+#: includes/class-files.php:475
+msgid "The file is being updated. Refresh the portal and try again."
+msgstr ""
+
+#: includes/class-files.php:483
 msgid "The requested file could not be found."
 msgstr ""
 
-#: includes/class-files.php:467
-#: includes/class-files.php:493
-#: includes/class-requests.php:819
+#: includes/class-files.php:484
+#: includes/class-files.php:513
+#: includes/class-requests.php:850
 msgid "Not Found"
 msgstr ""
 
-#: includes/class-files.php:478
+#: includes/class-files.php:495
 msgid "You do not have access to this file."
 msgstr ""
 
-#: includes/class-files.php:492
+#: includes/class-files.php:505
+msgid "This request attachment is no longer available. Refresh the portal or contact your team."
+msgstr ""
+
+#: includes/class-files.php:512
 msgid "The requested file is missing from protected storage."
 msgstr ""
 
-#: includes/class-files.php:764
+#: includes/class-files.php:534
+msgid "The requested file could not be opened."
+msgstr ""
+
+#: includes/class-files.php:796
 msgid "The file upload failed. Please try again."
 msgstr ""
 
-#: includes/class-files.php:774
+#: includes/class-files.php:806
 msgid "The uploaded file data is incomplete."
 msgstr ""
 
-#: includes/class-files.php:781
+#: includes/class-files.php:813
 msgid "The uploaded file could not be validated."
 msgstr ""
 
-#: includes/class-files.php:793
+#: includes/class-files.php:825
 msgid "That file type is not allowed."
 msgstr ""
 
-#: includes/class-files.php:812
+#: includes/class-files.php:844
 msgid "The uploaded file could not be moved into protected storage."
 msgstr ""
 
-#: includes/class-files.php:843
+#: includes/class-files.php:875
 msgid "The protected storage directory could not be created."
 msgstr ""
 
-#: includes/class-files.php:896
+#: includes/class-files.php:928
 msgid "The uploads directory is not available for protected files."
 msgstr ""
 
-#: includes/class-files.php:932
+#: includes/class-files.php:964
 msgid "The protected storage directory could not be hardened."
 msgstr ""
 
@@ -906,64 +928,64 @@ msgstr ""
 msgid "You do not have access to this portal."
 msgstr ""
 
-#: includes/class-portal.php:231
+#: includes/class-portal.php:232
 msgid "SignoffFlow logo"
 msgstr ""
 
-#: includes/class-portal.php:246
+#: includes/class-portal.php:247
 msgid "Staff preview"
 msgstr ""
 
-#: includes/class-portal.php:252
+#: includes/class-portal.php:253
 msgid "Signed in as"
 msgstr ""
 
-#: includes/class-portal.php:255
+#: includes/class-portal.php:256
 msgid "Sign out"
 msgstr ""
 
-#: includes/class-portal.php:261
+#: includes/class-portal.php:262
 msgid "Client workspace"
 msgstr ""
 
-#: includes/class-portal.php:263
+#: includes/class-portal.php:264
 msgid "Updates, decisions, and shared deliverables in one secure place."
 msgstr ""
 
-#: includes/class-portal.php:265
+#: includes/class-portal.php:266
 msgid "Workspace totals"
 msgstr ""
 
-#: includes/class-portal.php:266
-#: includes/class-portal.php:274
-#: includes/class-portal.php:316
+#: includes/class-portal.php:267
+#: includes/class-portal.php:275
+#: includes/class-portal.php:317
 #: includes/class-updates.php:78
 #: includes/class-updates.php:80
 msgid "Updates"
 msgstr ""
 
-#: includes/class-portal.php:267
-#: includes/class-portal.php:275
-#: includes/class-portal.php:381
-#: includes/class-requests.php:203
-#: includes/class-requests.php:205
+#: includes/class-portal.php:268
+#: includes/class-portal.php:276
+#: includes/class-portal.php:382
+#: includes/class-requests.php:204
+#: includes/class-requests.php:206
 msgid "Requests"
 msgstr ""
 
-#: includes/class-portal.php:272
+#: includes/class-portal.php:273
 msgid "Portal sections"
 msgstr ""
 
-#: includes/class-portal.php:273
+#: includes/class-portal.php:274
 msgid "Overview"
 msgstr ""
 
-#: includes/class-portal.php:282
+#: includes/class-portal.php:283
 msgid "Action required"
 msgstr ""
 
 #. translators: %d: number of open requests
-#: includes/class-portal.php:288
+#: includes/class-portal.php:289
 #, php-format
 msgid "%d request needs your attention."
 msgid_plural "%d requests need your attention."
@@ -971,121 +993,121 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: number of overdue requests, 2: number due today or in the next seven days.
-#: includes/class-portal.php:297
+#: includes/class-portal.php:298
 #, php-format
 msgid "%1$d overdue · %2$d due soon (next 7 days)"
 msgstr ""
 
-#: includes/class-portal.php:304
+#: includes/class-portal.php:305
 msgid "You are all caught up."
 msgstr ""
 
-#: includes/class-portal.php:308
+#: includes/class-portal.php:309
 msgid "Review requests"
 msgstr ""
 
-#: includes/class-portal.php:317
+#: includes/class-portal.php:318
 msgid "Latest progress and delivery notes from your team."
 msgstr ""
 
 #. translators: 1: date, 2: author name
-#: includes/class-portal.php:336
+#: includes/class-portal.php:337
 #, php-format
 msgid "Posted on %1$s by %2$s"
 msgstr ""
 
-#: includes/class-portal.php:369
+#: includes/class-portal.php:370
 msgid "No updates yet. Publish a client update from client-approval-workflow > Updates."
 msgstr ""
 
-#: includes/class-portal.php:370
+#: includes/class-portal.php:371
 msgid "No updates yet. New project updates will appear here."
 msgstr ""
 
-#: includes/class-portal.php:382
+#: includes/class-portal.php:383
 msgid "Outstanding actions and confirmations for this client account."
 msgstr ""
 
-#: includes/class-portal.php:426
+#: includes/class-portal.php:430
 msgid "Response note"
 msgstr ""
 
-#: includes/class-portal.php:437
+#: includes/class-portal.php:441
 msgid "Required when requesting changes, rejecting, or blocking. Optional when approving. Maximum 500 characters."
 msgstr ""
 
-#: includes/class-portal.php:440
+#: includes/class-portal.php:444
 msgid "Approve"
 msgstr ""
 
-#: includes/class-portal.php:441
+#: includes/class-portal.php:445
 msgid "Request changes"
 msgstr ""
 
-#: includes/class-portal.php:442
+#: includes/class-portal.php:446
 msgid "Reject"
 msgstr ""
 
-#: includes/class-portal.php:443
+#: includes/class-portal.php:447
 msgid "Block"
 msgstr ""
 
-#: includes/class-portal.php:446
+#: includes/class-portal.php:450
 msgid "Reopen"
 msgstr ""
 
-#: includes/class-portal.php:458
+#: includes/class-portal.php:462
 msgid "No requests yet. Add one from client-approval-workflow > Requests."
 msgstr ""
 
-#: includes/class-portal.php:459
+#: includes/class-portal.php:463
 msgid "No requests yet. Your team will add anything they still need from you here."
 msgstr ""
 
-#: includes/class-portal.php:470
+#: includes/class-portal.php:474
 msgid "Shared deliverables and protected downloads for this client account."
 msgstr ""
 
-#: includes/class-portal.php:514
+#: includes/class-portal.php:518
 msgid "No files yet. Upload one from client-approval-workflow > Files."
 msgstr ""
 
-#: includes/class-portal.php:515
+#: includes/class-portal.php:519
 msgid "No files yet. Shared deliverables and downloads will appear here."
 msgstr ""
 
-#: includes/class-portal.php:525
+#: includes/class-portal.php:529
 msgid "Secure client workspace"
 msgstr ""
 
-#: includes/class-portal.php:527
+#: includes/class-portal.php:531
 msgid "Private to your account"
 msgstr ""
 
-#: includes/class-portal.php:561
-#: includes/class-requests.php:368
+#: includes/class-portal.php:565
+#: includes/class-requests.php:369
 msgid "Previous client response"
 msgstr ""
 
-#: includes/class-portal.php:562
-#: includes/class-requests.php:369
+#: includes/class-portal.php:566
+#: includes/class-requests.php:370
 msgid "Latest client response"
 msgstr ""
 
-#: includes/class-portal.php:568
-#: includes/class-requests.php:374
+#: includes/class-portal.php:572
+#: includes/class-requests.php:375
 msgid "Outcome:"
 msgstr ""
 
 #. translators: 1: client user display name, 2: response date and time
-#: includes/class-portal.php:581
-#: includes/class-requests.php:388
+#: includes/class-portal.php:586
+#: includes/class-requests.php:389
 #, php-format
 msgid "Responded by %1$s on %2$s"
 msgstr ""
 
 #. translators: %d: number of request activity entries
-#: includes/class-portal.php:615
+#: includes/class-portal.php:620
 #, php-format
 msgid "Activity history (%d item)"
 msgid_plural "Activity history (%d items)"
@@ -1093,25 +1115,25 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: actor display name, 2: event date and time
-#: includes/class-portal.php:639
-#: includes/class-requests.php:435
+#: includes/class-portal.php:644
+#: includes/class-requests.php:437
 #, php-format
 msgid "%1$s on %2$s"
 msgstr ""
 
 #. translators: 1: previous request status, 2: new request status
-#: includes/class-portal.php:654
-#: includes/class-requests.php:450
+#: includes/class-portal.php:659
+#: includes/class-requests.php:452
 #, php-format
 msgid "%1$s to %2$s"
 msgstr ""
 
 #: includes/class-release-notices.php:150
-msgid "New in SignoffFlow 1.7.0: Request due dates"
+msgid "New in SignoffFlow 1.8.0: Review material on requests"
 msgstr ""
 
 #: includes/class-release-notices.php:151
-msgid "Add optional deadlines to requests, see overdue and due-soon indicators, and review deadline changes in Activity History. Existing requests remain undated until you set a deadline."
+msgid "Link protected files to requests, add a material reference and revision label, and preserve the reviewed context in Activity History. Reopen a resolved request before changing its review material."
 msgstr ""
 
 #: includes/class-release-notices.php:153
@@ -1133,7 +1155,7 @@ msgid "Dismiss release notice"
 msgstr ""
 
 #: includes/class-request-dates.php:68
-#: includes/class-requests.php:619
+#: includes/class-requests.php:649
 msgid "No due date"
 msgstr ""
 
@@ -1154,7 +1176,7 @@ msgid "Due today"
 msgstr ""
 
 #: includes/class-request-dates.php:127
-#: includes/class-requests.php:619
+#: includes/class-requests.php:649
 msgid "Due soon"
 msgstr ""
 
@@ -1175,171 +1197,246 @@ msgid "latest first"
 msgstr ""
 
 #: includes/class-request-dates.php:195
-#: includes/class-requests.php:338
+#: includes/class-requests.php:339
 msgid "Due date"
 msgstr ""
 
-#: includes/class-requests.php:204
+#: includes/class-request-materials.php:383
+#: includes/class-request-materials.php:451
+msgid "Review material"
+msgstr ""
+
+#: includes/class-request-materials.php:396
+msgid "Reopen and save this request before changing its review material."
+msgstr ""
+
+#: includes/class-request-materials.php:403
+msgid "Material reference"
+msgstr ""
+
+#: includes/class-request-materials.php:403
+msgid "Revision label"
+msgstr ""
+
+#: includes/class-request-materials.php:406
+msgid "Optional. Identify the material and revision being reviewed. These labels are preserved with each response, not permanent file archives or proof of review."
+msgstr ""
+
+#: includes/class-request-materials.php:408
+msgid "Remove link:"
+msgstr ""
+
+#: includes/class-request-materials.php:408
+msgid "Unavailable"
+msgstr ""
+
+#: includes/class-request-materials.php:411
+msgid "Select a client and save the request before linking protected files."
+msgstr ""
+
+#: includes/class-request-materials.php:422
+msgid "Add protected files"
+msgstr ""
+
+#: includes/class-request-materials.php:431
+msgid "No additional eligible files on this page."
+msgstr ""
+
+#: includes/class-request-materials.php:433
+msgid "Create files in SignoffFlow > Files. Linked files cannot be replaced in place; create a new file for each revision. Save changes before changing file-picker pages."
+msgstr ""
+
+#. translators: %d: file picker page number.
+#: includes/class-request-materials.php:438
+#, php-format
+msgid "Files page %d"
+msgstr ""
+
+#: includes/class-request-materials.php:446
+msgid "Review context not recorded"
+msgstr ""
+
+#: includes/class-request-materials.php:453
+msgid "Material:"
+msgstr ""
+
+#: includes/class-request-materials.php:453
+msgid "Revision:"
+msgstr ""
+
+#: includes/class-request-materials.php:470
+msgid "Unavailable; approval requires staff repair."
+msgstr ""
+
+#: includes/class-request-materials.php:476
+msgid "No review material specified."
+msgstr ""
+
+#: includes/class-request-materials.php:518
+msgid "Review material was not saved. Reopen and save resolved requests first. Otherwise refresh the editor, select valid files for the saved client, and retry. Existing material was preserved."
+msgstr ""
+
+#: includes/class-requests.php:205
 msgid "Request"
 msgstr ""
 
-#: includes/class-requests.php:206
+#: includes/class-requests.php:207
 msgid "Add Request"
 msgstr ""
 
-#: includes/class-requests.php:207
+#: includes/class-requests.php:208
 msgid "Edit Request"
 msgstr ""
 
-#: includes/class-requests.php:208
+#: includes/class-requests.php:209
 msgid "New Request"
 msgstr ""
 
-#: includes/class-requests.php:209
+#: includes/class-requests.php:210
 msgid "View Request"
 msgstr ""
 
-#: includes/class-requests.php:210
+#: includes/class-requests.php:211
 msgid "Search Requests"
 msgstr ""
 
-#: includes/class-requests.php:211
+#: includes/class-requests.php:212
 msgid "No requests found."
 msgstr ""
 
-#: includes/class-requests.php:252
+#: includes/class-requests.php:253
 msgid "Request Details"
 msgstr ""
 
-#: includes/class-requests.php:261
+#: includes/class-requests.php:262
 msgid "Activity History"
 msgstr ""
 
-#: includes/class-requests.php:319
-#: includes/class-requests.php:557
+#: includes/class-requests.php:320
+#: includes/class-requests.php:587
 msgid "Status"
 msgstr ""
 
-#: includes/class-requests.php:334
+#: includes/class-requests.php:335
 msgid "Saved status:"
 msgstr ""
 
-#: includes/class-requests.php:341
+#: includes/class-requests.php:342
 msgid "Optional. Due by the end of this day in the WordPress site timezone. Leave empty to remove the deadline."
 msgstr ""
 
-#: includes/class-requests.php:343
+#: includes/class-requests.php:344
 msgid "Assigned portal users can choose an approval outcome from the portal. Staff can reopen resolved requests from the portal preview or override status here."
 msgstr ""
 
-#: includes/class-requests.php:379
+#: includes/class-requests.php:380
 msgid "Note:"
 msgstr ""
 
-#: includes/class-requests.php:414
+#: includes/class-requests.php:416
 msgid "No activity has been recorded for this request yet."
 msgstr ""
 
-#: includes/class-requests.php:607
+#: includes/class-requests.php:637
 msgid "Filter by request status"
 msgstr ""
 
-#: includes/class-requests.php:610
+#: includes/class-requests.php:640
 msgid "All statuses"
 msgstr ""
 
-#: includes/class-requests.php:617
+#: includes/class-requests.php:647
 msgid "Filter by due state"
 msgstr ""
 
-#: includes/class-requests.php:619
+#: includes/class-requests.php:649
 msgid "All due states"
 msgstr ""
 
-#: includes/class-requests.php:619
+#: includes/class-requests.php:649
 msgid "Overdue"
 msgstr ""
 
-#: includes/class-requests.php:679
+#: includes/class-requests.php:710
 msgid "The due date was not saved. Enter a valid date between years 1000 and 9999, or leave it empty to remove it. If the date is valid, retry after the current request update finishes."
 msgstr ""
 
-#: includes/class-requests.php:757
+#: includes/class-requests.php:788
 msgid "Invalid request update."
 msgstr ""
 
-#: includes/class-requests.php:767
-#: includes/class-requests.php:916
+#: includes/class-requests.php:798
+#: includes/class-requests.php:948
 msgid "You must be logged in to update requests."
 msgstr ""
 
-#: includes/class-requests.php:780
+#: includes/class-requests.php:811
 msgid "You are not allowed to update requests."
 msgstr ""
 
-#: includes/class-requests.php:806
+#: includes/class-requests.php:837
 msgid "Invalid request status."
 msgstr ""
 
-#: includes/class-requests.php:818
+#: includes/class-requests.php:849
 msgid "The requested task could not be found."
 msgstr ""
 
-#: includes/class-requests.php:839
+#: includes/class-requests.php:870
 msgid "The request history could not be recorded. Please try again."
 msgstr ""
 
-#: includes/class-requests.php:840
-#: includes/class-requests.php:898
+#: includes/class-requests.php:871
+#: includes/class-requests.php:930
 msgid "Request update failed"
 msgstr ""
 
-#: includes/class-requests.php:858
+#: includes/class-requests.php:889
 msgid "You are not allowed to update this request."
 msgstr ""
 
-#: includes/class-requests.php:868
+#: includes/class-requests.php:899
 msgid "Response notes must be 500 characters or fewer."
 msgstr ""
 
-#: includes/class-requests.php:869
+#: includes/class-requests.php:900
 msgid "Invalid response note"
 msgstr ""
 
-#: includes/class-requests.php:878
+#: includes/class-requests.php:909
 msgid "Add a response note when requesting changes, rejecting, or blocking a request."
 msgstr ""
 
-#: includes/class-requests.php:879
+#: includes/class-requests.php:910
 msgid "Response note required"
 msgstr ""
 
-#: includes/class-requests.php:897
+#: includes/class-requests.php:929
 msgid "The request could not be updated safely. Refresh the portal and try again."
 msgstr ""
 
-#: includes/class-requests.php:1313
-#: includes/class-requests.php:1425
+#: includes/class-requests.php:1399
+#: includes/class-requests.php:1511
 msgid "Approved"
 msgstr ""
 
-#: includes/class-requests.php:1317
-#: includes/class-requests.php:1426
+#: includes/class-requests.php:1403
+#: includes/class-requests.php:1512
 msgid "Changes requested"
 msgstr ""
 
-#: includes/class-requests.php:1321
-#: includes/class-requests.php:1427
+#: includes/class-requests.php:1407
+#: includes/class-requests.php:1513
 msgid "Rejected"
 msgstr ""
 
-#: includes/class-requests.php:1325
-#: includes/class-requests.php:1428
+#: includes/class-requests.php:1411
+#: includes/class-requests.php:1514
 msgid "Blocked"
 msgstr ""
 
-#: includes/class-requests.php:1328
-#: includes/class-requests.php:1424
+#: includes/class-requests.php:1414
+#: includes/class-requests.php:1510
 msgid "Open"
 msgstr ""
 

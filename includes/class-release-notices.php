@@ -18,9 +18,9 @@ class Release_Notices
 {
 	const VERSION_OPTION = 'cliapwo_installed_version';
 	const ANNOUNCEMENT_OPTION = 'cliapwo_whats_new_release';
-	const RELEASE = '1.7.0';
+	const RELEASE = '1.8.0';
 	const NONCE_NAME = 'cliapwo_whats_new_nonce';
-	const NONCE_ACTION = 'cliapwo_dismiss_whats_new_1.7.0';
+	const NONCE_ACTION = 'cliapwo_dismiss_whats_new_1.8.0';
 
 	/**
 	 * Actual settings screen IDs returned by menu registration.
@@ -101,7 +101,7 @@ class Release_Notices
 	 */
 	public static function dismissal_key()
 	{
-		return 'cliapwo_whats_new_dismissed_' . get_current_blog_id();
+		return 'cliapwo_whats_new_dismissed_' . get_current_blog_id() . '_1_8_0';
 	}
 
 	/**
@@ -147,8 +147,8 @@ class Release_Notices
 		$return_to = 'edit-cliapwo_request' === $screen->id ? 'requests' : 'settings';
 		?>
 		<div class="notice notice-info cliapwo-release-notice" role="region" aria-labelledby="cliapwo-whats-new-title">
-			<p id="cliapwo-whats-new-title"><strong><?php esc_html_e('New in SignoffFlow 1.7.0: Request due dates', 'signoffflow-client-approval-workflow'); ?></strong></p>
-			<p><?php esc_html_e('Add optional deadlines to requests, see overdue and due-soon indicators, and review deadline changes in Activity History. Existing requests remain undated until you set a deadline.', 'signoffflow-client-approval-workflow'); ?></p>
+			<p id="cliapwo-whats-new-title"><strong><?php esc_html_e('New in SignoffFlow 1.8.0: Review material on requests', 'signoffflow-client-approval-workflow'); ?></strong></p>
+			<p><?php esc_html_e('Link protected files to requests, add a material reference and revision label, and preserve the reviewed context in Activity History. Reopen a resolved request before changing its review material.', 'signoffflow-client-approval-workflow'); ?></p>
 			<div class="cliapwo-release-notice__actions">
 				<a class="button button-primary" href="<?php echo esc_url(admin_url('edit.php?post_type=cliapwo_request')); ?>"><?php esc_html_e('Manage requests', 'signoffflow-client-approval-workflow'); ?></a>
 				<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">

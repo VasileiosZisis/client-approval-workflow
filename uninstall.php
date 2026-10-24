@@ -94,6 +94,7 @@ delete_option('cliapwo_sample_content_ids');
 delete_option('cliapwo_installed_version');
 delete_option('cliapwo_whats_new_release');
 delete_metadata('user', 0, 'cliapwo_whats_new_dismissed_' . get_current_blog_id(), '', true);
+delete_metadata('user', 0, 'cliapwo_whats_new_dismissed_' . get_current_blog_id() . '_1_8_0', '', true);
 delete_metadata('user', 0, 'cliapwo_onboarding_dismissed', '', true);
 delete_transient('cliapwo_plugin_activated');
 
