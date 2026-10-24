@@ -21,6 +21,7 @@ The plugin includes:
 - immutable staff due-date edits in request activity history
 - state-aware first-run setup that tracks progress through the first real client response
 - opt-in sample content with a safe staff preview and exact cleanup
+- upgrade-only release notices with independent per-administrator/site dismissal
 - focused, responsive portal workspace with section navigation and accessible motion
 - event logging for key actions
 - email notifications for requests, updates, and files
@@ -38,6 +39,15 @@ The plugin includes:
 The page selected in SignoffFlow settings uses the plugin's focused portal canvas, without the active theme's public header and footer. Shortcodes placed on other pages remain embedded in the theme as normal.
 
 Due dates use the WordPress site timezone. A request is overdue only while open and after its due day has ended. “Due soon” includes today through seven calendar days ahead. Resolving or reopening a request preserves its deadline. New-request emails include the deadline; date edits do not send reminders or additional emails.
+
+## Documentation and Roadmaps
+
+- [WordPress.org listing copy and release history](readme.txt)
+- [Product scope and Free/Pro boundaries](docs/product-scope.md)
+- [Free roadmap and implementation status](docs/free-roadmap.md)
+- [Planned separate Pro add-on roadmap](docs/pro-roadmap.md)
+
+Product scope defines feature placement, while the roadmaps distinguish implemented work from planned additions. The current repository implementation baseline is **1.7.0**; publication status is tracked separately in the Free roadmap. The feature list above describes current Free functionality, not roadmap promises. Request-linked attachments, client response uploads, and all Pro functionality remain planned. Historical research and superseded plans remain available in Git history.
 
 ## Repository Notes
 
